@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const controllers = require("../../controllers/UserController");
+const controllers = require("../../controllers/TopicCategoryController");
 
 router.get("/", controllers.onGetAll);
 router.get("/:id", controllers.onGetById);

@@ -1,37 +1,54 @@
 const express = require("express");
 // import api from './api/index.js'
-const assetLocationHistory = require("./api/asset-location-history");
-const assetPhoto = require("./api/asset-photo");
-const asset = require("./api/asset");
-const department = require("./api/department");
-const holderHistory = require("./api/holder-history");
-const repairHistory = require("./api/repair-history");
-const budgetType = require("./api/budget-type");
-const assetType = require("./api/asset-type");
+const prefixName = require("./api/prefix-name");
+const position = require("./api/position");
+const inspector = require("./api/inspector");
+// const froala = require("./api/froala");
+const bureau = require("./api/bureau");
+const division = require("./api/division");
+const agency = require("./api/agency");
+const role = require("./api/role");
+const section = require("./api/section");
 const user = require("./api/user");
-const froala = require("./api/froala");
+const complaintType = require("./api/complaint-type");
+const occupation = require("./api/occupation");
+const complainant = require("./api/complainant");
+const province = require("./api/province");
+const district = require("./api/district");
+const subDistrict = require("./api/sub-district");
+const complaintChannel = require("./api/complaint-channel");
+const topicCategory = require("./api/topic-category");
+const topicType = require("./api/topic-type");
+const state = require("./api/state");
+const order = require("./api/order");
+const proceedStatus = require("./api/proceed-status");
 
 const router = express.Router();
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
-  router.use("/asset-location-history", assetLocationHistory),
-  router.use("/asset-photo", assetPhoto),
-  router.use("/asset-type", assetType),
-  router.use("/asset", asset),
-  router.use("/budget-type", budgetType),
-  router.use("/department", department),
-  router.use("/holder-history", holderHistory),
-  router.use("/repair-history", repairHistory),
+  router.use("/prefix-name", prefixName),
+  router.use("/position", position),
+  router.use("/inspector", inspector),
+  // router.use("/froala", froala),
+  router.use("/bureau", bureau),
+  router.use("/division", division),
+  router.use("/agency", agency),
+  router.use("/role", role),
+  router.use("/section", section),
   router.use("/user", user),
-  router.use("/froala", froala),
-
-  // router.use("/news", news),
-  // router.use("/news-type", newsType),
-
-
-  // router.use("/news-gallery", newsGallery),
-
+  router.use("/complaint-type", complaintType),
+  router.use("/occupation", occupation),
+  router.use("/complainant", complainant),
+  router.use("/province", province),
+  router.use("/district", district),
+  router.use("/sub-district", subDistrict),
+  router.use("/complaint-channel", complaintChannel),
+  router.use("/topic-category", topicCategory),
+  router.use("/topic-type", topicType),
+  router.use("/state", state),
+  router.use("/order", order),
+  router.use("/proceed-status", proceedStatus)
 );
 
 module.exports = router;

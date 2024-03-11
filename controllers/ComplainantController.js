@@ -1,30 +1,21 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const $table = "user";
+const $table = "complainant";
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
-    username: true,
+    uuid: true,
+    card_type: true,
     prefix_name_id: true,
     firstname: true,
     lastname: true,
-    officer_code: true,
-    id_card: true,
-    position_id: true,
-    section_id: true,
-    role_id: true,
-    inspector_id: true,
-    bureau_id: true,
-    division_id: true,
-    agency_id: true,
+    birthday: true,
+    occupation_id: true,
+    occupation_text: true,
     phone_number: true,
-    status: true,
     email: true,
     line_id: true,
-    birthday: true,
-    file_attach: true,
-    password: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -42,8 +33,12 @@ const filterData = (req) => {
         $where["id"] = parseInt(req.query.id);
     }
 
-    if (req.query.username) {
-        $where["username"] =  {contains: req.query.username};
+    if (req.query.uuid) {
+        $where["uuid"] =  {contains: req.query.uuid};
+    }
+
+    if (req.query.card_type) {
+        $where["card_type"] = parseInt(req.query.card_type);
     }
 
     if (req.query.prefix_name_id) {
@@ -58,48 +53,20 @@ const filterData = (req) => {
         $where["lastname"] =  {contains: req.query.lastname};
     }
 
-    if (req.query.officer_code) {
-        $where["officer_code"] =  {contains: req.query.officer_code};
+    if (req.query.birthday) {
+        $where["birthday"] =  {contains: req.query.birthday};
     }
 
-    if (req.query.id_card) {
-        $where["id_card"] =  {contains: req.query.id_card};
+    if (req.query.occupation_id) {
+        $where["occupation_id"] = parseInt(req.query.occupation_id);
     }
 
-    if (req.query.position_id) {
-        $where["position_id"] = parseInt(req.query.position_id);
-    }
-
-    if (req.query.section_id) {
-        $where["section_id"] = parseInt(req.query.section_id);
-    }
-
-    if (req.query.role_id) {
-        $where["role_id"] = parseInt(req.query.role_id);
-    }
-
-    if (req.query.inspector_id) {
-        $where["inspector_id"] = parseInt(req.query.inspector_id);
-    }
-
-    if (req.query.bureau_id) {
-        $where["bureau_id"] = parseInt(req.query.bureau_id);
-    }
-
-    if (req.query.division_id) {
-        $where["division_id"] = parseInt(req.query.division_id);
-    }
-
-    if (req.query.agency_id) {
-        $where["agency_id"] = parseInt(req.query.agency_id);
+    if (req.query.occupation_text) {
+        $where["occupation_text"] =  {contains: req.query.occupation_text};
     }
 
     if (req.query.phone_number) {
         $where["phone_number"] =  {contains: req.query.phone_number};
-    }
-
-    if (req.query.status) {
-        $where["status"] = parseInt(req.query.status);
     }
 
     if (req.query.email) {
@@ -108,14 +75,6 @@ const filterData = (req) => {
 
     if (req.query.line_id) {
         $where["line_id"] =  {contains: req.query.line_id};
-    }
-
-    if (req.query.birthday) {
-        $where["birthday"] =  {contains: req.query.birthday};
-    }
-
-    if (req.query.file_attach) {
-        $where["file_attach"] =  {contains: req.query.file_attach};
     }
 
     if (req.query.is_active) {
@@ -154,9 +113,7 @@ const countDataAndOrder = async (req, $where) => {
         $totalPage: $totalPage,
         $currentPage: $currentPage,
     };
-    };
-
-
+};
 
     const checkLanguage = (req) => {
         let prismaLang = prisma.$extends({
@@ -230,26 +187,18 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
-                    username: req.body.username,
+                    uuid: uuidv4(),
+                    card_type: Number(req.body.card_type),
+                    id_card: req.body.id_card,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
-                    officer_code: req.body.officer_code,
-                    id_card: req.body.id_card,
-                    position_id: Number(req.body.position_id),
-                    section_id: Number(req.body.section_id),
-                    role_id: Number(req.body.role_id),
-                    inspector_id: Number(req.body.inspector_id),
-                    bureau_id: Number(req.body.bureau_id),
-                    division_id: Number(req.body.division_id),
-                    agency_id: Number(req.body.agency_id),
+                    birthday: req.body.birthday != null ? new Date(req.body.birthday) : undefined,
+                    occupation_id: Number(req.body.occupation_id),
+                    occupation_text: req.body.occupation_text,
                     phone_number: req.body.phone_number,
-                    status: Number(req.body.status),
                     email: req.body.email,
                     line_id: req.body.line_id,
-                    password: req.body.password,
-                    birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
-
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -269,26 +218,17 @@ const methods = {
                     id: Number(req.params.id),
                 },
                 data: {
-                    username: req.body.username != null ? req.body.username : undefined,
+                    card_type: req.body.card_type != null ? Number(req.body.card_type) : undefined,
+                    id_card: req.body.id_card != null ? req.body.id_card : undefined,
                     prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname != null ? req.body.firstname : undefined,
                     lastname: req.body.lastname != null ? req.body.lastname : undefined,
-                    officer_code: req.body.officer_code != null ? req.body.officer_code : undefined,
-                    id_card: req.body.id_card != null ? req.body.id_card : undefined,
-                    position_id: req.body.position_id != null ? Number(req.body.position_id) : undefined,
-                    section_id: req.body.section_id != null ? Number(req.body.section_id) : undefined,
-                    role_id: req.body.role_id != null ? Number(req.body.role_id) : undefined,
-                    inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
-                    bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
-                    division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
-                    agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+                    birthday: req.body.birthday != null ? new Date(req.body.birthday) : undefined,
+                    occupation_id: req.body.occupation_id != null ? Number(req.body.occupation_id) : undefined,
+                    occupation_text: req.body.occupation_text != null ? req.body.occupation_text : undefined,
                     phone_number: req.body.phone_number != null ? req.body.phone_number : undefined,
-                    status: req.body.status != null ? Number(req.body.status) : undefined,
                     email: req.body.email != null ? req.body.email : undefined,
                     line_id: req.body.line_id != null ? req.body.line_id : undefined,
-                    password: req.body.password != null ? req.body.password : undefined,
-                    birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
-
                     // updated_by: null,
                 },
             });
