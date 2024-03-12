@@ -1,5 +1,6 @@
 const express = require("express");
 // import api from './api/index.js'
+const router = express.Router();
 const prefixName = require("./api/prefix-name");
 const position = require("./api/position");
 const inspector = require("./api/inspector");
@@ -22,8 +23,11 @@ const topicType = require("./api/topic-type");
 const state = require("./api/state");
 const order = require("./api/order");
 const proceedStatus = require("./api/proceed-status");
-
-const router = express.Router();
+const complaintReport = require("./api/complaint-report");
+const complaintForward = require("./api/complaint-forward");
+const complaintFollow = require("./api/complaint-follow");
+const loginLog = require("./api/login-log");
+const complaint = require("./api/complaint");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -48,7 +52,12 @@ router.use(
   router.use("/topic-type", topicType),
   router.use("/state", state),
   router.use("/order", order),
-  router.use("/proceed-status", proceedStatus)
+  router.use("/proceed-status", proceedStatus),
+  router.use("/complaint-report", complaintReport),
+  router.use("/complaint-forward", complaintForward),
+  router.use("/complaint-follow", complaintFollow),
+  router.use("/login-log", loginLog),
+  router.use("/complaint", complaint)
 );
 
 module.exports = router;

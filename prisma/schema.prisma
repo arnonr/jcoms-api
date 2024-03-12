@@ -47,6 +47,7 @@ model position {
 
     user                user[]
     accused             accused[]
+    complainant         complainant[]
 }
 
 model inspector {
@@ -71,12 +72,13 @@ model inspector {
     complaint           complaint[]
     accused             accused[]
     complaint_follow    complaint_follow[]
+    complainant         complainant[]
 
     forward_from_inspector  complaint_forward[]     @relation(name: "forward_from_inspector")
     forward_to_inspector    complaint_forward[]     @relation(name: "forward_to_inspector")
 
-    report_from_inspector  complaint_reporting[]     @relation(name: "report_from_inspector")
-    report_to_inspector    complaint_reporting[]     @relation(name: "report_to_inspector")
+    report_from_inspector  complaint_report[]     @relation(name: "report_from_inspector")
+    report_to_inspector    complaint_report[]     @relation(name: "report_to_inspector")
 }
 
 model bureau {
@@ -98,17 +100,18 @@ model bureau {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    inspector           inspector     @relation(fields: [inspector_id], references: [id])
-
     divisions           division[]
     user                user[]
     complaint           complaint[]
     accused             accused[]
+    complainant         complainant[]
+
+    inspector           inspector     @relation(fields: [inspector_id], references: [id])
     forward_from_bureau         complaint_forward[]     @relation(name: "forward_from_bureau")
     forward_to_bureau           complaint_forward[]     @relation(name: "forward_to_bureau")
 
-    report_from_bureau  complaint_reporting[]   @relation(name: "report_from_bureau")
-    report_to_bureau    complaint_reporting[]   @relation(name: "report_to_bureau")
+    report_from_bureau  complaint_report[]   @relation(name: "report_from_bureau")
+    report_to_bureau    complaint_report[]   @relation(name: "report_to_bureau")
 }
 model division {
     id                  Int         @id @default(autoincrement())
@@ -130,6 +133,7 @@ model division {
 
     agencies            agency[]
     user                user[]
+    complainant         complainant[]
 
     bureau              bureau     @relation(fields: [bureau_id], references: [id])
     complaint           complaint[]
@@ -137,10 +141,9 @@ model division {
     forward_from_division       complaint_forward[]     @relation(name: "forward_from_division")
     forward_to_division         complaint_forward[]     @relation(name: "forward_to_division")
 
-    report_from_division  complaint_reporting[]   @relation(name: "report_from_division")
-    report_to_division    complaint_reporting[]   @relation(name: "report_to_division")
+    report_from_division  complaint_report[]   @relation(name: "report_from_division")
+    report_to_division    complaint_report[]   @relation(name: "report_to_division")
 }
-
 model agency {
     id                  Int         @id @default(autoincrement())
 
@@ -164,12 +167,13 @@ model agency {
     user                user[]
     complaint           complaint[]
     accused             accused[]
+    complainant         complainant[]
 
     forward_from_agency         complaint_forward[]     @relation(name: "forward_from_agency")
     forward_to_agency           complaint_forward[]     @relation(name: "forward_to_agency")
 
-    report_from_agency  complaint_reporting[]   @relation(name: "report_from_agency")
-    report_to_agency    complaint_reporting[]   @relation(name: "report_to_agency")
+    report_from_agency  complaint_report[]   @relation(name: "report_from_agency")
+    report_to_agency    complaint_report[]   @relation(name: "report_to_agency")
 }
 
 model role {
@@ -208,13 +212,14 @@ model section {
 
     user                user[]
     accused             accused[]
+    complainant         complainant[]
 }
 
 //รอดำเนินการ
 model user {
     id                  Int         @id @default(autoincrement())
-
-    username            String      @db.VarChar(32) @unique
+    uuid                String?     @db.VarChar(100) @unique
+    username            String?     @db.VarChar(32) @unique
     prefix_name_id      Int?
     firstname           String?     @db.VarChar(100)
     lastname            String?     @db.VarChar(100)
@@ -245,6 +250,14 @@ model user {
 
     complaint           complaint[]
     login_log           login_log[]
+    report_from_user         complaint_report[] @relation(name: "report_from_user")
+    report_receive_by_user   complaint_report[] @relation(name: "report_receive_by_user")
+
+    forward_from_user   complaint_forward[] @relation(name: "forward_from_user")
+    forward_receive_by_user   complaint_forward[] @relation(name: "forward_receive_by_user")
+
+    follow_from_user   complaint_follow[] @relation(name: "follow_from_user")
+    follow_receive_by_user   complaint_follow[] @relation(name: "follow_receive_by_user")
 
     prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
     position            position?        @relation(fields: [position_id], references: [id])
@@ -254,6 +267,7 @@ model user {
     bureau              bureau?          @relation(fields: [bureau_id], references: [id])
     division            division?        @relation(fields: [division_id], references: [id])
     agency              agency?          @relation(fields: [agency_id], references: [id])
+
 }
 
 model complaint_type {
@@ -294,10 +308,10 @@ model occupation {
 //รอดำเนินการ
 model complainant {
     id                  Int         @id @default(autoincrement())
-
     uuid                String?     @db.VarChar(45) @unique
     card_type           Int?        @db.TinyInt
     id_card             String?     @db.VarChar(100)
+    card_photo          String?     @db.VarChar(100)
     prefix_name_id      Int?
     firstname           String?     @db.VarChar(100)
     lastname            String?     @db.VarChar(100)
@@ -308,6 +322,15 @@ model complainant {
     email               String?     @db.VarChar(100)
     line_id             String?     @db.VarChar(45)
 
+    position_id         Int?
+    section_id          Int?
+    role_id             Int?
+    inspector_id        Int?
+    bureau_id           Int?
+    division_id         Int?
+    agency_id           Int?
+    complainant_type    Int?        @db.TinyInt
+
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -316,9 +339,16 @@ model complainant {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
-    occupation          occupation?     @relation(fields: [occupation_id], references: [id])
     complaint           complaint[]
+
+    prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
+    occupation          occupation?      @relation(fields: [occupation_id], references: [id])
+    position            position?        @relation(fields: [position_id], references: [id])
+    section             section?         @relation(fields: [section_id], references: [id])
+    inspector           inspector?       @relation(fields: [inspector_id], references: [id])
+    bureau              bureau?          @relation(fields: [bureau_id], references: [id])
+    division            division?        @relation(fields: [division_id], references: [id])
+    agency              agency?          @relation(fields: [agency_id], references: [id])
 }
 
 model province {
@@ -454,29 +484,31 @@ model state {
 
     complaint           complaint[]
     proceed_status      proceed_status[]
+    complaint_report complaint_report[]
+    complaint_forward   complaint_forward[]
 }
 
 //รอดำเนินการ
 model complaint {
     id                  Int         @id @default(autoincrement())
-
     uuid                String?     @db.VarChar(100)
-    complaint_code      String?     @db.VarChar(45)
+    complaint_code      String?     @db.VarChar(45) @unique
     tracking_satisfaction Int?      @db.TinyInt
     tracking_satisfaction_at DateTime?
     complaint_satisfaction Int?     @db.TinyInt
     complaint_satisfaction_at DateTime?
-    received_at         DateTime?
-    received_by         Int?
+    receive_at         DateTime?
+    receive_user_id         Int?
     complaint_type_id   Int?
     complainant_id      Int?
     is_anonymous        Int?        @db.TinyInt
     complaint_title     String?     @db.VarChar(200)
     complaint_detail    String?     @db.Text
     incident_date       DateTime    @db.Date
+    incident_time       DateTime    @db.Time(0)
     location_coordinates  String?   @db.VarChar(100)
     incident_location   String?     @db.VarChar(200)
-    incident_time       DateTime    @db.Time(0)
+
     day_time            Int?        @db.TinyInt
     file_attach_1       String?     @db.VarChar(100)
     file_attach_2       String?     @db.VarChar(100)
@@ -502,8 +534,10 @@ model complaint {
     notice_type         Int?        @db.TinyInt
     jcoms_no            String?     @db.VarChar(100)
     pol_no              String?     @db.VarChar(100)
-    receive_no          String?     @db.VarChar(100)
-    forward_no          String?     @db.VarChar(100)
+    receive_doc_no      String?     @db.VarChar(100)
+    receive_doc_date    DateTime?   @db.Date
+    forward_doc_no      String?     @db.VarChar(100)
+    forward_doc_date    DateTime    @db.Date
     receive_status      Int?        @db.TinyInt
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -514,7 +548,7 @@ model complaint {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    user                user?               @relation(fields: [received_by], references: [id])
+    user                user?               @relation(fields: [receive_user_id], references: [id])
     complaint_type      complaint_type?     @relation(fields: [complaint_type_id], references: [id])
     complainant         complainant?        @relation(fields: [complainant_id], references: [id])
     complaint_channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])
@@ -530,7 +564,7 @@ model complaint {
 
     accused             accused[]
     complaint_forward   complaint_forward[]
-    complaint_reporting complaint_reporting[]
+    complaint_report complaint_report[]
     complaint_follow    complaint_follow[]
 
 }
@@ -590,10 +624,12 @@ model order {
 //รอดำเนินการ
 model complaint_forward {
     id                  Int         @id @default(autoincrement())
-
     complaint_id        Int?
     forward_doc_no      String?     @db.VarChar(100)
-    forward_doc_date    DateTime?
+    forward_doc_date    DateTime?   @db.Date
+    forward_doc_filename String?    @db.VarChar(100)
+    forward_user_id     Int?
+    forward_at          DateTime?
     from_inspector_id   Int?
     from_bureau_id      Int?
     from_agency_id      Int?
@@ -604,9 +640,13 @@ model complaint_forward {
     to_agency_id        Int?
     receive_doc_no      String?     @db.VarChar(100)
     receive_doc_date    DateTime?
+    receive_doc_filename String?    @db.VarChar(100)
+    receive_user_id     Int?
+    receive_at          DateTime?
     order_id            Int?
     order_detail        String?     @db.VarChar(100)
-    receive_status      Int?
+    receive_status      Int?        @db.TinyInt
+    state_id            Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -618,6 +658,10 @@ model complaint_forward {
 
     complaint           complaint?      @relation(fields: [complaint_id], references: [id])
     order               order?          @relation(fields: [order_id], references: [id])
+    state               state?          @relation(fields: [state_id], references: [id])
+
+    forward_user        user?           @relation(name: "forward_from_user", fields: [forward_user_id], references: [id])
+    receive_user        user?           @relation(name: "forward_receive_by_user", fields: [receive_user_id], references: [id])
 
     from_inspector      inspector?      @relation(name: "forward_from_inspector", fields: [from_inspector_id], references: [id])
     from_bureau         bureau?         @relation(name: "forward_from_bureau", fields: [from_bureau_id], references: [id])
@@ -645,17 +689,21 @@ model proceed_status {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    complaint_reporting complaint_reporting[]
+    complaint_report complaint_report[]
 
     state               state?          @relation(fields: [state_id], references: [id])
 }
 
 //รอดำเนินการ
-model complaint_reporting {
+model complaint_report {
     id                  Int         @id @default(autoincrement())
-
     complaint_id        Int?
     proceed_status_id   Int?
+    report_doc_no       String?     @db.VarChar(100)
+    report_doc_date     DateTime?   @db.Date
+    report_doc_filename String?     @db.VarChar(100)
+    report_user_id      Int?
+    report_at           DateTime?
     from_inspector_id   Int?
     from_bureau_id      Int?
     from_division_id    Int?
@@ -664,7 +712,12 @@ model complaint_reporting {
     to_bureau_id        Int?
     to_division_id      Int?
     to_agency_id        Int?
-    proceed_state_id    Int?
+    receive_doc_no      String?     @db.VarChar(100)
+    receive_doc_date    DateTime?   @db.Date
+    receive_doc_filename String?    @db.VarChar(100)
+    receive_user_id     Int?
+    receive_at          DateTime?
+    state_id            Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -676,6 +729,8 @@ model complaint_reporting {
 
     complaint           complaint?      @relation(fields: [complaint_id], references: [id])
     proceed_status      proceed_status? @relation(fields: [proceed_status_id], references: [id])
+    report_user         user?           @relation(name: "report_from_user", fields: [report_user_id], references: [id])
+    receive_user        user?           @relation(name: "report_receive_by_user", fields: [receive_user_id], references: [id])
 
     from_inspector      inspector?      @relation(name: "report_from_inspector", fields: [from_inspector_id], references: [id])
     from_bureau         bureau?         @relation(name: "report_from_bureau", fields: [from_bureau_id], references: [id])
@@ -686,14 +741,28 @@ model complaint_reporting {
     to_bureau           bureau?         @relation(name: "report_to_bureau", fields: [to_bureau_id], references: [id])
     to_agency           agency?         @relation(name: "report_to_agency", fields: [to_agency_id], references: [id])
     to_division         division?       @relation(name: "report_to_division", fields: [to_division_id], references: [id])
+
+    state               state?          @relation(fields: [state_id], references: [id])
 }
 //รอดำเนินการ
 model complaint_follow {
     id                  Int         @id @default(autoincrement())
-
     complaint_id        Int
+    inspector_id        Int?
+
     detail              String?     @db.VarChar(200)
-    inspector_id      Int?
+
+    follow_doc_no       String?     @db.VarChar(100)
+    follow_doc_date     DateTime?   @db.Date
+    follow_doc_filename String?     @db.VarChar(100)
+    follow_user_id      Int?
+    follow_at           DateTime?
+
+    receive_doc_no      String?     @db.VarChar(100)
+    receive_doc_date    DateTime?   @db.Date
+    receive_doc_filename String?    @db.VarChar(100)
+    receive_user_id     Int?
+    receive_at          DateTime?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -705,13 +774,24 @@ model complaint_follow {
 
     complaint           complaint?          @relation(fields: [complaint_id], references: [id])
     inspector           inspector?          @relation(fields: [inspector_id], references: [id])
+
+    follow_user         user?           @relation(name: "follow_from_user", fields: [follow_user_id], references: [id])
+    receive_user        user?           @relation(name: "follow_receive_by_user", fields: [receive_user_id], references: [id])
 }
 
 model login_log {
     id                  Int         @id @default(autoincrement())
     user_id             Int
     logined_at          DateTime?   @default(now())     @db.DateTime(0)
-    ip_address          String?      @db.VarChar(100)
+    ip_address          String?     @db.VarChar(100)
+    user_agent          String      @db.VarChar(200)
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
 
     user                user?          @relation(fields: [user_id], references: [id])
 }

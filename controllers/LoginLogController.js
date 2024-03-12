@@ -1,24 +1,14 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const $table = "complainant";
-const { v4: uuidv4 } = require('uuid');
+const $table = "login_log";
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
-    uuid: true,
-    card_type: true,
-    id_card: true,
-    card_photo: true,
-    prefix_name_id: true,
-    firstname: true,
-    lastname: true,
-    birthday: true,
-    occupation_id: true,
-    occupation_text: true,
-    phone_number: true,
-    email: true,
-    line_id: true,
+    user_id: true,
+    logined_at: true,
+    ip_address: true,
+    user_agent: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -36,48 +26,14 @@ const filterData = (req) => {
         $where["id"] = parseInt(req.query.id);
     }
 
-    if (req.query.uuid) {
-        $where["uuid"] =  {contains: req.query.uuid};
+    if (req.query.user_id) {
+        $where["user_id"] = parseInt(req.query.user_id);
     }
 
-    if (req.query.card_type) {
-        $where["card_type"] = parseInt(req.query.card_type);
-    }
-
-    if (req.query.prefix_name_id) {
-        $where["prefix_name_id"] = parseInt(req.query.prefix_name_id);
-    }
-
-    if (req.query.firstname) {
-        $where["firstname"] =  {contains: req.query.firstname};
-    }
-
-    if (req.query.lastname) {
-        $where["lastname"] =  {contains: req.query.lastname};
-    }
-
-    if (req.query.birthday) {
-        $where["birthday"] =  {contains: req.query.birthday};
-    }
-
-    if (req.query.occupation_id) {
-        $where["occupation_id"] = parseInt(req.query.occupation_id);
-    }
-
-    if (req.query.occupation_text) {
-        $where["occupation_text"] =  {contains: req.query.occupation_text};
-    }
-
-    if (req.query.phone_number) {
-        $where["phone_number"] =  {contains: req.query.phone_number};
-    }
-
-    if (req.query.email) {
-        $where["email"] =  {contains: req.query.email};
-    }
-
-    if (req.query.line_id) {
-        $where["line_id"] =  {contains: req.query.line_id};
+    if (req.query.logined_at) {
+        $where["logined_at"] = {
+            contains: req.query.logined_at,
+        }
     }
 
     if (req.query.is_active) {
@@ -118,12 +74,12 @@ const countDataAndOrder = async (req, $where) => {
     };
 };
 
+
 const methods = {
     async onGetAll(req, res) {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
-
 
             const item = await prisma[$table].findMany({
                 select: selectField,
@@ -169,19 +125,10 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
-                    uuid: uuidv4(),
-                    card_type: Number(req.body.card_type),
-                    id_card: req.body.id_card,
-                    card_photo: req.body.card_photo,
-                    prefix_name_id: Number(req.body.prefix_name_id),
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname,
-                    birthday: req.body.birthday != null ? new Date(req.body.birthday) : undefined,
-                    occupation_id: Number(req.body.occupation_id),
-                    occupation_text: req.body.occupation_text,
-                    phone_number: req.body.phone_number,
-                    email: req.body.email,
-                    line_id: req.body.line_id,
+                    user_id: Number(req.body.user_id),
+                    logined_at: req.body.logined_at != null ? new Date(req.body.logined_at) : undefined,
+                    ip_address: req.body.ip_address,
+                    user_agent: req.body.user_agent,
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -201,18 +148,10 @@ const methods = {
                     id: Number(req.params.id),
                 },
                 data: {
-                    card_type: req.body.card_type != null ? Number(req.body.card_type) : undefined,
-                    id_card: req.body.id_card != null ? req.body.id_card : undefined,
-                    card_photo: req.body.card_photo != null ? req.body.card_photo : undefined,
-                    prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
-                    firstname: req.body.firstname != null ? req.body.firstname : undefined,
-                    lastname: req.body.lastname != null ? req.body.lastname : undefined,
-                    birthday: req.body.birthday != null ? new Date(req.body.birthday) : undefined,
-                    occupation_id: req.body.occupation_id != null ? Number(req.body.occupation_id) : undefined,
-                    occupation_text: req.body.occupation_text != null ? req.body.occupation_text : undefined,
-                    phone_number: req.body.phone_number != null ? req.body.phone_number : undefined,
-                    email: req.body.email != null ? req.body.email : undefined,
-                    line_id: req.body.line_id != null ? req.body.line_id : undefined,
+                    user_id: req.body.user_id != null ? Number(req.body.user_id) : undefined,
+                    logined_at: req.body.logined_at != null ? new Date(req.body.logined_at) : undefined,
+                    ip_address: req.body.ip_address != null ? req.body.ip_address : undefined,
+                    user_agent: req.body.user_agent != null ? req.body.user_agent : undefined,
                     // updated_by: null,
                 },
             });

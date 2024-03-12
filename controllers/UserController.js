@@ -1,10 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const $table = "user";
+const { v4: uuidv4 } = require('uuid');
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
+    uuid: true,
     username: true,
     prefix_name_id: true,
     firstname: true,
@@ -230,6 +232,7 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
+                    uuid: uuidv4(),
                     username: req.body.username,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
