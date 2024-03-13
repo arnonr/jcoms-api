@@ -22,7 +22,7 @@ model prefix_name {
     updated_by          String?     @db.VarChar(32)
     deleted_at          DateTime?
     deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    is_active           Int?        @db.TinyInt @default(1)
 
     user                user[]
     complainant         complainant[]
@@ -121,7 +121,7 @@ model division {
     name_en             String?     @db.VarChar(100)
     name_en_abbr        String?     @db.VarChar(100)
     sort_order          Int?
-    bureau_id           Int
+    bureau_id           Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -135,7 +135,7 @@ model division {
     user                user[]
     complainant         complainant[]
 
-    bureau              bureau     @relation(fields: [bureau_id], references: [id])
+    bureau              bureau?     @relation(fields: [bureau_id], references: [id])
     complaint           complaint[]
     accused             accused[]
     forward_from_division       complaint_forward[]     @relation(name: "forward_from_division")
@@ -181,7 +181,7 @@ model role {
 
     name_th             String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
-
+    description         String?     @db.VarChar(200)
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -217,9 +217,9 @@ model section {
 
 //รอดำเนินการ
 model user {
-    id                  Int         @id @default(autoincrement())
-    uuid                String?     @db.VarChar(100) @unique
-    username            String?     @db.VarChar(32) @unique
+    id                  Int        @id @default(autoincrement())
+    uuid                String     @db.VarChar(100) @unique
+    username            String     @db.VarChar(32) @unique
     prefix_name_id      Int?
     firstname           String?     @db.VarChar(100)
     lastname            String?     @db.VarChar(100)
@@ -286,6 +286,7 @@ model complaint_type {
 
     topic_category      topic_category[]
     complaint           complaint[]
+    proceed_status      proceed_status[]
 }
 
 model occupation {
@@ -504,8 +505,8 @@ model complaint {
     is_anonymous        Int?        @db.TinyInt
     complaint_title     String?     @db.VarChar(200)
     complaint_detail    String?     @db.Text
-    incident_date       DateTime    @db.Date
-    incident_time       DateTime    @db.Time(0)
+    incident_date       DateTime?    @db.Date
+    incident_time       DateTime?    @db.Time(0)
     location_coordinates  String?   @db.VarChar(100)
     incident_location   String?     @db.VarChar(200)
 
@@ -537,7 +538,7 @@ model complaint {
     receive_doc_no      String?     @db.VarChar(100)
     receive_doc_date    DateTime?   @db.Date
     forward_doc_no      String?     @db.VarChar(100)
-    forward_doc_date    DateTime    @db.Date
+    forward_doc_date    DateTime?   @db.Date
     receive_status      Int?        @db.TinyInt
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -624,7 +625,7 @@ model order {
 //รอดำเนินการ
 model complaint_forward {
     id                  Int         @id @default(autoincrement())
-    complaint_id        Int?
+    complaint_id        Int
     forward_doc_no      String?     @db.VarChar(100)
     forward_doc_date    DateTime?   @db.Date
     forward_doc_filename String?    @db.VarChar(100)
@@ -680,7 +681,7 @@ model proceed_status {
     name_th             String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
     state_id            Int?
-
+    complaint_type_id   Int?
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -692,12 +693,13 @@ model proceed_status {
     complaint_report complaint_report[]
 
     state               state?          @relation(fields: [state_id], references: [id])
+    complaint_type      complaint_type?          @relation(fields: [complaint_type_id], references: [id])
 }
 
 //รอดำเนินการ
 model complaint_report {
     id                  Int         @id @default(autoincrement())
-    complaint_id        Int?
+    complaint_id        Int
     proceed_status_id   Int?
     report_doc_no       String?     @db.VarChar(100)
     report_doc_date     DateTime?   @db.Date
@@ -785,6 +787,7 @@ model login_log {
     logined_at          DateTime?   @default(now())     @db.DateTime(0)
     ip_address          String?     @db.VarChar(100)
     user_agent          String      @db.VarChar(200)
+    status              Int?        @db.TinyInt
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)

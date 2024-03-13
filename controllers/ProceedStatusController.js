@@ -8,6 +8,7 @@ const selectField = {
     name_th: true,
     name_en: true,
     state_id: true,
+    complaint_type_id: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -58,6 +59,10 @@ const filterData = (req) => {
 
     if (req.query.state_id) {
         $where["state_id"] = parseInt(req.query.state_id);
+    }
+
+    if (req.query.complaint_type_id) {
+        $where["complaint_type_id"] = parseInt(req.query.complaint_type_id);
     }
 
     if (req.query.is_active) {
@@ -175,6 +180,7 @@ const methods = {
                     name_en: req.body.name_en,
                     is_active: Number(req.body.is_active),
                     state_id: Number(req.body.state_id),
+                    complaint_type_id: Number(req.body.complaint_type_id),
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -198,6 +204,7 @@ const methods = {
                     name_en: req.body.name_en != null ? req.body.name_en : undefined,
                     is_active: Number(req.body.is_active),
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
+                    complaint_type_id: req.body.complaint_type_id != null ? Number(req.body.complaint_type_id) : undefined,
                     // updated_by: null,
                 },
             });

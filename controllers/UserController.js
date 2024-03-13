@@ -2,7 +2,15 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const $table = "user";
 const { v4: uuidv4 } = require('uuid');
+jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
+const encrypt = (text) => {
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(text, salt);
+    return hash;
+};
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
@@ -26,7 +34,7 @@ const selectField = {
     line_id: true,
     birthday: true,
     file_attach: true,
-    password: true,
+    // password: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -210,8 +218,7 @@ const methods = {
 
     async onGetById(req, res) {
         try {
-            let prismaLang = checkLanguage(req);
-            const item = await prismaLang[$table].findUnique({
+            const item = await prisma[$table].findUnique({
                 select: selectField,
                 where: {
                     id: Number(req.params.id),
@@ -250,7 +257,8 @@ const methods = {
                     status: Number(req.body.status),
                     email: req.body.email,
                     line_id: req.body.line_id,
-                    password: req.body.password,
+                    // password: req.body.password,
+                    password: encrypt(req.body.password),
                     birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
 
                     // created_by: null,
@@ -289,7 +297,10 @@ const methods = {
                     status: req.body.status != null ? Number(req.body.status) : undefined,
                     email: req.body.email != null ? req.body.email : undefined,
                     line_id: req.body.line_id != null ? req.body.line_id : undefined,
-                    password: req.body.password != null ? req.body.password : undefined,
+
+                    // password: req.body.password != null ? req.body.password : undefined,
+                    password: req.body.password != null ? encrypt(req.body.password) : undefined,
+
                     birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
 
                     // updated_by: null,
@@ -319,6 +330,44 @@ const methods = {
             });
         } catch (error) {
             res.status(400).json({ msg: error.message });
+        }
+    },
+
+    async onLogin(req, res) {
+        try {
+            const item = await prisma[$table].findUnique({
+                select: { ...selectField, password: true},
+                where: {
+                    username: req.body.username,
+                    is_active: 1
+                },
+            });
+
+            // if(item == null) throw new Error("Username หรือ Password ไม่ถูกต้อง")
+
+            if (item == null || bcrypt.compareSync(req.body.password, item.password) == false) {
+                throw new Error("Invalid credential");
+            }
+
+            if(item.status == 1) {
+                throw new Error("Not Confirm Email");
+            }
+
+            const payload = item;
+            const secretKey = process.env.SECRET_KEY;
+
+            const token = jwt.sign(payload, secretKey, {
+                expiresIn: "90d",
+            });
+
+            res.status(200).json({
+                data: item,
+                token: token,
+                msg: " success",
+            });
+
+        } catch (error) {
+            res.status(404).json({ msg: error.message });
         }
     },
 };

@@ -7,6 +7,7 @@ const selectField = {
     id: true,
     name_th: true,
     name_en: true,
+    description: true,
     created_at: true,
     created_by: true,
     updated_at: true,

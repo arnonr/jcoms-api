@@ -9,6 +9,7 @@ const selectField = {
     logined_at: true,
     ip_address: true,
     user_agent: true,
+    status: true,
     created_at: true,
     created_by: true,
     updated_at: true,
