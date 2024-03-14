@@ -549,7 +549,7 @@ model complaint {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    user                user?               @relation(fields: [receive_user_id], references: [id])
+    receive_user        user?               @relation(fields: [receive_user_id], references: [id])
     complaint_type      complaint_type?     @relation(fields: [complaint_type_id], references: [id])
     complainant         complainant?        @relation(fields: [complainant_id], references: [id])
     complaint_channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])
