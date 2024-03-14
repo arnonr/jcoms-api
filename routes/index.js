@@ -28,6 +28,7 @@ const complaintForward = require("./api/complaint-forward");
 const complaintFollow = require("./api/complaint-follow");
 const loginLog = require("./api/login-log");
 const complaint = require("./api/complaint");
+const accused = require("./api/accused");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -57,7 +58,8 @@ router.use(
   router.use("/complaint-forward", complaintForward),
   router.use("/complaint-follow", complaintFollow),
   router.use("/login-log", loginLog),
-  router.use("/complaint", complaint)
+  router.use("/complaint", complaint),
+  router.use("/accused", accused)
 );
 
 module.exports = router;

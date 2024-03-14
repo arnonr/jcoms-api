@@ -26,6 +26,23 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    follow_user: {
+        select: {
+            firstname: true,
+            lastname: true
+        }
+    },
+    receive_user: {
+        select: {
+            firstname: true,
+            lastname: true
+        }
+    },
+    inspector: {
+        select: {
+            name_th: true
+        }
+    }
 };
 
 const filterData = (req) => {

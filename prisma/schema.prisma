@@ -582,7 +582,7 @@ model accused {
     inspector_id        Int?
     bureau_id           Int?
     division_id         Int?
-    complaint_id        Int?
+    complaint_id        Int
     type                Int?        @db.TinyInt
     detail              String?     @db.VarChar(200)
 

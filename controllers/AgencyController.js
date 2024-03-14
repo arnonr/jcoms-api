@@ -18,6 +18,21 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    // division: {
+    //     select:{
+    //         name_th: true,
+    //         bureau: {
+    //             select: {
+    //                 name_th: true,
+    //                 inspector: {
+    //                     select: {
+    //                         name_th: true,
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 };
 const filterData = (req) => {
     let $where = {

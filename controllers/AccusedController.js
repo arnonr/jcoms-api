@@ -1,40 +1,23 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const $table = "user";
-const { v4: uuidv4 } = require('uuid');
-jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const $table = "accused";
 
-const encrypt = (text) => {
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(text, salt);
-    return hash;
-};
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
-    uuid: true,
-    username: true,
     prefix_name_id: true,
     firstname: true,
     lastname: true,
-    officer_code: true,
-    id_card: true,
     position_id: true,
     section_id: true,
-    role_id: true,
+    agency_id: true,
     inspector_id: true,
     bureau_id: true,
     division_id: true,
-    agency_id: true,
-    phone_number: true,
-    status: true,
-    email: true,
-    line_id: true,
-    birthday: true,
-    file_attach: true,
-    // password: true,
+    complaint_id: true,
+    type: true,
+    detail: true,
+
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -77,11 +60,6 @@ const selectField = {
             name_th: true
         }
     },
-    role:{
-        select:{
-            name_th: true
-        }
-    }
 };
 const filterData = (req) => {
     let $where = {
@@ -90,10 +68,6 @@ const filterData = (req) => {
 
     if (req.query.id) {
         $where["id"] = parseInt(req.query.id);
-    }
-
-    if (req.query.username) {
-        $where["username"] =  {contains: req.query.username};
     }
 
     if (req.query.prefix_name_id) {
@@ -108,24 +82,12 @@ const filterData = (req) => {
         $where["lastname"] =  {contains: req.query.lastname};
     }
 
-    if (req.query.officer_code) {
-        $where["officer_code"] =  {contains: req.query.officer_code};
+    if (req.query.type) {
+        $where["type"] = parseInt(req.query.type);
     }
 
-    if (req.query.id_card) {
-        $where["id_card"] =  {contains: req.query.id_card};
-    }
-
-    if (req.query.position_id) {
-        $where["position_id"] = parseInt(req.query.position_id);
-    }
-
-    if (req.query.section_id) {
-        $where["section_id"] = parseInt(req.query.section_id);
-    }
-
-    if (req.query.role_id) {
-        $where["role_id"] = parseInt(req.query.role_id);
+    if (req.query.complaint_id) {
+        $where["complaint_id"] = parseInt(req.query.complaint_id);
     }
 
     if (req.query.inspector_id) {
@@ -144,28 +106,12 @@ const filterData = (req) => {
         $where["agency_id"] = parseInt(req.query.agency_id);
     }
 
-    if (req.query.phone_number) {
-        $where["phone_number"] =  {contains: req.query.phone_number};
+    if (req.query.section_id) {
+        $where["section_id"] = parseInt(req.query.section_id);
     }
 
-    if (req.query.status) {
-        $where["status"] = parseInt(req.query.status);
-    }
-
-    if (req.query.email) {
-        $where["email"] =  {contains: req.query.email};
-    }
-
-    if (req.query.line_id) {
-        $where["line_id"] =  {contains: req.query.line_id};
-    }
-
-    if (req.query.birthday) {
-        $where["birthday"] =  {contains: req.query.birthday};
-    }
-
-    if (req.query.file_attach) {
-        $where["file_attach"] =  {contains: req.query.file_attach};
+    if (req.query.position_id) {
+        $where["position_id"] = parseInt(req.query.position_id);
     }
 
     if (req.query.is_active) {
@@ -204,28 +150,7 @@ const countDataAndOrder = async (req, $where) => {
         $totalPage: $totalPage,
         $currentPage: $currentPage,
     };
-    };
-
-
-
-    const checkLanguage = (req) => {
-        let prismaLang = prisma.$extends({
-            result: {
-                table: {
-                    name: {
-                        needs: { name_th: true },
-                        compute(table) {
-                            return req.query.lang && req.query.lang == "en"
-                            ? table.name_en
-                            : table.name_th;
-                        },
-                    },
-                },
-            },
-        });
-
-        return prismaLang;
-    };
+};
 
 const methods = {
     async onGetAll(req, res) {
@@ -233,9 +158,8 @@ const methods = {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
 
-            let prismaLang = checkLanguage(req);
 
-            const item = await prismaLang[$table].findMany({
+            const item = await prisma[$table].findMany({
                 select: selectField,
                 where: $where,
                 orderBy: other.$orderBy,
@@ -279,28 +203,18 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
-                    uuid: uuidv4(),
-                    username: req.body.username,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
-                    officer_code: req.body.officer_code,
-                    id_card: req.body.id_card,
                     position_id: Number(req.body.position_id),
                     section_id: Number(req.body.section_id),
-                    role_id: Number(req.body.role_id),
+                    agency_id: Number(req.body.agency_id),
                     inspector_id: Number(req.body.inspector_id),
                     bureau_id: Number(req.body.bureau_id),
                     division_id: Number(req.body.division_id),
-                    agency_id: Number(req.body.agency_id),
-                    phone_number: req.body.phone_number,
-                    status: Number(req.body.status),
-                    email: req.body.email,
-                    line_id: req.body.line_id,
-                    // password: req.body.password,
-                    password: encrypt(req.body.password),
-                    birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
-
+                    complaint_id: Number(req.body.complaint_id),
+                    type: Number(req.body.type),
+                    detail: req.body.detail,
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -320,29 +234,18 @@ const methods = {
                     id: Number(req.params.id),
                 },
                 data: {
-                    username: req.body.username != null ? req.body.username : undefined,
                     prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname != null ? req.body.firstname : undefined,
                     lastname: req.body.lastname != null ? req.body.lastname : undefined,
-                    officer_code: req.body.officer_code != null ? req.body.officer_code : undefined,
-                    id_card: req.body.id_card != null ? req.body.id_card : undefined,
                     position_id: req.body.position_id != null ? Number(req.body.position_id) : undefined,
                     section_id: req.body.section_id != null ? Number(req.body.section_id) : undefined,
-                    role_id: req.body.role_id != null ? Number(req.body.role_id) : undefined,
+                    agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
                     inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
-                    agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
-                    phone_number: req.body.phone_number != null ? req.body.phone_number : undefined,
-                    status: req.body.status != null ? Number(req.body.status) : undefined,
-                    email: req.body.email != null ? req.body.email : undefined,
-                    line_id: req.body.line_id != null ? req.body.line_id : undefined,
-
-                    // password: req.body.password != null ? req.body.password : undefined,
-                    password: req.body.password != null ? encrypt(req.body.password) : undefined,
-
-                    birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
-
+                    complaint_id: req.body.complaint_id != null ? Number(req.body.complaint_id) : undefined,
+                    type: req.body.type != null ? Number(req.body.type) : undefined,
+                    detail: req.body.detail != null ? req.body.detail : undefined,
                     // updated_by: null,
                 },
             });
@@ -370,44 +273,6 @@ const methods = {
             });
         } catch (error) {
             res.status(400).json({ msg: error.message });
-        }
-    },
-
-    async onLogin(req, res) {
-        try {
-            const item = await prisma[$table].findUnique({
-                select: { ...selectField, password: true},
-                where: {
-                    username: req.body.username,
-                    is_active: 1
-                },
-            });
-
-            // if(item == null) throw new Error("Username หรือ Password ไม่ถูกต้อง")
-
-            if (item == null || bcrypt.compareSync(req.body.password, item.password) == false) {
-                throw new Error("Invalid credential");
-            }
-
-            if(item.status == 1) {
-                throw new Error("Not Confirm Email");
-            }
-
-            const payload = item;
-            const secretKey = process.env.SECRET_KEY;
-
-            const token = jwt.sign(payload, secretKey, {
-                expiresIn: "90d",
-            });
-
-            res.status(200).json({
-                data: item,
-                token: token,
-                msg: " success",
-            });
-
-        } catch (error) {
-            res.status(404).json({ msg: error.message });
         }
     },
 };

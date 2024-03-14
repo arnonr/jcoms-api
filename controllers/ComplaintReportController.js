@@ -34,6 +34,68 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    proceed_status: {
+        select: {
+            name_th: true
+        }
+    },
+    state: {
+        select: {
+            name_th: true
+        }
+    },
+    report_user: {
+        select: {
+            firstname: true,
+            lastname: true
+        }
+    },
+    receive_user: {
+        select: {
+            firstname: true,
+            lastname: true
+        }
+    }  ,
+    from_inspector: {
+        select: {
+            name_th: true
+        }
+    },
+    from_bureau: {
+        select: {
+            name_th: true
+        }
+    },
+    from_division: {
+        select: {
+            name_th: true
+        }
+    },
+    from_agency: {
+        select: {
+            name_th: true
+        }
+    },
+    to_inspector: {
+        select: {
+            name_th: true
+        }
+    },
+    to_bureau: {
+        select: {
+            name_th: true
+        }
+    },
+    to_division: {
+        select: {
+            name_th: true
+        }
+    },
+    to_agency: {
+        select: {
+            name_th: true
+        }
+    },
 };
 
 const filterData = (req) => {

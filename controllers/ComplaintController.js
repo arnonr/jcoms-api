@@ -61,6 +61,81 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    complaint_type: {
+        select: {
+            // id: true,
+            name_th: true,
+            // name_en: true,
+        },
+    },
+    user:{
+        select: {
+            // id: true,
+            username: true,
+            firstname: true,
+            lastname: true,
+            officer_code: true,
+            // agency_id: true,
+            // agency: {
+            //     select: {
+            //         name_th: true,
+            //         name_en: true,
+            //     },
+            // },
+        }
+    },
+    complaint_channel: {
+        select: {
+            // id: true,
+            name_th: true,
+            // name_en: true,
+        },
+    },
+    inspector: {
+        select: {
+            name_th: true,
+        }
+    },
+    bureau: {
+        select: {
+            name_th: true,
+        }
+    },
+    division: {
+        select: {
+            name_th: true,
+        }
+    },
+    agency: {
+        select: {
+            name_th: true,
+        }
+    },
+    topic_type: {
+        select: {
+            name_th: true,
+        }
+    },
+    province: {
+        select: {
+            name_th: true,
+        }
+    },
+    district: {
+        select: {
+            name_th: true,
+        }
+    },
+    sub_district: {
+        select: {
+            name_th: true,
+        }
+    },
+    state: {
+        select: {
+            name_th: true,
+        }
+    }
 };
 
 const filterData = (req) => {
