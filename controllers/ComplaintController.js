@@ -68,7 +68,7 @@ const selectField = {
             // name_en: true,
         },
     },
-    user:{
+    receive_user:{
         select: {
             // id: true,
             username: true,
@@ -82,6 +82,23 @@ const selectField = {
             //         name_en: true,
             //     },
             // },
+        }
+    },
+    complainant: {
+
+    },
+    accused: {
+
+    },
+    channel_history: {
+        select: {
+            complaint_channel_id: true,
+            description: true,
+            channel: {
+                select: {
+                    name_th: true,
+                }
+            }
         }
     },
     complaint_channel: {

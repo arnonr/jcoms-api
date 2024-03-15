@@ -414,12 +414,29 @@ model sub_district {
     complaint           complaint[]
 }
 
+model complaint_channel_history {
+    id                  Int         @id @default(autoincrement())
+    complaint_id        Int
+    complaint_channel_id Int
+    description         String?     @db.VarChar(100)
+    can_input           Int?        @db.TinyInt
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+
+    complaint           complaint?  @relation(fields: [complaint_id], references: [id])
+    channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])
+}
+
 model complaint_channel {
     id                  Int         @id @default(autoincrement())
-
     name_th             String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
-
+    can_input           Int?        @db.TinyInt
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -429,6 +446,7 @@ model complaint_channel {
     is_active           Int?        @default(1)
 
     complaint           complaint[]
+    complaint_channel_history   complaint_channel_history[]
 }
 
 model topic_category {
@@ -567,6 +585,7 @@ model complaint {
     complaint_forward   complaint_forward[]
     complaint_report complaint_report[]
     complaint_follow    complaint_follow[]
+    channel_history   complaint_channel_history[]
 
 }
 
