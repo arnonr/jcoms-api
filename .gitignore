@@ -2,4 +2,5 @@
 .env
 /public/uploads
 package.json
+package-lock.json
 /prisma/migrations
