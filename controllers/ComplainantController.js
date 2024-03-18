@@ -19,6 +19,23 @@ const selectField = {
     phone_number: true,
     email: true,
     line_id: true,
+    house_number: true,
+    building: true,
+    moo: true,
+    soi: true,
+    road: true,
+    postal_code: true,
+    sub_district_id: true,
+    district_id: true,
+    province_id: true,
+
+    position_id: true,
+    section_id: true,
+    inspector_id: true,
+    bureau_id: true,
+    division_id: true,
+    agency_id: true,
+
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -26,6 +43,46 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    province: {
+        select: {
+            name_th: true,
+        }
+    },
+    district: {
+        select: {
+            name_th: true,
+        }
+    },
+    sub_district: {
+        select: {
+            name_th: true,
+        }
+    },
+    inspector: {
+        select: {
+            name_th: true,
+        }
+    },
+    bureau: {
+        select: {
+            name_th: true,
+        }
+    },
+    division: {
+        select: {
+            name_th: true,
+        }
+    },
+    agency: {
+        select: {
+            name_th: true,
+        }
+    },
+    section:{
+        select:{
+            name_th: true
+        }
+    },
 };
 const filterData = (req) => {
     let $where = {
@@ -80,8 +137,80 @@ const filterData = (req) => {
         $where["line_id"] =  {contains: req.query.line_id};
     }
 
+    if (req.query.house_number) {
+        $where["house_number"] = {
+            contains: req.query.house_number,
+        }
+    }
+
+    if (req.query.building) {
+        $where["building"] = {
+            contains: req.query.building,
+        }
+    }
+
+    if (req.query.moo) {
+        $where["moo"] = {
+            contains: req.query.moo,
+        }
+    }
+
+    if (req.query.soi) {
+        $where["soi"] = {
+            contains: req.query.soi,
+        }
+    }
+
+    if (req.query.road) {
+        $where["road"] = {
+            contains: req.query.road,
+        }
+    }
+
+    if (req.query.postal_code) {
+        $where["postal_code"] = {
+            contains: req.query.postal_code,
+        }
+    }
+
+    if (req.query.sub_district_id) {
+        $where["sub_district_id"] = parseInt(req.query.sub_district_id);
+    }
+
+    if (req.query.district_id) {
+        $where["district_id"] = parseInt(req.query.district_id);
+    }
+
+    if (req.query.province_id) {
+        $where["province_id"] = parseInt(req.query.province_id);
+    }
+
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
+    }
+
+    if (req.query.position_id) {
+        $where["position_id"] = parseInt(req.query.position_id);
+    }
+
+    if (req.query.section_id) {
+        $where["section_id"] = parseInt(req.query.section_id);
+    }
+
+    if (req.query.inspector_id) {
+        $where["inspector_id"] = parseInt(req.query.inspector_id);
+    }
+
+    if (req.query.bureau_id) {
+        $where["bureau_id"] = parseInt(req.query.bureau_id);
+    }
+
+    if (req.query.division_id) {
+        $where["division_id"] = parseInt(req.query.division_id);
+    }
+
+    if (req.query.agency_id) {
+        $where["agency_id"] = parseInt(req.query.agency_id);
     }
 
     return $where;
@@ -182,6 +311,22 @@ const methods = {
                     phone_number: req.body.phone_number,
                     email: req.body.email,
                     line_id: req.body.line_id,
+                    house_number: req.body.house_number,
+                    building: req.body.building,
+                    moo: req.body.moo,
+                    soi: req.body.soi,
+                    road: req.body.road,
+                    postal_code: req.body.postal_code,
+                    sub_district_id: Number(req.body.sub_district_id),
+                    district_id: Number(req.body.district_id),
+                    province_id: Number(req.body.province_id),
+
+                    position_id: Number(req.body.position_id),
+                    section_id: Number(req.body.section_id),
+                    inspector_id: Number(req.body.inspector_id),
+                    bureau_id: Number(req.body.bureau_id),
+                    division_id: Number(req.body.division_id),
+                    agency_id: Number(req.body.agency_id),
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -213,6 +358,21 @@ const methods = {
                     phone_number: req.body.phone_number != null ? req.body.phone_number : undefined,
                     email: req.body.email != null ? req.body.email : undefined,
                     line_id: req.body.line_id != null ? req.body.line_id : undefined,
+                    house_number: req.body.house_number != null ? req.body.house_number : undefined,
+                    building: req.body.building != null ? req.body.building : undefined,
+                    moo: req.body.moo != null ? req.body.moo : undefined,
+                    soi: req.body.soi != null ? req.body.soi : undefined,
+                    road: req.body.road != null ? req.body.road : undefined,
+                    postal_code: req.body.postal_code != null ? req.body.postal_code : undefined,
+                    sub_district_id: req.body.sub_district_id != null ? Number(req.body.sub_district_id) : undefined,
+                    district_id: req.body.district_id != null ? Number(req.body.district_id) : undefined,
+                    province_id: req.body.province_id != null ? Number(req.body.province_id) : undefined,
+
+                    section_id: req.body.section_id != null ? Number(req.body.section_id) : undefined,
+                    inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
+                    bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
+                    division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
+                    agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
                     // updated_by: null,
                 },
             });

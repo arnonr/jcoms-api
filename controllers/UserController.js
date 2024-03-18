@@ -286,13 +286,15 @@ const methods = {
                     lastname: req.body.lastname,
                     officer_code: req.body.officer_code,
                     id_card: req.body.id_card,
+                    role_id: Number(req.body.role_id),
+
                     position_id: Number(req.body.position_id),
                     section_id: Number(req.body.section_id),
-                    role_id: Number(req.body.role_id),
                     inspector_id: Number(req.body.inspector_id),
                     bureau_id: Number(req.body.bureau_id),
                     division_id: Number(req.body.division_id),
                     agency_id: Number(req.body.agency_id),
+
                     phone_number: req.body.phone_number,
                     status: Number(req.body.status),
                     email: req.body.email,
@@ -327,12 +329,14 @@ const methods = {
                     officer_code: req.body.officer_code != null ? req.body.officer_code : undefined,
                     id_card: req.body.id_card != null ? req.body.id_card : undefined,
                     position_id: req.body.position_id != null ? Number(req.body.position_id) : undefined,
-                    section_id: req.body.section_id != null ? Number(req.body.section_id) : undefined,
                     role_id: req.body.role_id != null ? Number(req.body.role_id) : undefined,
+
+                    section_id: req.body.section_id != null ? Number(req.body.section_id) : undefined,
                     inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
                     agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+
                     phone_number: req.body.phone_number != null ? req.body.phone_number : undefined,
                     status: req.body.status != null ? Number(req.body.status) : undefined,
                     email: req.body.email != null ? req.body.email : undefined,

@@ -275,6 +275,9 @@ model complaint_type {
 
     name_th             String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
+    due_date            Int
+    extend_time         Int
+    extend_date         Int
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -323,9 +326,18 @@ model complainant {
     email               String?     @db.VarChar(100)
     line_id             String?     @db.VarChar(45)
 
+    house_number        String?     @db.VarChar(100)
+    building            String?     @db.VarChar(100)
+    moo                 String?     @db.VarChar(100)
+    soi                 String?     @db.VarChar(100)
+    road                String?     @db.VarChar(100)
+    postal_code         String?     @db.VarChar(10)
+    sub_district_id     Int?
+    district_id         Int?
+    province_id         Int?
+
     position_id         Int?
     section_id          Int?
-    role_id             Int?
     inspector_id        Int?
     bureau_id           Int?
     division_id         Int?
@@ -350,6 +362,10 @@ model complainant {
     bureau              bureau?          @relation(fields: [bureau_id], references: [id])
     division            division?        @relation(fields: [division_id], references: [id])
     agency              agency?          @relation(fields: [agency_id], references: [id])
+
+    sub_district        sub_district?       @relation(fields: [sub_district_id], references: [id])
+    district            district?           @relation(fields: [district_id], references: [id])
+    province            province?           @relation(fields: [province_id], references: [id])
 }
 
 model province {
@@ -369,6 +385,7 @@ model province {
     district            district[]
     sub_district        sub_district[]
     complaint           complaint[]
+    complainant         complainant[]
 }
 
 model district {
@@ -390,6 +407,7 @@ model district {
 
     sub_district        sub_district[]
     complaint           complaint[]
+    complainant         complainant[]
 }
 
 model sub_district {
@@ -412,6 +430,7 @@ model sub_district {
     district            district?     @relation(fields: [district_id], references: [id])
     province            province?     @relation(fields: [province_id], references: [id])
     complaint           complaint[]
+    complainant         complainant[]
 }
 
 model complaint_channel_history {
