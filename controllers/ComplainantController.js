@@ -1,7 +1,28 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const uploadController = require("./UploadsController");
 const $table = "complainant";
 const { v4: uuidv4 } = require('uuid');
+
+// const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+    result: {
+        complainant: { //extend Model name
+            card_photo: { // the name of the new computed field
+                needs: { card_photo: true }, /* field */
+                compute(model) {
+
+                    let card_photo = null;
+
+                    if (model.card_photo != null) {
+                        card_photo = process.env.PATH_UPLOAD + model.card_photo;
+                    }
+
+                    return card_photo;
+                },
+            },
+        },
+    },
+});
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -296,12 +317,19 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let pathFile = await uploadController.onUploadFile(req, "/complainant/", "card_photo");
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     uuid: uuidv4(),
                     card_type: Number(req.body.card_type),
                     id_card: req.body.id_card,
-                    card_photo: req.body.card_photo,
+                    card_photo: pathFile,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
@@ -341,6 +369,13 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
         try {
+
+            let pathFile = await uploadController.onUploadFile(req,"/complainant/","card_photo");
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -348,7 +383,7 @@ const methods = {
                 data: {
                     card_type: req.body.card_type != null ? Number(req.body.card_type) : undefined,
                     id_card: req.body.id_card != null ? req.body.id_card : undefined,
-                    card_photo: req.body.card_photo != null ? req.body.card_photo : undefined,
+
                     prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname != null ? req.body.firstname : undefined,
                     lastname: req.body.lastname != null ? req.body.lastname : undefined,
@@ -373,6 +408,8 @@ const methods = {
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
                     agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+
+                    card_photo: pathFile != null ? pathFile : undefined,
                     // updated_by: null,
                 },
             });

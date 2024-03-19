@@ -1,7 +1,67 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+
+const uploadController = require("./UploadsController");
 const { v4: uuidv4 } = require('uuid');
 const $table = "complaint";
+
+// const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+    result: {
+        complaint: { //extend Model name
+            file_attach_1: { // the name of the new computed field
+                needs: { file_attach_1: true }, /* field */
+                compute(model) {
+                    let file_attach = null;
+                    if (model.file_attach_1 != null) {
+                        file_attach = process.env.PATH_UPLOAD + model.file_attach_1;
+                    }
+                    return file_attach;
+                },
+            },
+            file_attach_2: { // the name of the new computed field
+                needs: { file_attach_2: true }, /* field */
+                compute(model) {
+                    let file_attach = null;
+                    if (model.file_attach_2 != null) {
+                        file_attach = process.env.PATH_UPLOAD + model.file_attach_2;
+                    }
+                    return file_attach;
+                }
+            },
+            file_attach_3: { // the name of the new computed field
+                needs: { file_attach_3: true }, /* field */
+                compute(model) {
+                    let file_attach = null;
+                    if (model.file_attach_3 != null) {
+                        file_attach = process.env.PATH_UPLOAD + model.file_attach_3;
+                    }
+                    return file_attach;
+                }
+            },
+            file_attach_4: { // the name of the new computed field
+                needs: { file_attach_4: true }, /* field */
+                compute(model) {
+                    let file_attach = null;
+                    if (model.file_attach_4 != null) {
+                        file_attach = process.env.PATH_UPLOAD + model.file_attach_4;
+                    }
+                    return file_attach;
+                }
+            },
+            file_attach_5: { // the name of the new computed field
+                needs: { file_attach_5: true }, /* field */
+                compute(model) {
+                    let file_attach = null;
+                    if (model.file_attach_5 != null) {
+                        file_attach = process.env.PATH_UPLOAD + model.file_attach_5;
+                    }
+                    return file_attach;
+                }
+            },
+
+        },
+    },
+});
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -444,6 +504,17 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let pathFile1 = await uploadController.onUploadFile(req,"/complaint/","file_attach_1");
+            let pathFile2 = await uploadController.onUploadFile(req,"/complaint/","file_attach_2");
+            let pathFile3 = await uploadController.onUploadFile(req,"/complaint/","file_attach_3");
+            let pathFile4 = await uploadController.onUploadFile(req,"/complaint/","file_attach_4");
+            let pathFile5 = await uploadController.onUploadFile(req,"/complaint/","file_attach_5");
+
+            if (pathFile1 == "error" || pathFile2 == "error" || pathFile3 == "error" || pathFile4 == "error" || pathFile5 == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     is_active: Number(req.body.is_active),
@@ -465,11 +536,13 @@ const methods = {
                     location_coordinates: req.body.location_coordinates,
                     incident_location: req.body.incident_location,
                     day_time: parseInt(req.body.day_time),
-                    file_attach_1: req.body.file_attach_1,
-                    file_attach_2: req.body.file_attach_2,
-                    file_attach_3: req.body.file_attach_3,
-                    file_attach_4: req.body.file_attach_4,
-                    file_attach_5: req.body.file_attach_5,
+
+                    file_attach_1: pathFile1,
+                    file_attach_2: pathFile2,
+                    file_attach_3: pathFile3,
+                    file_attach_4: pathFile4,
+                    file_attach_5: pathFile5,
+
                     complaint_channel_id: Number(req.body.complaint_channel_id),
                     inspector_id: Number(req.body.inspector_id),
                     bureau_id: Number(req.body.bureau_id),
@@ -507,6 +580,17 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
         try {
+
+            let pathFile1 = await uploadController.onUploadFile(req,"/complaint/","file_attach_1");
+            let pathFile2 = await uploadController.onUploadFile(req,"/complaint/","file_attach_2");
+            let pathFile3 = await uploadController.onUploadFile(req,"/complaint/","file_attach_3");
+            let pathFile4 = await uploadController.onUploadFile(req,"/complaint/","file_attach_4");
+            let pathFile5 = await uploadController.onUploadFile(req,"/complaint/","file_attach_5");
+
+            if (pathFile1 == "error" || pathFile2 == "error" || pathFile3 == "error" || pathFile4 == "error" || pathFile5 == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -530,11 +614,13 @@ const methods = {
                     location_coordinates: req.body.location_coordinates != null ? req.body.location_coordinates : undefined,
                     incident_location: req.body.incident_location != null ? req.body.incident_location : undefined,
                     day_time: req.body.day_time != null ? Number(req.body.day_time) : undefined,
-                    file_attach_1: req.body.file_attach_1 != null ? req.body.file_attach_1 : undefined,
-                    file_attach_2: req.body.file_attach_2 != null ? req.body.file_attach_2 : undefined,
-                    file_attach_3: req.body.file_attach_3 != null ? req.body.file_attach_3 : undefined,
-                    file_attach_4: req.body.file_attach_4 != null ? req.body.file_attach_4 : undefined,
-                    file_attach_5: req.body.file_attach_5 != null ? req.body.file_attach_5 : undefined,
+
+                    file_attach_1: pathFile1 != null ? pathFile1 : undefined,
+                    file_attach_2: pathFile2 != null ? pathFile2 : undefined,
+                    file_attach_3: pathFile3 != null ? pathFile3 : undefined,
+                    file_attach_4: pathFile4 != null ? pathFile4 : undefined,
+                    file_attach_5: pathFile5 != null ? pathFile5 : undefined,
+
                     complaint_channel_id: req.body.complaint_channel_id != null ? Number(req.body.complaint_channel_id) : undefined,
                     inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,

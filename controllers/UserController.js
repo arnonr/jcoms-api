@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const uploadController = require("./UploadsController");
+
 const $table = "user";
 const { v4: uuidv4 } = require('uuid');
 jwt = require("jsonwebtoken");
@@ -11,6 +12,28 @@ const encrypt = (text) => {
     const hash = bcrypt.hashSync(text, salt);
     return hash;
 };
+
+// const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+    result: {
+        user: { //extend Model name
+            file_attach: { // the name of the new computed field
+                needs: { file_attach: true }, /* field */
+                compute(user) {
+
+                    let file_attach = null;
+
+                    if (user.file_attach != null) {
+                        file_attach = process.env.PATH_UPLOAD + user.file_attach;
+                    }
+
+                    return file_attach;
+                },
+            },
+        },
+    },
+});
+
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
@@ -277,6 +300,23 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let pathFile = await uploadController.onUploadFile(req,"/user/","file_attach");
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
+            const user = await prisma[$table].findUnique({
+                where: {
+                    username: req.body.username,
+                },
+            });
+
+            if(user != null) {
+                throw new Error("Username are already exist");
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     uuid: uuidv4(),
@@ -302,6 +342,7 @@ const methods = {
                     // password: req.body.password,
                     password: encrypt(req.body.password),
                     birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
+                    file_attach: pathFile,
 
                     // created_by: null,
                     // updated_by: null,
@@ -317,6 +358,13 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
         try {
+
+            let pathFile = await uploadController.onUploadFile(req,"/user/","file_attach");
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -346,6 +394,8 @@ const methods = {
                     password: req.body.password != null ? encrypt(req.body.password) : undefined,
 
                     birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
+
+                    file_attach: pathFile != null ? pathFile : undefined,
 
                     // updated_by: null,
                 },
