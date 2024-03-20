@@ -219,7 +219,7 @@ model section {
 model user {
     id                  Int        @id @default(autoincrement())
     uuid                String     @db.VarChar(100) @unique
-    username            String     @db.VarChar(32) @unique
+    email               String     @db.VarChar(100) @unique
     prefix_name_id      Int?
     firstname           String?     @db.VarChar(100)
     lastname            String?     @db.VarChar(100)
@@ -234,7 +234,6 @@ model user {
     agency_id           Int?
     phone_number        String?     @db.VarChar(100)
     status              Int?        @db.TinyInt
-    email               String?     @db.VarChar(100)
     line_id             String?     @db.VarChar(100)
     birthday            DateTime?   @db.Date
     file_attach         String?     @db.VarChar(200)
@@ -666,7 +665,7 @@ model complaint_forward {
     complaint_id        Int
     forward_doc_no      String?     @db.VarChar(100)
     forward_doc_date    DateTime?   @db.Date
-    forward_doc_filename String?    @db.VarChar(100)
+    forward_doc_filename String?    @db.VarChar(200)
     forward_user_id     Int?
     forward_at          DateTime?
     from_inspector_id   Int?
@@ -679,7 +678,7 @@ model complaint_forward {
     to_agency_id        Int?
     receive_doc_no      String?     @db.VarChar(100)
     receive_doc_date    DateTime?
-    receive_doc_filename String?    @db.VarChar(100)
+    receive_doc_filename String?    @db.VarChar(200)
     receive_user_id     Int?
     receive_at          DateTime?
     order_id            Int?
@@ -741,7 +740,7 @@ model complaint_report {
     proceed_status_id   Int?
     report_doc_no       String?     @db.VarChar(100)
     report_doc_date     DateTime?   @db.Date
-    report_doc_filename String?     @db.VarChar(100)
+    report_doc_filename String?     @db.VarChar(200)
     report_user_id      Int?
     report_at           DateTime?
     from_inspector_id   Int?
@@ -754,7 +753,7 @@ model complaint_report {
     to_agency_id        Int?
     receive_doc_no      String?     @db.VarChar(100)
     receive_doc_date    DateTime?   @db.Date
-    receive_doc_filename String?    @db.VarChar(100)
+    receive_doc_filename String?    @db.VarChar(200)
     receive_user_id     Int?
     receive_at          DateTime?
     state_id            Int?

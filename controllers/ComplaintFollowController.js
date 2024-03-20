@@ -1,6 +1,40 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const uploadController = require("./UploadsController");
 const $table = "complaint_follow";
+
+// const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+    result: {
+        complaint_follow: { //extend Model name
+            follow_doc_filename: { // the name of the new computed field
+                needs: { follow_doc_filename: true }, /* field */
+                compute(complaint_follow) {
+
+                    let follow_doc_filename = null;
+
+                    if (complaint_follow.follow_doc_filename != null) {
+                        follow_doc_filename = process.env.PATH_UPLOAD + complaint_follow.follow_doc_filename;
+                    }
+
+                    return follow_doc_filename;
+                },
+            },
+            receive_doc_filename: { // the name of the new computed field
+                needs: { receive_doc_filename: true }, /* field */
+                compute(complaint_follow) {
+
+                    let receive_doc_filename = null;
+
+                    if (complaint_follow.receive_doc_filename != null) {
+                        receive_doc_filename = process.env.PATH_UPLOAD + complaint_follow.receive_doc_filename;
+                    }
+
+                    return receive_doc_filename;
+                }
+            }
+        },
+    },
+});
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -184,6 +218,14 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let followDocPathFile = await uploadController.onUploadFile(req,"/complaint-follow/","follow_doc_filename");
+            let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-follow/","receive_doc_filename");
+
+            if (followDocPathFile == "error" || receiveDocPathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     complaint_id: Number(req.body.complaint_id),
@@ -192,14 +234,14 @@ const methods = {
 
                     follow_doc_no: req.body.follow_doc_no,
                     follow_doc_date: req.body.follow_doc_date != null ? new Date(req.body.follow_doc_date) : undefined,
-                    follow_doc_filename: req.body.follow_doc_filename,
+                    follow_doc_filename: followDocPathFile,
 
                     follow_user_id: Number(req.body.follow_user_id),
                     follow_at: req.body.follow_at != null ? new Date(req.body.follow_at) : undefined,
 
                     receive_doc_no: req.body.receive_doc_no,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
-                    receive_doc_filename: req.body.receive_doc_filename,
+                    receive_doc_filename: receiveDocPathFile,
 
                     receive_user_id: Number(req.body.receive_user_id),
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
@@ -219,6 +261,14 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
         try {
+
+            let followDocPathFile = await uploadController.onUploadFile(req,"/complaint-follow/","follow_doc_filename");
+            let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-follow/","receive_doc_filename");
+
+            if (followDocPathFile == "error" || receiveDocPathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -227,12 +277,11 @@ const methods = {
                     complaint_id: req.body.complaint_id != null ? Number(req.body.complaint_id) : undefined,
                     proceed_status_id: req.body.proceed_status_id != null ? Number(req.body.proceed_status_id) : undefined,
 
-                    report_doc_no: req.body.report_doc_no != null ? req.body.report_doc_no : undefined,
-                    report_doc_date: req.body.report_doc_date != null ? new Date(req.body.report_doc_date) : undefined,
-                    report_doc_filename: req.body.report_doc_filename != null ? req.body.report_doc_filename : undefined,
-
-                    report_user_id: req.body.report_user_id != null ? Number(req.body.report_user_id) : undefined,
-                    report_at: req.body.report_at != null ? new Date(req.body.report_at) : undefined,
+                    follow_doc_no: req.body.follow_doc_no != null ? req.body.follow_doc_no : undefined,
+                    follow_doc_date: req.body.follow_doc_date != null ? new Date(req.body.follow_doc_date) : undefined,
+                    follow_doc_filename: followDocPathFile != null ? followDocPathFile : undefined,
+                    follow_user_id: req.body.follow_user_id != null ? Number(req.body.follow_user_id) : undefined,
+                    follow_at: req.body.follow_at != null ? new Date(req.body.follow_at) : undefined,
 
                     from_inspector_id: req.body.from_inspector_id != null ? Number(req.body.from_inspector_id) : undefined,
                     from_bureau_id: req.body.from_bureau_id != null ? Number(req.body.from_bureau_id) : undefined,
@@ -245,7 +294,7 @@ const methods = {
 
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
-                    receive_doc_filename: req.body.receive_doc_filename != null ? req.body.receive_doc_filename : undefined,
+                    receive_doc_filename: receiveDocPathFile != null ? receiveDocPathFile : undefined,
 
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,

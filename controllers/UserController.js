@@ -38,7 +38,6 @@ const prisma = new PrismaClient().$extends({
 const selectField = {
     id: true,
     uuid: true,
-    username: true,
     prefix_name_id: true,
     firstname: true,
     lastname: true,
@@ -113,10 +112,6 @@ const filterData = (req) => {
 
     if (req.query.id) {
         $where["id"] = parseInt(req.query.id);
-    }
-
-    if (req.query.username) {
-        $where["username"] =  {contains: req.query.username};
     }
 
     if (req.query.prefix_name_id) {
@@ -309,18 +304,17 @@ const methods = {
 
             const user = await prisma[$table].findUnique({
                 where: {
-                    username: req.body.username,
+                    email: req.body.email,
                 },
             });
 
             if(user != null) {
-                throw new Error("Username are already exist");
+                throw new Error("Email are already exist");
             }
 
             const item = await prisma[$table].create({
                 data: {
                     uuid: uuidv4(),
-                    username: req.body.username,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
@@ -370,7 +364,6 @@ const methods = {
                     id: Number(req.params.id),
                 },
                 data: {
-                    username: req.body.username != null ? req.body.username : undefined,
                     prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname != null ? req.body.firstname : undefined,
                     lastname: req.body.lastname != null ? req.body.lastname : undefined,
@@ -432,7 +425,7 @@ const methods = {
             const item = await prisma[$table].findUnique({
                 select: { ...selectField, password: true},
                 where: {
-                    username: req.body.username,
+                    email: req.body.email,
                     is_active: 1
                 },
             });

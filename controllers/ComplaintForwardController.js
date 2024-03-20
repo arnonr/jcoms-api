@@ -1,6 +1,41 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const uploadController = require("./UploadsController");
+
 const $table = "complaint_forward";
+
+// const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+    result: {
+        complaint_forward: { //extend Model name
+            forward_doc_filename: { // the name of the new computed field
+                needs: { forward_doc_filename: true }, /* field */
+                compute(complaint_forward) {
+
+                    let forward_doc_filename = null;
+
+                    if (complaint_forward.forward_doc_filename != null) {
+                        forward_doc_filename = process.env.PATH_UPLOAD + complaint_forward.forward_doc_filename;
+                    }
+
+                    return forward_doc_filename;
+                },
+            },
+            receive_doc_filename: { // the name of the new computed field
+                needs: { receive_doc_filename: true }, /* field */
+                compute(complaint_forward) {
+
+                    let receive_doc_filename = null;
+
+                    if (complaint_forward.receive_doc_filename != null) {
+                        receive_doc_filename = process.env.PATH_UPLOAD + complaint_forward.receive_doc_filename;
+                    }
+
+                    return receive_doc_filename;
+                }
+            }
+        },
+    },
+});
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -292,13 +327,21 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let forwardDocPathFile = await uploadController.onUploadFile(req,"/complaint-forward/","forward_doc_filename");
+            let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-forward/","receive_doc_filename");
+
+            if (forwardDocPathFile == "error" || receiveDocPathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     is_active: Number(req.body.is_active),
                     complaint_id: Number(req.body.complaint_id),
                     forward_doc_no: req.body.forward_doc_no,
                     forward_doc_date: req.body.forward_doc_date != null ? new Date(req.body.forward_doc_date) : undefined,
-                    forward_doc_filename: req.body.forward_doc_filename,
+                    forward_doc_filename: forwardDocPathFile,
                     forward_user_id: Number(req.body.forward_user_id),
                     forward_at: req.body.forward_at != null ? new Date(req.body.forward_at) : undefined,
                     from_inspector_id: Number(req.body.from_inspector_id),
@@ -311,7 +354,7 @@ const methods = {
                     to_agency_id: Number(req.body.to_agency_id),
                     receive_doc_no: req.body.receive_doc_no,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
-                    receive_doc_filename: req.body.receive_doc_filename,
+                    receive_doc_filename: receiveDocPathFile,
                     receive_user_id: Number(req.body.receive_user_id),
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
                     order_id: Number(req.body.order_id),
@@ -332,6 +375,14 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
         try {
+
+            let forwardDocPathFile = await uploadController.onUploadFile(req,"/complaint-forward/","forward_doc_filename");
+            let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-forward/","receive_doc_filename");
+
+            if (forwardDocPathFile == "error" || receiveDocPathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -341,7 +392,7 @@ const methods = {
                     complaint_id: req.body.complaint_id != null ? Number(req.body.complaint_id) : undefined,
                     forward_doc_no: req.body.forward_doc_no != null ? req.body.forward_doc_no : undefined,
                     forward_doc_date: req.body.forward_doc_date != null ? new Date(req.body.forward_doc_date) : undefined,
-                    forward_doc_filename: req.body.forward_doc_filename != null ? req.body.forward_doc_filename : undefined,
+                    forward_doc_filename: forwardDocPathFile != null ? forwardDocPathFile : undefined,
 
                     forward_user_id: req.body.forward_user_id != null ? Number(req.body.forward_user_id) : undefined,
                     forward_at: req.body.forward_at != null ? new Date(req.body.forward_at) : undefined,
@@ -357,7 +408,7 @@ const methods = {
 
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
-                    receive_doc_filename: req.body.receive_doc_filename != null ? req.body.receive_doc_filename : undefined,
+                    receive_doc_filename: receiveDocPathFile != null ? receiveDocPathFile : undefined,
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
 
