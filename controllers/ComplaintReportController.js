@@ -274,7 +274,7 @@ const methods = {
                 totalData: other.$count,
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
-                msg: " success",
+                msg: "success",
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
@@ -292,7 +292,7 @@ const methods = {
 
             res.status(200).json({
                 data: item,
-                msg: " success",
+                msg: "success",
             });
         } catch (error) {
             res.status(404).json({ msg: error.message });

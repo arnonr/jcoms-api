@@ -267,7 +267,7 @@ const methods = {
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
                 lang: req.query.lang ? req.query.lang : "",
-                msg: " success",
+                msg: "success",
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
@@ -285,7 +285,7 @@ const methods = {
 
             res.status(200).json({
                 data: item,
-                msg: " success",
+                msg: "success",
             });
         } catch (error) {
             res.status(404).json({ msg: error.message });
@@ -450,7 +450,7 @@ const methods = {
             res.status(200).json({
                 data: item,
                 token: token,
-                msg: " success",
+                msg: "success",
             });
 
         } catch (error) {

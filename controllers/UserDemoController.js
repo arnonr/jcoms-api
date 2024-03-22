@@ -190,7 +190,7 @@ const filterData = (req) => {
             id: Number(req.params.id),
             },
         });
-        res.status(200).json({ data: item, msg: " success" });
+        res.status(200).json({ data: item, msg: "success" });
         } catch (error) {
         res.status(404).json({ msg: error.message });
         }
