@@ -534,8 +534,8 @@ model complaint {
     tracking_satisfaction_at DateTime?
     complaint_satisfaction Int?     @db.TinyInt
     complaint_satisfaction_at DateTime?
-    receive_at         DateTime?
-    receive_user_id         Int?
+    receive_at          DateTime?
+    receive_user_id     Int?
     complaint_type_id   Int?
     complainant_id      Int?
     is_anonymous        Int?        @db.TinyInt
@@ -544,7 +544,7 @@ model complaint {
     incident_date       DateTime?    @db.Date
     incident_time       DateTime?    @db.Time(0)
     location_coordinates  String?   @db.VarChar(100)
-    incident_location   String?     @db.VarChar(200)
+    incident_location   String?     @db.Text
 
     day_time            Int?        @db.TinyInt
     file_attach_1       String?     @db.VarChar(200)
