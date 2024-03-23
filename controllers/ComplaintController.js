@@ -5,64 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
 
-// const prisma = new PrismaClient();
-const prisma = new PrismaClient().$extends({
-    result: {
-        complaint: { //extend Model name
-            file_attach_1: { // the name of the new computed field
-                needs: { file_attach_1: true }, /* field */
-                compute(model) {
-                    let file_attach = null;
-                    if (model.file_attach_1 != null) {
-                        file_attach = process.env.PATH_UPLOAD + model.file_attach_1;
-                    }
-                    return file_attach;
-                },
-            },
-            file_attach_2: { // the name of the new computed field
-                needs: { file_attach_2: true }, /* field */
-                compute(model) {
-                    let file_attach = null;
-                    if (model.file_attach_2 != null) {
-                        file_attach = process.env.PATH_UPLOAD + model.file_attach_2;
-                    }
-                    return file_attach;
-                }
-            },
-            file_attach_3: { // the name of the new computed field
-                needs: { file_attach_3: true }, /* field */
-                compute(model) {
-                    let file_attach = null;
-                    if (model.file_attach_3 != null) {
-                        file_attach = process.env.PATH_UPLOAD + model.file_attach_3;
-                    }
-                    return file_attach;
-                }
-            },
-            file_attach_4: { // the name of the new computed field
-                needs: { file_attach_4: true }, /* field */
-                compute(model) {
-                    let file_attach = null;
-                    if (model.file_attach_4 != null) {
-                        file_attach = process.env.PATH_UPLOAD + model.file_attach_4;
-                    }
-                    return file_attach;
-                }
-            },
-            file_attach_5: { // the name of the new computed field
-                needs: { file_attach_5: true }, /* field */
-                compute(model) {
-                    let file_attach = null;
-                    if (model.file_attach_5 != null) {
-                        file_attach = process.env.PATH_UPLOAD + model.file_attach_5;
-                    }
-                    return file_attach;
-                }
-            },
-
-        },
-    },
-});
+const prisma = new PrismaClient();
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -85,11 +28,6 @@ const selectField = {
     incident_location: true,
     incident_time: true,
     day_time: true,
-    file_attach_1: true,
-    file_attach_2: true,
-    file_attach_3: true,
-    file_attach_4: true,
-    file_attach_5: true,
     complaint_channel_id: true,
     inspector_id: true,
     bureau_id: true,
