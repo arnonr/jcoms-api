@@ -547,11 +547,6 @@ model complaint {
     incident_location   String?     @db.Text
 
     day_time            Int?        @db.TinyInt
-    file_attach_1       String?     @db.VarChar(200)
-    file_attach_2       String?     @db.VarChar(200)
-    file_attach_3       String?     @db.VarChar(200)
-    file_attach_4       String?     @db.VarChar(200)
-    file_attach_5       String?     @db.VarChar(200)
     complaint_channel_id Int?
     inspector_id        Int?
     bureau_id           Int?
@@ -834,4 +829,20 @@ model login_log {
     is_active           Int?        @default(1)
 
     user                user?          @relation(fields: [user_id], references: [id])
+}
+
+model complaint_file_attach {
+    id                  Int         @id @default(autoincrement())
+
+    complaint_id        Int?
+    filename            String?     @db.VarChar(200)
+    secret_key          String?     @db.VarChar(100)
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
 }

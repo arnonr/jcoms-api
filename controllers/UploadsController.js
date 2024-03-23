@@ -30,17 +30,26 @@ const methods = {
             let date = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
             let nameFile = date + "_" + uuidv4() + "." + typeFile[1];
 
-            let uploadFolder = "/../public/uploads" + real_path;
+            const dir = "public/uploads" + real_path;
 
+            /* Create path if not exists */
+            try{
+                if (!fs.existsSync(dir)){
+                    console.log("Create path: " + dir);
+
+                    /* Create path */
+                    fs.mkdir(dir, { recursive: true }, (err) => {
+                        if(err) console.log(err);
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+            const uploadFolder = "/../" + dir;
             let pathUpload = path.resolve(
                 __dirname + uploadFolder + nameFile
             );
-
-            /* Create path if not exists */
-            // if (!fs.existsSync(uploadFolder)) {
-            // console.log("Create path: " + uploadFolder);
-            // fs.mkdirSync(uploadFolder);
-            // }
 
             // console.log(pathUpload);
 
@@ -57,6 +66,7 @@ const methods = {
             /* Move to path */
             uploadFile.mv(pathUpload, function (err) {
                 if (err) return err;
+                console.log('File uploaded and moved!');
             });
 
             pathFile = real_path + nameFile;
