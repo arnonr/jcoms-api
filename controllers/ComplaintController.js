@@ -413,6 +413,55 @@ const addComplaintChannelHistory = async (complaint_id, complaint_channel_ids, a
     }
 };
 
+const generateJcomsCode = async (id) => {
+    /* Update JCOMS Month Running */
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // Months are zero-based
+
+    const maxRunning = await prisma[$table].aggregate({
+        _max: {
+            jcoms_month_running: true,
+        },
+        where: {
+            created_at: {
+            gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
+            lt: new Date(currentYear, currentMonth, 1), // Start of the next month
+            },
+        },
+    });
+
+    const newRunningMonth = maxRunning._max.jcoms_month_running + 1;
+    const newRunningCode = newRunningMonth.toString().padStart(5, "0");
+    const yearCode = (currentYear + 543).toString().substring(2, 4);
+    const monthCode = currentMonth.toString().padStart(2, "0");
+
+    const jcoms_code = `${yearCode}${monthCode}${newRunningCode}`;
+
+    const item = await prisma[$table].findUnique({
+        select: {
+            jcoms_no: true,
+            jcoms_month_running: true
+        },
+        where: {
+            id: Number(id),
+        },
+    });
+
+    if (item.jcoms_no == null) {
+        await prisma[$table].update({
+            where: {
+                id: Number(id),
+            },
+            data: {
+                jcoms_no: jcoms_code,
+                jcoms_month_running: newRunningMonth,
+            },
+        })
+    }
+
+    // return [jcoms_code, newRunningMonth];
+}
+
 const methods = {
     async onGetAll(req, res) {
         try {
@@ -519,6 +568,7 @@ const methods = {
             });
 
             await addComplaintChannelHistory(item.id, req.body.complaint_channel_ids);
+            await generateJcomsCode(item.id);
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({
@@ -587,7 +637,7 @@ const methods = {
                     province_id: req.body.province_id != null ? Number(req.body.province_id) : undefined,
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
                     notice_type: req.body.notice_type != null ? req.body.notice_type : undefined,
-                    jcoms_no: req.body.jcoms_no != null ? req.body.jcoms_no : undefined,
+                    // jcoms_no: req.body.jcoms_no != null ? req.body.jcoms_no : undefined,
                     pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
@@ -601,6 +651,7 @@ const methods = {
 
             await deleteComplaintChannelHistory(req.params.id);
             await addComplaintChannelHistory(req.params.id, req.body.complaint_channel_ids);
+            await generateJcomsCode(req.params.id);
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({

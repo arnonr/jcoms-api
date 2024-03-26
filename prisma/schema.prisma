@@ -571,6 +571,8 @@ model complaint {
     forward_doc_date    DateTime?   @db.Date
     receive_status      Int?        @db.TinyInt
 
+    jcoms_month_running Int?
+
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
