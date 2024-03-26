@@ -541,8 +541,7 @@ model complaint {
     is_anonymous        Int?        @db.TinyInt
     complaint_title     String?     @db.VarChar(200)
     complaint_detail    String?     @db.Text
-    incident_date       DateTime?    @db.Date
-    incident_time       DateTime?    @db.Time(0)
+    incident_datetime   DateTime?
     location_coordinates  String?   @db.VarChar(100)
     incident_location   String?     @db.Text
 

@@ -23,10 +23,9 @@ const selectField = {
     is_anonymous: true,
     complaint_title: true,
     complaint_detail: true,
-    incident_date: true,
+    incident_datetime: true,
     location_coordinates: true,
     incident_location: true,
-    incident_time: true,
     day_time: true,
     complaint_channel_id: true,
     inspector_id: true,
@@ -211,15 +210,9 @@ const filterData = (req) => {
         }
     }
 
-    if (req.query.incident_date) {
-        $where["incident_date"] = {
-            contains: req.query.incident_date,
-        }
-    }
-
-    if (req.query.incident_time) {
-        $where["incident_time"] = {
-            contains: req.query.incident_time,
+    if (req.query.incident_datetime) {
+        $where["incident_datetime"] = {
+            contains: req.query.incident_datetime,
         }
     }
 
@@ -467,8 +460,7 @@ const methods = {
                     is_anonymous: Number(req.body.is_anonymous),
                     complaint_title: req.body.complaint_title,
                     complaint_detail: req.body.complaint_detail,
-                    incident_date: req.body.incident_date != null ? new Date(req.body.incident_date) : undefined,
-                    incident_time: req.body.incident_time != null ? new Date(req.body.incident_time) : undefined,
+                    incident_datetime: req.body.incident_datetime != null ? new Date(req.body.incident_datetime) : undefined,
                     location_coordinates: req.body.location_coordinates,
                     incident_location: req.body.incident_location,
                     day_time: parseInt(req.body.day_time),
@@ -548,8 +540,7 @@ const methods = {
                     is_anonymous: req.body.is_anonymous != null ? Number(req.body.is_anonymous) : undefined,
                     complaint_title: req.body.complaint_title != null ? req.body.complaint_title : undefined,
                     complaint_detail: req.body.complaint_detail != null ? req.body.complaint_detail : undefined,
-                    incident_date: req.body.incident_date != null ? new Date(req.body.incident_date) : undefined,
-                    incident_time: req.body.incident_time != null ? new Date(req.body.incident_time) : undefined,
+                    incident_datetime: req.body.incident_datetime != null ? new Date(req.body.incident_datetime) : undefined,
                     location_coordinates: req.body.location_coordinates != null ? req.body.location_coordinates : undefined,
                     incident_location: req.body.incident_location != null ? req.body.incident_location : undefined,
                     day_time: req.body.day_time != null ? Number(req.body.day_time) : undefined,
