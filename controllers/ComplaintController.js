@@ -389,6 +389,30 @@ const countDataAndOrder = async (req, $where) => {
     };
 };
 
+const deleteComplaintChannelHistory = async (complaint_id) => {
+    const complaint_history = await prisma.complaint_channel_history.deleteMany({
+        where: {
+            complaint_id: Number(complaint_id),
+        }
+    });
+};
+
+const addComplaintChannelHistory = async (complaint_id, complaint_channel_ids, authUsername) => {
+    if(Array.isArray(complaint_channel_ids)){
+        for(let i = 0; i < complaint_channel_ids.length; i++){
+            // console.log(complaint_channel_ids[i]);
+            const complaint_history = await prisma.complaint_channel_history.create({
+                data: {
+                    complaint_id: Number(complaint_id),
+                    complaint_channel_id: Number(complaint_channel_ids[i]),
+                    created_by: authUsername,
+                    created_at: new Date()
+                }
+            });
+        }
+    }
+};
+
 const methods = {
     async onGetAll(req, res) {
         try {
@@ -443,7 +467,6 @@ const methods = {
         }
 
         try {
-
             const item = await prisma[$table].create({
                 data: {
                     is_active: Number(req.body.is_active),
@@ -494,6 +517,8 @@ const methods = {
                     updated_at: new Date(),
                 },
             });
+
+            await addComplaintChannelHistory(item.id, req.body.complaint_channel_ids);
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({
@@ -573,6 +598,9 @@ const methods = {
                     updated_at: new Date(),
                 },
             });
+
+            await deleteComplaintChannelHistory(req.params.id);
+            await addComplaintChannelHistory(req.params.id, req.body.complaint_channel_ids);
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({
