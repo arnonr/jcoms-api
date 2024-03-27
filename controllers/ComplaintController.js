@@ -565,7 +565,7 @@ const methods = {
                     province_id: req.body.province_id != null ? Number(req.body.province_id) : undefined,
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
                     notice_type: parseInt(req.body.notice_type),
-                    jcoms_no: req.body.jcoms_no,
+
                     pol_no: req.body.pol_no,
                     receive_doc_no: req.body.receive_doc_no,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
@@ -650,13 +650,14 @@ const methods = {
                     province_id: req.body.province_id != null ? Number(req.body.province_id) : undefined,
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
                     notice_type: req.body.notice_type != null ? req.body.notice_type : undefined,
-                    // jcoms_no: req.body.jcoms_no != null ? req.body.jcoms_no : undefined,
+
                     pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
                     forward_doc_no: req.body.forward_doc_no != null ? req.body.forward_doc_no : undefined,
                     forward_doc_date: req.body.forward_doc_date != null ? new Date(req.body.forward_doc_date) : undefined,
                     receive_status: req.body.receive_status != null ? req.body.receive_status : undefined,
+
                     updated_by: authUsername,
                     updated_at: new Date(),
                 },
