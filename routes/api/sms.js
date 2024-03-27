@@ -4,6 +4,6 @@ const router = express.Router();
 const controllers = require("../../controllers/SmsController");
 
 
-router.post("/", controllers.onSendSms);
+router.post("/send-sms", controllers.onSendSms);
 
 module.exports = router;
