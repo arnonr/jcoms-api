@@ -533,7 +533,7 @@ const methods = {
                     complaint_satisfaction: Number(req.body.complaint_satisfaction),
                     complaint_satisfaction_at: req.body.complaint_satisfaction_at != null ? new Date(req.body.complaint_satisfaction_at) : undefined,
                     received_at: req.body.received_at != null ? new Date(req.body.received_at) : undefined,
-                    receive_user_id: Number(req.body.receive_user_id),
+                    receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     complaint_type_id: Number(req.body.complaint_type_id),
                     complainant_id: Number(req.body.complainant_id),
                     is_anonymous: Number(req.body.is_anonymous),
