@@ -669,7 +669,7 @@ const methods = {
             const JcomsCode = await generateJcomsCode(req.params.id);
 
             if(JcomsCode.jcoms_code == null) {
-                item.jcoms_no = JcomsCode.jcoms_code;
+                item.jcoms_no = JcomsCode.jcoms_no;
             }
 
             /* Update File Attach */

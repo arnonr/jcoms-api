@@ -31,6 +31,7 @@ const complaint = require("./api/complaint");
 const accused = require("./api/accused");
 const froala = require("./api/froala");
 const compiaintFileAttach = require("./api/complaint-file-attach");
+const sms = require("./api/sms");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -63,7 +64,8 @@ router.use(
   router.use("/complaint", complaint),
   router.use("/accused", accused),
   router.use("/froala", froala),
-  router.use("/complaint-file-attach", compiaintFileAttach)
+  router.use("/complaint-file-attach", compiaintFileAttach),
+  router.use("/sms", sms)
 );
 
 module.exports = router;
