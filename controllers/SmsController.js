@@ -32,9 +32,11 @@ const methods = {
                 password: "8GgqEuR50OeQkCiSIrfgJ58X84IAbt",
             };
 
-            axios.post(`https://api-v2.thaibulksms.com/sms`, params, {
+            const sms = await axios.post(`https://api-v2.thaibulksms.com/sms`, params, {
                 auth: auth,
             });
+
+            // console.log(sms.data);
 
             res.status(200).json({ ...params, msg: "success" });
 
