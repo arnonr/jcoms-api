@@ -547,6 +547,7 @@ model complaint {
 
     day_time            Int?        @db.TinyInt
     complaint_channel_id Int?
+    channel_history_text String?    @db.VarChar(200)
     inspector_id        Int?
     bureau_id           Int?
     division_id         Int?

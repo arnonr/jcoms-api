@@ -28,6 +28,7 @@ const selectField = {
     incident_location: true,
     day_time: true,
     complaint_channel_id: true,
+    channel_history_text: true,
     inspector_id: true,
     bureau_id: true,
     division_id: true,
@@ -234,6 +235,12 @@ const filterData = (req) => {
 
     if (req.query.complaint_channel_id) {
         $where["complaint_channel_id"] = parseInt(req.query.complaint_channel_id);
+    }
+
+    if(req.query.channel_history_text) {
+        $where["channel_history_text"] = {
+            contains: req.query.channel_history_text,
+        }
     }
 
     if (req.query.inspector_id) {
@@ -538,6 +545,7 @@ const methods = {
                     day_time: parseInt(req.body.day_time),
 
                     complaint_channel_id: Number(req.body.complaint_channel_id),
+                    channel_history_text: req.body.channel_history_text,
                     inspector_id: Number(req.body.inspector_id),
                     bureau_id: Number(req.body.bureau_id),
                     division_id: Number(req.body.division_id),
@@ -621,6 +629,7 @@ const methods = {
                     day_time: req.body.day_time != null ? Number(req.body.day_time) : undefined,
 
                     complaint_channel_id: req.body.complaint_channel_id != null ? Number(req.body.complaint_channel_id) : undefined,
+                    channel_history_text: req.body.channel_history_text != null ? req.body.channel_history_text : undefined,
                     inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,

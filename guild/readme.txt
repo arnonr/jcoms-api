@@ -5,3 +5,6 @@ Develop
 ขั้นตอนการ Migrate DB
 - npx prisma migrate dev --create-only
 - npx prisma migrate dev
+
+#Sync schema without data lost
+- npx prisma db push
