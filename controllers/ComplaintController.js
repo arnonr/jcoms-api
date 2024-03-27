@@ -466,7 +466,7 @@ const generateJcomsCode = async (id) => {
         })
     }
 
-    // return [jcoms_code, newRunningMonth];
+    return {jcoms_code: jcoms_code, jcoms_month_running: newRunningMonth}
 }
 
 const methods = {
@@ -580,7 +580,8 @@ const methods = {
             });
 
             await addComplaintChannelHistory(item.id, req.body.complaint_channel_ids);
-            await generateJcomsCode(item.id);
+            const JcomsCode = await generateJcomsCode(item.id);
+            item.jcoms_no = JcomsCode.jcoms_code;
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({
@@ -665,7 +666,11 @@ const methods = {
 
             await deleteComplaintChannelHistory(req.params.id);
             await addComplaintChannelHistory(req.params.id, req.body.complaint_channel_ids);
-            await generateJcomsCode(req.params.id);
+            const JcomsCode = await generateJcomsCode(req.params.id);
+
+            if(JcomsCode.jcoms_code == null) {
+                item.jcoms_no = JcomsCode.jcoms_code;
+            }
 
             /* Update File Attach */
             await prisma[$table_file_attach].updateMany({
