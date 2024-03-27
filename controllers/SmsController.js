@@ -3,7 +3,7 @@ const axios = require("axios");
 
 const methods = {
     async onSendSms(req, res) {
-        console.log(req.body)
+        // console.log(req.body)
         let msisdn = req.body.msisdn;
         let message = req.body.message;
 
@@ -26,10 +26,12 @@ const methods = {
                 // tracking_url: true,
                 // expire:
             };
+
             let auth = {
                 username: "tRYlZ4Ddn8dOKUwCRBgASLMg5vDMLQ",
                 password: "8GgqEuR50OeQkCiSIrfgJ58X84IAbt",
             };
+
             axios.post(`https://api-v2.thaibulksms.com/sms`, params, {
                 auth: auth,
             });
