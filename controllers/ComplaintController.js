@@ -1,9 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 
 const uploadController = require("./UploadsController");
+const SmsController = require("./SmsController");
+
 const { v4: uuidv4 } = require('uuid');
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
+const $otp_table = "otp";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +14,7 @@ const prisma = new PrismaClient();
 const selectField = {
     id: true,
     uuid: true,
-    complaint_code: true,
+    jcoms_no: true,
     tracking_satisfaction: true,
     tracking_satisfaction_at: true,
     complaint_satisfaction: true,
@@ -45,7 +48,7 @@ const selectField = {
     province_id: true,
     state_id: true,
     notice_type: true,
-    jcoms_no: true,
+
     pol_no: true,
     receive_doc_no: true,
     receive_doc_date: true,
@@ -157,7 +160,14 @@ const selectField = {
 const filterData = (req) => {
     let $where = {
         deleted_at: null,
+        complainant:{}
     };
+
+    if(req.query.complainant_uuid){
+        $where["complainant"] = {
+            uuid: req.query.complainant_uuid
+        }
+    }
 
     if (req.query.id) {
         $where["id"] = parseInt(req.query.id);
@@ -442,7 +452,7 @@ const generateJcomsCode = async (id) => {
     const yearCode = (currentYear + 543).toString().substring(2, 4);
     const monthCode = currentMonth.toString().padStart(2, "0");
 
-    const jcoms_code = `${yearCode}${monthCode}${newRunningCode}`;
+    const jcoms_code = `jcoms${yearCode}${monthCode}${newRunningCode}`;
 
     const item = await prisma[$table].findUnique({
         select: {
@@ -467,9 +477,121 @@ const generateJcomsCode = async (id) => {
     }
 
     return {jcoms_code: jcoms_code, jcoms_month_running: newRunningMonth}
+};
+
+const getComplainantUUIDbyPhoneNumber = async (phoneNumber) => {
+    try {
+        const item = await prisma.complainant.findUnique({
+            where: {
+                phone_number: phoneNumber
+            },
+            select: {
+                uuid: true
+            }
+        });
+
+        if(item){
+            return item.uuid
+        }
+    } catch (error) {
+        return null
+    }
+
 }
 
 const methods = {
+    async onGetOTPTracking(req, res) {
+
+        const otpSecret = req.query.otp_secret;
+
+        if(!req.query.otp_secret) {
+            return res.status(400).json({ msg: "otp_secret is required" });
+        }
+
+        if(!req.query.jcoms_no && !req.query.phone_number && !req.query.id_card) {
+            return res.status(400).json({ msg: "jcoms_no or phone_number or id_card is required" });
+        }
+
+        let $where = {
+            complainant: {}
+        };
+
+        if (req.query.jcoms_no) {
+            $where["jcoms_no"] = req.query.jcoms_no;
+        }
+
+        if (req.query.phone_number) {
+            $where["complainant"]["phone_number"] = req.query.phone_number;
+        }
+
+        if (req.query.id_card) {
+            $where["complainant"]["id_card"] = req.query.id_card;
+        }
+
+        try {
+            const item = await prisma[$table].findFirstOrThrow({
+                select: {
+                    complainant: {
+                        select: {
+                            phone_number: true,
+                        }
+                    }
+                },
+                where: $where,
+            });
+
+            const phoneNumber = item.complainant.phone_number;
+
+            const otp = await SmsController.onSendOTP(phoneNumber, otpSecret);
+
+            if(otp == "error") {
+                return res.status(500).json({ msg: "error" });
+            }
+
+            res.status(200).json({
+                data: otp,
+                msg: "success",
+            })
+        } catch (error) {
+
+            if(error.code == "P2025") {
+                return res.status(404).json({ msg: "data not found" });
+            }
+
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onVertifyOTPTracking(req, res) {
+
+        let otp = req.body.otp;
+        let otp_secret = req.body.otp_secret;
+
+        if (otp == undefined) {
+            return res.status(400).json({ msg: "otp is undefined" });
+        }
+
+        if (otp_secret == undefined) {
+            return res.status(400).json({ msg: "otp_secret is undefined" });
+        }
+
+        try {
+
+            const otp_item = await SmsController.onVerifyOtp(otp_secret, otp);
+            if(otp_item == false) {
+                return res.status(400).json({ msg: "OTP is invalid" });
+            }
+
+            await SmsController.onUpdateOTP(otp_item.id);
+
+            const complainantUUID = await getComplainantUUIDbyPhoneNumber(otp_item.phone_number);
+
+            return res.status(200).json({ data: {complainant_uuid: complainantUUID, otp_secret: otp_secret}, msg: "success" });
+        } catch (error) {
+            return res.status(400).json({ msg: error.message });
+        }
+    },
+
     async onGetAll(req, res) {
         try {
             let $where = filterData(req);

@@ -4,6 +4,10 @@ const router = express.Router();
 const controllers = require("../../controllers/ComplaintController");
 
 router.get("/", controllers.onGetAll);
+
+router.get("/get-otp-tracking", controllers.onGetOTPTracking);
+router.post("/verify-otp-tracking", controllers.onVertifyOTPTracking);
+
 router.get("/:id", controllers.onGetById);
 
 router.post("/", controllers.onCreate);

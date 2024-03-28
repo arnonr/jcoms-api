@@ -312,6 +312,7 @@ model occupation {
 model complainant {
     id                  Int         @id @default(autoincrement())
     uuid                String?     @db.VarChar(45) @unique
+    phone_number        String     @db.VarChar(100) @unique
     card_type           Int?        @db.TinyInt
     id_card             String?     @db.VarChar(100)
     card_photo          String?     @db.VarChar(200)
@@ -321,7 +322,7 @@ model complainant {
     birthday            DateTime?   @db.Date
     occupation_id       Int?
     occupation_text     String?     @db.VarChar(100)
-    phone_number        String?     @db.VarChar(100)
+
     email               String?     @db.VarChar(100)
     line_id             String?     @db.VarChar(45)
 
@@ -525,11 +526,10 @@ model state {
     complaint_forward   complaint_forward[]
 }
 
-//รอดำเนินการ
 model complaint {
     id                  Int         @id @default(autoincrement())
     uuid                String?     @db.VarChar(100)
-    complaint_code      String?     @db.VarChar(45) @unique
+    jcoms_no            String?     @db.VarChar(100) @unique
     tracking_satisfaction Int?      @db.TinyInt
     tracking_satisfaction_at DateTime?
     complaint_satisfaction Int?     @db.TinyInt
@@ -564,7 +564,6 @@ model complaint {
     province_id         Int?
     state_id            Int?
     notice_type         Int?        @db.TinyInt
-    jcoms_no            String?     @db.VarChar(100)
     pol_no              String?     @db.VarChar(100)
     receive_doc_no      String?     @db.VarChar(100)
     receive_doc_date    DateTime?   @db.Date
@@ -839,6 +838,23 @@ model complaint_file_attach {
     complaint_id        Int?
     filename            String?     @db.VarChar(200)
     secret_key          String?     @db.VarChar(100)
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+}
+
+model otp {
+    id                  Int         @id @default(autoincrement())
+
+    phone_number        String     @db.VarChar(100)
+    otp_secret          String     @db.VarChar(100)
+    otp                 String     @db.VarChar(100)
+    status              Int?       @db.TinyInt
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
