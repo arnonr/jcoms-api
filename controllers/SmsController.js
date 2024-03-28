@@ -4,35 +4,6 @@ const axios = require("axios");
 const $table = "otp";
 const prisma = new PrismaClient();
 
-const sendSMS = async (msisdn, message) => {
-    try {
-        let params = {
-            msisdn: msisdn,
-            message: message,
-            sender: "Demo",
-            force: "corporate",
-            // Shorten_url: true,
-            // tracking_url: true,
-            // expire:
-        };
-        let auth = {
-            username: process.env.SMS_USERNAME,
-            passwordx: process.env.SMS_PASSWORD,
-        };
-
-        const sms = await axios.post(
-            `https://api-v2.thaibulksms.com/sms`,
-            params,{
-                auth: auth,
-            }
-        );
-
-        return true;
-    } catch (error) {
-        // console.log(error);
-        return error;
-    }
-};
 
 const randomOTP = async () => {
 
@@ -43,7 +14,42 @@ const randomOTP = async () => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
     return randomNumber.toString();
-}
+};
+
+const sendSMS = async (msisdn, message) => {
+
+    try {
+        let params = {
+            msisdn: msisdn,
+            message: message,
+            // sender: "Demo",
+            sender: "Teams",
+            force: "corporate",
+            // Shorten_url: true,
+            // tracking_url: true,
+            // expire:
+        };
+        let auth = {
+            username: process.env.SMS_USERNAME,
+            password: process.env.SMS_PASSWORD,
+        };
+
+        const sms = await axios.post(
+            `https://api-v2.thaibulksms.com/sms`,
+            params,{
+                auth: auth,
+            }
+        );
+        // console.log(sms);
+        return true;
+    } catch (error) {
+        // console.log(error.code);
+        // console.log(error.name);
+        // console.log(error.message);
+        console.log(error.response.data.error);
+        return error;
+    }
+};
 
 const saveOTP = async(phone_number, otp, otp_secret) => {
 
@@ -65,8 +71,9 @@ const saveOTP = async(phone_number, otp, otp_secret) => {
 
 const genarateOTP = async(phoneNumber, otpScretet) => {
 
-    const otp_secret = otpScretet;
+    const debug = true;
 
+    const otp_secret = otpScretet;
     const phone_number = phoneNumber;
     const secret_phone_number = 'xxx-xxx-' + phone_number.slice(6);
 
@@ -75,26 +82,28 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
 
     await saveOTP(phone_number, otp, otp_secret);
 
-    return {
-        otp: otp,
-        phone_number: secret_phone_number,
-        // otp_secret: otp_secret,
-        message: message,
+    if(debug){
+        return {
+            otp: otp,
+            phone_number: secret_phone_number,
+            // otp_secret: otp_secret,
+            message: message,
+        }
     }
 
-    // try {
-    //     let result = await sendSMS(phoneNumber, message);
-    //     if (result == true) {
-    //         return {
-    //             otp: otp,
-    //             message: message
-    //         };
-    //     }else{
-    //         throw new Error("error");
-    //     }
-    // } catch (error) {
-    //     return "error";
-    // }
+    try {
+        let result = await sendSMS(phoneNumber, message);
+        if (result == true) {
+            return {
+                otp: otp,
+                message: message
+            };
+        }else{
+            throw new Error("error");
+        }
+    } catch (error) {
+        return "error";
+    }
 }
 
 const methods = {
