@@ -34,8 +34,8 @@ const sendSMS = async (msisdn, message) => {
             password: process.env.SMS_PASSWORD,
         };
 
-        const sms = await axios.get(
-            `https://api-v2.thaibulksms.com/credit`,
+        const sms = await axios.post(
+            `https://api-v2.thaibulksms.com/sms`,
             params,{
                 auth: auth,
             }
