@@ -35,7 +35,7 @@ const sendSMS = async (msisdn, message) => {
         };
 
         const sms = await axios.get(
-            `https://api-v2.thaibulksms.com/credit`,
+            `https://api-v2.thaibulksms.com/sms`,
             params,{
                 auth: auth,
             }
