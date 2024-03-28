@@ -34,7 +34,7 @@ const sendSMS = async (msisdn, message) => {
             password: process.env.SMS_PASSWORD,
         };
 
-        const sms = await axios.post(
+        const sms = await axios.get(
             `https://api-v2.thaibulksms.com/credit`,
             params,{
                 auth: auth,
@@ -71,7 +71,7 @@ const saveOTP = async(phone_number, otp, otp_secret) => {
 
 const genarateOTP = async(phoneNumber, otpScretet) => {
 
-    const debug = false;
+    const debug = true;
 
     const otp_secret = otpScretet;
     const phone_number = phoneNumber;
