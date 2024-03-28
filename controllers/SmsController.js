@@ -110,14 +110,14 @@ const methods = {
         const secret_phone_number = 'xxx-xxx-' + phone_number.slice(6);
 
         const otp = await generateOTP();
-        const message = `รหัส OTP คือ ${otp} (Ref: ${otpSecret})`;
+        const message = `Your OTP is ${otp} (Ref: ${otpSecret})`;
 
         await saveOTP(phone_number, otp, otpSecret);
 
         return {
             otp: otp,
             phone_number: secret_phone_number,
-            otp_secret: otpSecret,
+            // otp_secret: otpSecret,
             message: message,
         }
 

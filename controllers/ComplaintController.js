@@ -617,6 +617,46 @@ const methods = {
         }
     },
 
+    async onGetAllByOTP(req, res) {
+
+        if(!req.query.complainant_uuid) {
+            return res.status(400).json({ msg: "complainant_uuid is required" });
+        }
+
+        let $where = {
+            deleted_at: null,
+            complainant:{}
+        };
+
+        if(req.query.complainant_uuid){
+            $where["complainant"] = {
+                uuid: req.query.complainant_uuid
+            }
+        }
+
+        try {
+            let other = await countDataAndOrder(req, $where);
+
+            const item = await prisma[$table].findMany({
+                select: selectField,
+                where: $where,
+                orderBy: other.$orderBy,
+                skip: other.$offset,
+                take: other.$perPage,
+            });
+
+            res.status(200).json({
+                data: item,
+                totalData: other.$count,
+                totalPage: other.$totalPage,
+                currentPage: other.$currentPage,
+                msg: "success",
+            });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
     async onGetById(req, res) {
         try {
             const item = await prisma[$table].findUnique({
