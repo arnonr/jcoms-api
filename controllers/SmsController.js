@@ -35,12 +35,12 @@ const sendSMS = async (msisdn, message) => {
         };
 
         const sms = await axios.post(
-            `https://api-v2.thaibulksms.com/sms`,
+            `https://api-v2.thaibulksms.com/credit`,
             params,{
                 auth: auth,
             }
         );
-        // console.log(sms);
+        console.log(sms);
         return true;
     } catch (error) {
         // console.log(error.code);
@@ -71,7 +71,7 @@ const saveOTP = async(phone_number, otp, otp_secret) => {
 
 const genarateOTP = async(phoneNumber, otpScretet) => {
 
-    const debug = true;
+    const debug = false;
 
     const otp_secret = otpScretet;
     const phone_number = phoneNumber;

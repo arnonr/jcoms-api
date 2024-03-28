@@ -64,6 +64,11 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    prefix_name:{
+        select:{
+            name_th: true
+        }
+    },
     province: {
         select: {
             name_th: true,
