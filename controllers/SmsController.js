@@ -72,7 +72,10 @@ const methods = {
                 where: {
                     otp_secret: otp_secret,
                     otp: otp,
-                    status: 1
+                    status: 1,
+                    created_at: {
+                        gte: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+                    },
                 },
             });
 
