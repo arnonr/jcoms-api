@@ -71,7 +71,7 @@ const saveOTP = async(phone_number, otp, otp_secret) => {
 
 const genarateOTP = async(phoneNumber, otpScretet) => {
 
-    const debug = true;
+    const debug = false;
 
     const otp_secret = otpScretet;
     const phone_number = phoneNumber;
