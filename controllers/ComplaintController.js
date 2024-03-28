@@ -542,7 +542,7 @@ const methods = {
 
             const phoneNumber = item.complainant.phone_number;
 
-            const otp = await SmsController.onSendOTP(phoneNumber, otpSecret);
+            const otp = await SmsController.genarateOTP(phoneNumber, otpSecret);
 
             if(otp == "error") {
                 return res.status(500).json({ msg: "error" });
@@ -564,8 +564,8 @@ const methods = {
 
     async onVertifyOTPTracking(req, res) {
 
-        let otp = req.body.otp;
-        let otp_secret = req.body.otp_secret;
+        const otp = req.body.otp;
+        const otp_secret = req.body.otp_secret;
 
         if (otp == undefined) {
             return res.status(400).json({ msg: "otp is undefined" });
@@ -577,7 +577,7 @@ const methods = {
 
         try {
 
-            const otp_item = await SmsController.onVerifyOtp(otp_secret, otp);
+            const otp_item = await SmsController.verifyOTP(otp_secret, otp);
             if(otp_item == false) {
                 return res.status(400).json({ msg: "OTP is invalid" });
             }
