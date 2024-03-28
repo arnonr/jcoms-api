@@ -73,9 +73,9 @@ const methods = {
                     otp_secret: otp_secret,
                     otp: otp,
                     status: 1,
-                    created_at: {
-                        gte: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
-                    },
+                    // created_at: {
+                    //     gte: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+                    // },
                 },
             });
 
@@ -94,7 +94,8 @@ const methods = {
             const item = await prisma[$table].update({
                 where: {id: id},
                 data: {
-                    status: 0
+                    status: 0,
+                    updated_at: new Date()
                 }
             });
             return item;
