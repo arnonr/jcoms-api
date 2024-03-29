@@ -23,7 +23,7 @@ const sendSMS = async (msisdn, message) => {
             msisdn: msisdn,
             message: message,
             // sender: "Demo",
-            sender: "Teams",
+            sender: "heading",
             force: "corporate",
             // Shorten_url: true,
             // tracking_url: true,
@@ -40,7 +40,7 @@ const sendSMS = async (msisdn, message) => {
                 auth: auth,
             }
         );
-        console.log(sms);
+        console.log(sms.data);
         return true;
     } catch (error) {
         // console.log(error.code);
@@ -84,19 +84,22 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
 
     if(debug){
         return {
-            otp: otp,
             phone_number: secret_phone_number,
-            // otp_secret: otp_secret,
+            otp_secret: otp_secret,
+            otp: otp,
             message: message,
+            decription: "debug mode: OTP, OTP_SECRET, MESSAGE will remove on production"
         }
     }
 
     try {
-        let result = await sendSMS(phoneNumber, message);
+        let result = await sendSMS(phone_number, message);
         if (result == true) {
             return {
                 otp: otp,
-                message: message
+                phone_number: phone_number,
+                message: message,
+                decription: "debug mode: OTP, PHONE_NUMBER, MESSAGE will remove on production"
             };
         }else{
             throw new Error("error");

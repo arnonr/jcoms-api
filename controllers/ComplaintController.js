@@ -502,30 +502,32 @@ const getComplainantUUIDbyPhoneNumber = async (phoneNumber) => {
 const methods = {
     async onGetOTPTracking(req, res) {
 
-        const otpSecret = req.query.otp_secret;
 
-        if(!req.query.otp_secret) {
+
+        if(!req.body.otp_secret) {
             return res.status(400).json({ msg: "otp_secret is required" });
         }
 
-        if(!req.query.jcoms_no && !req.query.phone_number && !req.query.id_card) {
+        if(!req.body.jcoms_no && !req.body.phone_number && !req.body.id_card) {
             return res.status(400).json({ msg: "jcoms_no or phone_number or id_card is required" });
         }
+
+        const otpSecret = req.body.otp_secret;
 
         let $where = {
             complainant: {}
         };
 
-        if (req.query.jcoms_no) {
-            $where["jcoms_no"] = req.query.jcoms_no;
+        if (req.body.jcoms_no) {
+            $where["jcoms_no"] = req.body.jcoms_no;
         }
 
-        if (req.query.phone_number) {
-            $where["complainant"]["phone_number"] = req.query.phone_number;
+        if (req.body.phone_number) {
+            $where["complainant"]["phone_number"] = req.body.phone_number;
         }
 
-        if (req.query.id_card) {
-            $where["complainant"]["id_card"] = req.query.id_card;
+        if (req.body.id_card) {
+            $where["complainant"]["id_card"] = req.body.id_card;
         }
 
         try {
