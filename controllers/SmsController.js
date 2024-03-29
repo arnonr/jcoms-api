@@ -71,11 +71,11 @@ const saveOTP = async(phone_number, otp, otp_secret) => {
 
 const genarateOTP = async(phoneNumber, otpScretet) => {
 
-    const debug = true;
+    const debug = process.env.SMS_DEBUG == "true" ? true : false;
 
     const otp_secret = otpScretet;
     const phone_number = phoneNumber;
-    const secret_phone_number = 'xxx-xxx-' + phone_number.slice(6);
+    const secret_phone_number = 'xxx-xxx-' + phone_number.slice(6, 10);
 
     const otp = await randomOTP();
     const message = `Your OTP is ${otp} (Ref: ${otp_secret})`;
