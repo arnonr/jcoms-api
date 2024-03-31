@@ -717,6 +717,7 @@ const methods = {
                     inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
+                    agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
                     topic_type_id: req.body.topic_type_id != null ? Number(req.body.topic_type_id) : undefined,
                     house_number: req.body.house_number,
                     building: req.body.building,
