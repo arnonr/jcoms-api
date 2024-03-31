@@ -507,8 +507,6 @@ const getComplainantUUIDbyPhoneNumber = async (phoneNumber) => {
 const methods = {
     async onGetOTPTracking(req, res) {
 
-
-
         if(!req.body.otp_secret) {
             return res.status(400).json({ msg: "otp_secret is required" });
         }
