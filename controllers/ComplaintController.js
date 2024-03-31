@@ -431,6 +431,21 @@ const addComplaintChannelHistory = async (complaint_id, complaint_channel_ids, a
 };
 
 const generateJcomsCode = async (id) => {
+
+    const item = await prisma[$table].findUnique({
+        select: {
+            jcoms_no: true,
+            jcoms_month_running: true
+        },
+        where: {
+            id: Number(id),
+        },
+    });
+
+    if (item.jcoms_no != null) {
+        return null;
+    }
+
     /* Update JCOMS Month Running */
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1; // Months are zero-based
@@ -453,16 +468,6 @@ const generateJcomsCode = async (id) => {
     const monthCode = currentMonth.toString().padStart(2, "0");
 
     const jcoms_code = `jcoms${yearCode}${monthCode}${newRunningCode}`;
-
-    const item = await prisma[$table].findUnique({
-        select: {
-            jcoms_no: true,
-            jcoms_month_running: true
-        },
-        where: {
-            id: Number(id),
-        },
-    });
 
     if (item.jcoms_no == null) {
         await prisma[$table].update({
@@ -831,10 +836,13 @@ const methods = {
 
             await deleteComplaintChannelHistory(req.params.id);
             await addComplaintChannelHistory(req.params.id, req.body.complaint_channel_ids);
-            const JcomsCode = await generateJcomsCode(req.params.id);
 
-            if(JcomsCode.jcoms_code == null) {
-                item.jcoms_no = JcomsCode.jcoms_no;
+            if(item.jcoms_no == null) {
+                const JcomsCode = await generateJcomsCode(req.params.id);
+                console.log(JcomsCode);
+                if(JcomsCode != null) {
+                    item.jcoms_no = JcomsCode.jcoms_no;
+                }
             }
 
             /* Update File Attach */
