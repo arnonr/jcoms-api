@@ -26,9 +26,13 @@ const methods = {
 
             let uploadFile = req.files[attribute_name];
             let typeFile = uploadFile.mimetype.split("/");
-            let d = new Date();
-            let date = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
-            let nameFile = date + "_" + uuidv4() + "." + typeFile[1];
+
+            const today = new Date();
+            const month = `${today.getMonth() + 1}`.padStart(2, '0');
+            const date = `${today.getDate()}`.padStart(2, '0');
+
+            const dateFormat = today.getFullYear() + "" + month + "" + date;
+            const nameFile = dateFormat + "_" + uuidv4() + "." + typeFile[1];
 
             const dir = "public/uploads" + real_path;
 
