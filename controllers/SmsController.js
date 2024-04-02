@@ -47,7 +47,8 @@ const sendSMS = async (msisdn, message) => {
         // console.log(error.name);
         // console.log(error.message);
         console.log(error.response.data.error);
-        return error;
+        return error.response.data.error;
+        // return error;
     }
 };
 
@@ -102,10 +103,10 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
                 decription: "Send SMS success"
             };
         }else{
-            throw new Error("error");
+            throw new Error(result);
         }
     } catch (error) {
-        return "error";
+        return error;
     }
 }
 
