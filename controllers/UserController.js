@@ -349,6 +349,60 @@ const methods = {
         }
     },
 
+    async onRegister(req, res) {
+        try {
+
+            let pathFile = await uploadController.onUploadFile(req,"/user/","file_attach");
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
+            const user = await prisma[$table].findUnique({
+                where: {
+                    email: req.body.email,
+                },
+            });
+
+            if(user != null) {
+                throw new Error("Email are already exist");
+            }
+
+            const item = await prisma[$table].create({
+                data: {
+                    uuid: uuidv4(),
+                    prefix_name_id: Number(req.body.prefix_name_id),
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    officer_code: req.body.officer_code,
+                    id_card: req.body.id_card,
+
+                    position_id: Number(req.body.position_id),
+                    section_id: Number(req.body.section_id),
+                    inspector_id: Number(req.body.inspector_id),
+                    bureau_id: Number(req.body.bureau_id),
+                    division_id: Number(req.body.division_id),
+                    agency_id: Number(req.body.agency_id),
+
+                    phone_number: req.body.phone_number,
+                    status: Number(req.body.status),
+                    email: req.body.email,
+                    line_id: req.body.line_id,
+                    // password: req.body.password,
+                    password: encrypt(req.body.password),
+                    birthday:req.body.birthday != null ? new Date(req.body.birthday): undefined,
+                    file_attach: pathFile,
+                    // created_by: null,
+                    // updated_by: null,
+                },
+            });
+
+            res.status(201).json({ ...item, msg: "success" });
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
+        }
+    },
+
     // แก้ไข
     async onUpdate(req, res) {
         try {

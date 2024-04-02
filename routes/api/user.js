@@ -25,7 +25,9 @@ router.post('/login',
 router.get("/", controllers.onGetAll);
 router.get("/:id", controllers.onGetById);
 
+router.post("/register", controllers.onRegister);
 router.post("/", controllers.onCreate);
+
 
 // router.put("/:id", controllers.onUpdate);
 router.post("/:id", controllers.onUpdate); /* POST method for Upload file */
