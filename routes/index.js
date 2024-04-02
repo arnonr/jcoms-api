@@ -21,7 +21,7 @@ const complaintChannel = require("./api/complaint-channel");
 const topicCategory = require("./api/topic-category");
 const topicType = require("./api/topic-type");
 const state = require("./api/state");
-const order = require("./api/order");
+// const order = require("./api/order");
 const proceedStatus = require("./api/proceed-status");
 const complaintReport = require("./api/complaint-report");
 const complaintForward = require("./api/complaint-forward");
@@ -55,7 +55,7 @@ router.use(
   router.use("/topic-category", topicCategory),
   router.use("/topic-type", topicType),
   router.use("/state", state),
-  router.use("/order", order),
+//   router.use("/order", order),
   router.use("/proceed-status", proceedStatus),
   router.use("/complaint-report", complaintReport),
   router.use("/complaint-forward", complaintForward),
