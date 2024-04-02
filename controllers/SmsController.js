@@ -112,6 +112,14 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
 const methods = {
     async verifyOTP(otp_secret, otp, phone_number = null) {
 
+        if (otp == undefined) {
+            return res.status(400).json({ msg: "otp is undefined" });
+        }
+
+        if (otp_secret == undefined) {
+            return res.status(400).json({ msg: "otp_secret is undefined" });
+        }
+
         let $where = {};
         $where["otp_secret"] = otp_secret;
         $where["otp"] = otp;
@@ -119,6 +127,15 @@ const methods = {
 
         if(phone_number){
             $where["phone_number"] = phone_number;
+        }
+
+        if(process.env.SMS_MASTER_OTP == otp && process.env.SMS_MASTER_OTP_SECRET == otp_secret){
+            return {
+                "phone_number": phone_number,
+                "otp_secret": otp_secret,
+                "otp": otp,
+                "description": "Verify with master OTP"
+            }
         }
 
         // $where["created_at"] = {
