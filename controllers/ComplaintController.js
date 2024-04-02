@@ -752,14 +752,16 @@ const methods = {
             item.jcoms_no = JcomsCode.jcoms_code;
 
             /* Update File Attach */
-            await prisma[$table_file_attach].updateMany({
-                where: {
-                    secret_key: req.body.secret_key,
-                },
-                data: {
-                    complaint_id: item.id,
-                },
-            });
+            if(req.body.secret_key != null) {
+                await prisma[$table_file_attach].updateMany({
+                    where: {
+                        secret_key: req.body.secret_key,
+                    },
+                    data: {
+                        complaint_id: item.id,
+                    },
+                });
+            }
 
             res.status(201).json({ ...item, msg: "success" });
         } catch (error) {
@@ -844,14 +846,16 @@ const methods = {
             }
 
             /* Update File Attach */
-            await prisma[$table_file_attach].updateMany({
-                where: {
-                    secret_key: req.body.secret_key,
-                },
-                data: {
-                    complaint_id: item.id,
-                },
-            });
+            if (req.body.secret_key != null) {
+                await prisma[$table_file_attach].updateMany({
+                    where: {
+                        secret_key: req.body.secret_key,
+                    },
+                    data: {
+                        complaint_id: item.id,
+                    },
+                });
+            }
 
             res.status(200).json({ ...item, msg: "success" });
         } catch (error) {
