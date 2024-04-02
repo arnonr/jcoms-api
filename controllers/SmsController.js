@@ -97,7 +97,7 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
         if (result == true) {
             return {
                 otp: otp,
-                phone_number: phone_number,
+                phone_number: secret_phone_number,
                 message: message,
                 decription: "debug mode: OTP, PHONE_NUMBER, MESSAGE will remove on production"
             };
@@ -131,6 +131,7 @@ const methods = {
 
         if(process.env.SMS_MASTER_OTP == otp && process.env.SMS_MASTER_OTP_SECRET == otp_secret){
             return {
+                "master_otp": true,
                 "phone_number": phone_number,
                 "otp_secret": otp_secret,
                 "otp": otp,
@@ -252,13 +253,19 @@ const methods = {
             const otp_item = await methods.verifyOTP(otp_secret, otp, phone_number);
             if(otp_item == false) {
                 return res.status(400).json({ msg: "OTP is invalid" });
+            }else if(otp_item.master_otp == true) {
+                return res.status(200).json({
+                    data: otp_item,
+                    msg: "success" });
             }
 
             await methods.onUpdateOTP(otp_item.id);
 
+            const secret_phone_number = 'xxx-xxx-' + phone_number.slice(6, 10);
+
             return res.status(200).json({
                 data: {
-                    phone_number: phone_number,
+                    phone_number: secret_phone_number,
                     otp_secret: otp_secret
                 },
                 msg: "success" });
