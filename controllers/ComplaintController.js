@@ -554,7 +554,7 @@ const methods = {
             }
 
             res.status(200).json({
-                // data: otp,
+                data: otp,
                 msg: "success",
             })
         } catch (error) {
