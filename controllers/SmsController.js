@@ -99,7 +99,7 @@ const genarateOTP = async(phoneNumber, otpScretet) => {
                 otp: otp,
                 phone_number: secret_phone_number,
                 message: message,
-                decription: "debug mode: OTP, PHONE_NUMBER, MESSAGE will remove on production"
+                decription: "Send SMS success"
             };
         }else{
             throw new Error("error");
