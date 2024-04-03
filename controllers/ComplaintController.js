@@ -699,6 +699,23 @@ const methods = {
         }
     },
 
+    async onGetCount(req, res) {
+        try {
+            let $where = filterData(req);
+
+            const totalCount  = await prisma[$table].count({
+                where: $where,
+            });
+
+            res.status(200).json({
+                msg: "success",
+                totalCount: totalCount,
+            });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
     async onGetAllByOTP(req, res) {
 
         if(!req.query.complainant_uuid) {

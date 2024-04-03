@@ -3,6 +3,7 @@ const router = express.Router();
 
 const controllers = require("../../controllers/ComplaintController");
 
+router.get("/count", controllers.onGetCount);
 router.get("/", controllers.onGetAll);
 
 router.post("/get-otp-tracking", controllers.onGetOTPTracking);
