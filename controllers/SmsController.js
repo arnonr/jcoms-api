@@ -91,6 +91,7 @@ const genarateOTP = async (phoneNumber, otpScretet) => {
     if (result == true) {
       return {
         otp: otp,
+        otp_secret: otp_secret,
         phone_number: secret_phone_number,
         message: message,
         decription: "Send SMS success",
@@ -104,62 +105,64 @@ const genarateOTP = async (phoneNumber, otpScretet) => {
 };
 
 const methods = {
-  async verifyOTP(otp_secret, otp, phone_number = null) {
-    if (otp == undefined) {
-      return res.status(400).json({ msg: "otp is undefined" });
-    }
+    async verifyOTP(otp_secret, otp, phoneNumber = null) {
+        if (otp == undefined) {
+        return res.status(400).json({ msg: "otp is undefined" });
+        }
 
-    if (otp_secret == undefined) {
-      return res.status(400).json({ msg: "otp_secret is undefined" });
-    }
+        if (otp_secret == undefined) {
+        return res.status(400).json({ msg: "otp_secret is undefined" });
+        }
 
-    let $where = {};
-    $where["otp_secret"] = otp_secret;
-    $where["otp"] = otp;
-    $where["status"] = 0;
+        let phone_number = phoneNumber;
 
-    if (phone_number) {
-      $where["phone_number"] = phone_number;
-    }
+        try {
 
-    if (process.env.SMS_MASTER_OTP == otp) {
-      return {
-        master_otp: true,
-        phone_number: phone_number,
-        otp_secret: otp_secret,
-        otp: otp,
-        description: "Verify with master OTP",
-      };
-    }
+            // await SmsController.onUpdateOTP(otp_item.id);
+            if (process.env.SMS_MASTER_OTP == otp) {
 
-    // if(process.env.SMS_MASTER_OTP == otp && process.env.SMS_MASTER_OTP_SECRET == otp_secret){
-    //     return {
-    //         "master_otp": true,
-    //         "phone_number": phone_number,
-    //         "otp_secret": otp_secret,
-    //         "otp": otp,
-    //         "description": "Verify with master OTP"
-    //     }
-    // }
+                const itemDebug = await prisma[$table].findFirst({
+                    select: { id: true, phone_number: true },
+                    where: {otp_secret: otp_secret},
+                });
 
-    // $where["created_at"] = {
-    //     gte: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
-    // }
+                if(itemDebug){
+                    phone_number = itemDebug.phone_number;
+                    await methods.onUpdateOTP(itemDebug.id);
+                }
 
-    try {
-      const item = await prisma[$table].findFirst({
-        select: { id: true, phone_number: true },
-        where: $where,
-      });
+                return {
+                    master_otp: true,
+                    phone_number: phone_number,
+                    otp_secret: otp_secret,
+                    otp: otp,
+                    description: "Verify with master OTP",
+                };
+            }
 
-      if (item) {
-        return item;
-      }
+            let $where = {};
+            $where["otp_secret"] = otp_secret;
+            $where["otp"] = otp;
+            $where["status"] = 0;
 
-      return false;
-    } catch (error) {
-      return false;
-    }
+            if (phone_number) {
+                $where["phone_number"] = phone_number;
+            }
+
+            const item = await prisma[$table].findFirst({
+                select: { id: true, phone_number: true },
+                where: $where,
+            });
+
+            if (item) {
+                await methods.onUpdateOTP(otp_item.id);
+                return item;
+            }
+
+            return false;
+        } catch (error) {
+            return false;
+        }
   },
 
   async onUpdateOTP(id) {

@@ -588,8 +588,6 @@ const methods = {
                 return res.status(400).json({ msg: "OTP is invalid" });
             }
 
-            await SmsController.onUpdateOTP(otp_item.id);
-
             const complainantUUID = await getComplainantUUIDbyPhoneNumber(otp_item.phone_number);
 
             return res.status(200).json({ data: {complainant_uuid: complainantUUID, otp_secret: otp_secret}, msg: "success" });
