@@ -1,12 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
-
-const uploadController = require("./UploadsController");
 const SmsController = require("./SmsController");
-
 const { v4: uuidv4 } = require('uuid');
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
-const $otp_table = "otp";
 
 const prisma = new PrismaClient();
 
