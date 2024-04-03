@@ -571,6 +571,7 @@ const methods = {
 
         const otp = req.body.otp;
         const otp_secret = req.body.otp_secret;
+        const phone_number = req.body.phone_number;
 
         if (otp == undefined) {
             return res.status(400).json({ msg: "otp is undefined" });
@@ -582,7 +583,7 @@ const methods = {
 
         try {
 
-            const otp_item = await SmsController.verifyOTP(otp_secret, otp);
+            const otp_item = await SmsController.verifyOTP(otp_secret, otp, phone_number);
             if(otp_item == false) {
                 return res.status(400).json({ msg: "OTP is invalid" });
             }
