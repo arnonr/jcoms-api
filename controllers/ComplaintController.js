@@ -133,6 +133,12 @@ const selectField = {
     topic_type: {
         select: {
             name_th: true,
+            topic_category: {
+                select: {
+                    id: true,
+                    name_th: true,
+                }
+            }
         }
     },
     province: {
@@ -160,8 +166,80 @@ const selectField = {
 const filterData = (req) => {
     let $where = {
         deleted_at: null,
-        complainant:{}
+        complainant:{},
+        accused:{},
+        topic_type:{
+            topic_category:{}
+        }
     };
+
+    if(req.query.topic_category_id){
+        $where["topic_type"]["topic_category"]["id"] = parseInt(req.query.topic_category_id);
+    }
+
+    if (req.query.accused_fullname) {
+
+        const [firstName, lastName] = req.query.accused_fullname.split(' ');
+
+        $where["accused"] = {
+            some: {
+                OR: [
+                    { firstname: firstName }, { lastname: lastName },
+                    { firstname: lastName }, { lastname: firstName },
+                ],
+            },
+        };
+    }
+
+    if (req.query.create_year) {
+        const year = parseInt(req.query.create_year, 10);
+        const startOfYear = new Date(year, 0, 1); // January 1st of the given year
+        const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999); // December 31st of the given year
+
+        $where["created_at"] = {
+            gte: startOfYear,
+            lte: endOfYear,
+        };
+    }
+
+    if (req.query.create_from && req.query.create_to) {
+
+        let date_from = new Date(req.query.create_from + "T00:00:00.000+0000").toISOString();
+        let date_to = new Date(req.query.create_to + "T23:59:59.000+0000").toISOString();
+
+        $where["created_at"] = {
+            gte: date_from,
+            lte: date_to
+        }
+
+    } else if (req.query.create_from) {
+
+        let date_from = new Date(req.query.create_from + "T00:00:00.000+0000").toISOString();
+        $where["created_at"] = {
+            gte: date_from,
+        };
+
+    } else if (req.query.create_to) {
+
+        let date_to = new Date(req.query.create_to + "T23:59:59.000+0000").toISOString();
+        $where["created_at"] = {
+            lte: date_to,
+        };
+    }
+
+    if (req.query.complainant_fullname) {
+
+        const [firstName, lastName] = req.query.complainant_fullname.split(' ');
+
+        $where["complainant"] = {
+                OR: [
+                    { firstname: firstName }, { lastname: lastName },
+                    { firstname: lastName }, { lastname: firstName },
+                ],
+
+        };
+        console.log($where);
+    }
 
     if(req.query.complainant_uuid){
         $where["complainant"] = {
@@ -610,11 +688,11 @@ const methods = {
             });
 
             res.status(200).json({
-                data: item,
                 totalData: other.$count,
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
                 msg: "success",
+                data: item,
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
