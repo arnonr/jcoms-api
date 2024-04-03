@@ -234,7 +234,7 @@ const filterData = (req) => {
                 ],
 
         };
-        console.log($where);
+
     }
 
     if(req.query.complainant_uuid){
@@ -929,7 +929,7 @@ const methods = {
 
             if(item.jcoms_no == null) {
                 const JcomsCode = await generateJcomsCode(req.params.id);
-                console.log(JcomsCode);
+                // console.log(JcomsCode);
                 if(JcomsCode != null) {
                     item.jcoms_no = JcomsCode.jcoms_no;
                 }
