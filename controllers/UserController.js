@@ -71,27 +71,32 @@ const selectField = {
     },
     position:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     inspector:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     bureau:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     division:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     agency:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     section:{
