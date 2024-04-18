@@ -530,8 +530,8 @@ const generateJcomsCode = async (id) => {
         },
         where: {
             created_at: {
-            gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
-            lt: new Date(currentYear, currentMonth, 1), // Start of the next month
+                gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
+                lt: new Date(currentYear, currentMonth, 1), // Start of the next month
             },
         },
     });
@@ -556,6 +556,59 @@ const generateJcomsCode = async (id) => {
     }
 
     return {jcoms_code: jcoms_code, jcoms_month_running: newRunningMonth}
+};
+
+const generateJcomsYearCode = async (id) => {
+
+    const item = await prisma[$table].findUnique({
+        select: {
+            jcoms_no: true,
+            jcoms_year_running: true
+        },
+        where: {
+            id: Number(id),
+        },
+    });
+
+    if (item.jcoms_no != null) {
+        return null;
+    }
+
+    /* Update JCOMS Year Running */
+
+    const currentYear = new Date().getFullYear();
+
+    const maxRunning = await prisma[$table].aggregate({
+        _max: {
+            jcoms_year_running: true,
+        },
+        where: {
+            created_at: {
+                gte: new Date(`${currentYear}-01-01`),
+                lt: new Date(`${currentYear + 1}-01-01`),
+            },
+        },
+    });
+
+    const newRunningYear = maxRunning._max.jcoms_year_running + 1;
+    const newRunningCode = newRunningYear.toString().padStart(5, "0");
+    const yearCode = (currentYear + 543).toString();
+
+    const jcoms_code = `JCOMS${yearCode}${newRunningCode}`;
+
+    if (item.jcoms_no == null) {
+        await prisma[$table].update({
+            where: {
+                id: Number(id),
+            },
+            data: {
+                jcoms_no: jcoms_code,
+                jcoms_year_running: newRunningYear,
+            },
+        })
+    }
+
+    return {jcoms_code: jcoms_code, jcoms_year_running: newRunningYear}
 };
 
 const getComplainantUUIDbyPhoneNumber = async (phoneNumber) => {
@@ -838,7 +891,8 @@ const methods = {
             });
 
             await addComplaintChannelHistory(item.id, req.body.complaint_channel_ids);
-            const JcomsCode = await generateJcomsCode(item.id);
+            // const JcomsCode = await generateJcomsCode(item.id);
+            const JcomsCode = await generateJcomsYearCode(item.id);
             item.jcoms_no = JcomsCode.jcoms_code;
 
             /* Update File Attach */
@@ -928,7 +982,8 @@ const methods = {
             await addComplaintChannelHistory(req.params.id, req.body.complaint_channel_ids);
 
             if(item.jcoms_no == null) {
-                const JcomsCode = await generateJcomsCode(req.params.id);
+                // const JcomsCode = await generateJcomsCode(req.params.id);
+                const JcomsCode = await generateJcomsYearCode(req.params.id);
                 // console.log(JcomsCode);
                 if(JcomsCode != null) {
                     item.jcoms_no = JcomsCode.jcoms_no;
