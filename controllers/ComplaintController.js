@@ -480,6 +480,43 @@ const countDataAndOrder = async (req, $where) => {
     };
 };
 
+const excludeSpecificField = (req, selectField) => {
+    // console.log(selectField);
+    let fields = {};
+    fields = selectField;
+
+    const { exclude } = req.query;
+
+    // console.log(exclude);
+
+    if (exclude) {
+        console.log("Exclude: " + exclude);
+        if(exclude == 'all') {
+            // Remove nested select objects
+            const keysToRemove = Object.keys(fields).filter(
+                (key) => typeof fields[key] === 'object' && fields[key] !== null
+            );
+
+            keysToRemove.forEach((key) => {
+                delete fields[key];
+            });
+        }
+
+        const fieldsToExclude = exclude.split(',');
+        // console.log(fieldsToExclude);
+        // Remove fields from selectField
+        for (const field of fieldsToExclude) {
+            delete fields[field];
+        }
+    }else{
+        console.log("No Exclude");
+    }
+
+    // console.log(fields);
+
+    return fields;
+};
+
 const deleteComplaintChannelHistory = async (complaint_id) => {
     const complaint_history = await prisma.complaint_channel_history.deleteMany({
         where: {
@@ -727,9 +764,10 @@ const methods = {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
+            let select = excludeSpecificField(req, selectField);
 
             const item = await prisma[$table].findMany({
-                select: selectField,
+                select: select,
                 where: $where,
                 orderBy: other.$orderBy,
                 skip: other.$offset,
@@ -806,9 +844,12 @@ const methods = {
     },
 
     async onGetById(req, res) {
+
+        let select = excludeSpecificField(req, selectField);
+
         try {
             const item = await prisma[$table].findUnique({
-                select: selectField,
+                select: select,
                 where: {
                     id: Number(req.params.id),
                 },
