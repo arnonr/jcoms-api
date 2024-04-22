@@ -480,17 +480,13 @@ const countDataAndOrder = async (req, $where) => {
     };
 };
 
-const excludeSpecificField = (req, selectField) => {
-    // console.log(selectField);
-    let fields = {};
-    fields = selectField;
+const excludeSpecificField = (req) => {
+
+    let fields = {...selectField};
 
     const { exclude } = req.query;
 
-    // console.log(exclude);
-
     if (exclude) {
-        console.log("Exclude: " + exclude);
         if(exclude == 'all') {
             // Remove nested select objects
             const keysToRemove = Object.keys(fields).filter(
@@ -503,16 +499,11 @@ const excludeSpecificField = (req, selectField) => {
         }
 
         const fieldsToExclude = exclude.split(',');
-        // console.log(fieldsToExclude);
         // Remove fields from selectField
         for (const field of fieldsToExclude) {
             delete fields[field];
         }
-    }else{
-        console.log("No Exclude");
     }
-
-    // console.log(fields);
 
     return fields;
 };
