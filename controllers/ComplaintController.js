@@ -1004,7 +1004,7 @@ const methods = {
                     pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
                     receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
-                    receive_status: req.body.receive_status != null ? req.body.receive_status : undefined,
+                    receive_status: req.body.receive_status != null ? Number(req.body.receive_status) : undefined,
                     receive_comment: req.body.receive_comment != null ? req.body.receive_comment : undefined,
                     receive_doc_filename: receiveDocPathFile != null ? receiveDocPathFile : undefined,
 
