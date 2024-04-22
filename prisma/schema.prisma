@@ -534,8 +534,16 @@ model complaint {
     tracking_satisfaction_at DateTime?
     complaint_satisfaction Int?     @db.TinyInt
     complaint_satisfaction_at DateTime?
+
     receive_at          DateTime?
     receive_user_id     Int?
+    pol_no              String?     @db.VarChar(100)
+    receive_doc_no      String?     @db.VarChar(100)
+    receive_doc_date    DateTime?   @db.Date
+    receive_comment     String?     @db.VarChar(200)
+    receive_doc_filename String?     @db.VarChar(200)
+    receive_status      Int?        @db.TinyInt
+
     complaint_type_id   Int?
     complainant_id      Int?
     is_anonymous        Int?        @db.TinyInt
@@ -564,12 +572,9 @@ model complaint {
     province_id         Int?
     state_id            Int?
     notice_type         Int?        @db.TinyInt
-    pol_no              String?     @db.VarChar(100)
-    receive_doc_no      String?     @db.VarChar(100)
-    receive_doc_date    DateTime?   @db.Date
+
     forward_doc_no      String?     @db.VarChar(100)
     forward_doc_date    DateTime?   @db.Date
-    receive_status      Int?        @db.TinyInt
 
     jcoms_month_running Int?
     jcoms_year_running  Int?

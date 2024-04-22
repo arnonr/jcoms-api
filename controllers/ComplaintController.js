@@ -1,10 +1,31 @@
 const { PrismaClient } = require("@prisma/client");
 const SmsController = require("./SmsController");
+const uploadController = require("./UploadsController");
 const { v4: uuidv4 } = require('uuid');
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
+
+const prisma = new PrismaClient().$extends({
+    result: {
+        complaint: { //extend Model name
+            receive_doc_filename: { // the name of the new computed field
+                needs: { receive_doc_filename: true }, /* field */
+                compute(model) {
+
+                    let receive_doc_filename = null;
+
+                    if (model.receive_doc_filename != null) {
+                        receive_doc_filename = process.env.PATH_UPLOAD + model.receive_doc_filename;
+                    }
+
+                    return receive_doc_filename;
+                },
+            },
+        },
+    },
+});
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -45,12 +66,17 @@ const selectField = {
     state_id: true,
     notice_type: true,
 
+    /* การรับเรื่อง ฝ่ายรับเรื่องร้องเรียน */
     pol_no: true,
     receive_doc_no: true,
     receive_doc_date: true,
+    receive_comment: true,
+    receive_doc_filename: true,
+    receive_status: true,
+
     forward_doc_no: true,
     forward_doc_date: true,
-    receive_status: true,
+
 
     created_at: true,
     created_by: true,
@@ -854,11 +880,18 @@ const methods = {
             authUsername = decoded.username;
         }
 
+        let receiveDocPathFile = await uploadController.onUploadFile(req, "/complaint/", "receive_doc_filename");
+
+        if (receiveDocPathFile == "error") {
+            return res.status(500).send("error");
+        }
+
         try {
             const item = await prisma[$table].create({
                 data: {
                     is_active: Number(req.body.is_active),
                     uuid: uuidv4(),
+                    receive_doc_filename: receiveDocPathFile,
                     complaint_code: req.body.complaint_code,
                     tracking_satisfaction: Number(req.body.tracking_satisfaction),
                     tracking_satisfaction_at: req.body.tracking_satisfaction_at != null ? new Date(req.body.tracking_satisfaction_at) : undefined,
@@ -866,8 +899,13 @@ const methods = {
                     complaint_satisfaction_at: req.body.complaint_satisfaction_at != null ? new Date(req.body.complaint_satisfaction_at) : undefined,
 
                     received_at: req.body.received_at != null ? new Date(req.body.received_at) : undefined,
-
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
+                    receive_comment: req.body.receive_comment,
+                    pol_no: req.body.pol_no,
+                    receive_doc_no: req.body.receive_doc_no,
+                    receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
+                    receive_status: Number(req.body.receive_status),
+
                     complaint_type_id: req.body.complaint_type_id != null ? Number(req.body.complaint_type_id) : undefined,
                     complainant_id: req.body.complainant_id != null ? Number(req.body.complainant_id) : undefined,
                     is_anonymous: Number(req.body.is_anonymous),
@@ -899,12 +937,9 @@ const methods = {
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
                     notice_type: parseInt(req.body.notice_type),
 
-                    pol_no: req.body.pol_no,
-                    receive_doc_no: req.body.receive_doc_no,
-                    receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
                     forward_doc_no: req.body.forward_doc_no,
                     forward_doc_date: req.body.forward_doc_date != null ? new Date(req.body.forward_doc_date) : undefined,
-                    receive_status: Number(req.body.receive_status),
+
                     created_by: authUsername,
                     updated_by: authUsername,
                     created_at: new Date(),
@@ -944,6 +979,12 @@ const methods = {
             authUsername = decoded.username;
         }
 
+        let receiveDocPathFile = await uploadController.onUploadFile(req, "/complaint/", "receive_doc_filename");
+
+        if (receiveDocPathFile == "error") {
+            return res.status(500).send("error");
+        }
+
         try {
 
             const item = await prisma[$table].update({
@@ -957,8 +998,16 @@ const methods = {
                     tracking_satisfaction_at: req.body.tracking_satisfaction_at != null ? new Date(req.body.tracking_satisfaction_at) : undefined,
                     complaint_satisfaction: req.body.complaint_satisfaction != null ? Number(req.body.complaint_satisfaction) : undefined,
                     complaint_satisfaction_at: req.body.complaint_satisfaction_at != null ? new Date(req.body.complaint_satisfaction_at) : undefined,
+
                     received_at: req.body.received_at != null ? new Date(req.body.received_at) : undefined,
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
+                    pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
+                    receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
+                    receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
+                    receive_status: req.body.receive_status != null ? req.body.receive_status : undefined,
+                    receive_comment: req.body.receive_comment != null ? req.body.receive_comment : undefined,
+                    receive_doc_filename: receiveDocPathFile != null ? receiveDocPathFile : undefined,
+
                     complaint_type_id: req.body.complaint_type_id != null ? Number(req.body.complaint_type_id) : undefined,
                     complainant_id: req.body.complainant_id != null ? Number(req.body.complainant_id) : undefined,
                     is_anonymous: req.body.is_anonymous != null ? Number(req.body.is_anonymous) : undefined,
@@ -988,12 +1037,8 @@ const methods = {
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
                     notice_type: req.body.notice_type != null ? req.body.notice_type : undefined,
 
-                    pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
-                    receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
-                    receive_doc_date: req.body.receive_doc_date != null ? new Date(req.body.receive_doc_date) : undefined,
                     forward_doc_no: req.body.forward_doc_no != null ? req.body.forward_doc_no : undefined,
                     forward_doc_date: req.body.forward_doc_date != null ? new Date(req.body.forward_doc_date) : undefined,
-                    receive_status: req.body.receive_status != null ? req.body.receive_status : undefined,
 
                     updated_by: authUsername,
                     updated_at: new Date(),
