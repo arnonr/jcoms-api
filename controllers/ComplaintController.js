@@ -61,32 +61,24 @@ const selectField = {
     is_active: true,
     complaint_type: {
         select: {
-            // id: true,
             name_th: true,
-            // name_en: true,
         },
     },
     receive_user:{
         select: {
-            // id: true,
             email: true,
             firstname: true,
             lastname: true,
             officer_code: true,
-            // agency_id: true,
-            // agency: {
-            //     select: {
-            //         name_th: true,
-            //         name_en: true,
-            //     },
-            // },
         }
     },
     complainant: {
 
     },
     accused: {
-
+        where: {
+            deleted_at: null
+        }
     },
     channel_history: {
         select: {
@@ -101,9 +93,7 @@ const selectField = {
     },
     complaint_channel: {
         select: {
-            // id: true,
             name_th: true,
-            // name_en: true,
         },
     },
     inspector: {
