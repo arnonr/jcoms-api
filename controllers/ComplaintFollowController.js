@@ -53,6 +53,7 @@ const selectField = {
     receive_user_id: true,
     receive_at: true,
     receive_comment: true,
+    follow_detail: true,
 
     created_at: true,
     created_by: true,
@@ -231,7 +232,7 @@ const methods = {
                 data: {
                     complaint_id: Number(req.body.complaint_id),
                     inspector_id: Number(req.body.inspector_id),
-                    detail: req.body.detail,
+                    follow_detail: req.body.follow_detail,
 
                     follow_doc_no: req.body.follow_doc_no,
                     follow_doc_date: req.body.follow_doc_date != null ? new Date(req.body.follow_doc_date) : undefined,
@@ -284,6 +285,7 @@ const methods = {
                     follow_doc_filename: followDocPathFile != null ? followDocPathFile : undefined,
                     follow_user_id: req.body.follow_user_id != null ? Number(req.body.follow_user_id) : undefined,
                     follow_at: req.body.follow_at != null ? new Date(req.body.follow_at) : undefined,
+                    follow_detail: req.body.follow_detail != null ? req.body.follow_detail : undefined,
 
                     from_inspector_id: req.body.from_inspector_id != null ? Number(req.body.from_inspector_id) : undefined,
                     from_bureau_id: req.body.from_bureau_id != null ? Number(req.body.from_bureau_id) : undefined,

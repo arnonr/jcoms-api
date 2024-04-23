@@ -511,6 +511,7 @@ model state {
 
     name_th             String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
+    parent_state        Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -746,6 +747,7 @@ model complaint_report {
     report_doc_filename String?     @db.VarChar(200)
     report_user_id      Int?
     report_at           DateTime?
+    report_detail       String?     @db.Text
     from_inspector_id   Int?
     from_bureau_id      Int?
     from_division_id    Int?
@@ -793,7 +795,7 @@ model complaint_follow {
     complaint_id        Int
     inspector_id        Int?
 
-    detail              String?     @db.VarChar(200)
+    follow_detail       String?     @db.Text
 
     follow_doc_no       String?     @db.VarChar(100)
     follow_doc_date     DateTime?   @db.Date

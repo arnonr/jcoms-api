@@ -47,6 +47,7 @@ const selectField = {
     report_doc_filename: true,
     report_user_id: true,
     report_at: true,
+    report_detail: true,
     from_inspector_id: true,
     from_bureau_id: true,
     from_division_id: true,
@@ -322,6 +323,7 @@ const methods = {
 
                     report_user_id: Number(req.body.report_user_id),
                     report_at: req.body.report_at != null ? new Date(req.body.report_at) : undefined,
+                    report_detail: req.body.report_detail,
 
                     from_inspector_id: Number(req.body.from_inspector_id),
                     from_bureau_id: Number(req.body.from_bureau_id),
@@ -379,6 +381,7 @@ const methods = {
 
                     report_user_id: req.body.report_user_id != null ? Number(req.body.report_user_id) : undefined,
                     report_at: req.body.report_at != null ? new Date(req.body.report_at) : undefined,
+                    report_detail: req.body.report_detail != null ? req.body.report_detail : undefined,
 
                     from_inspector_id: req.body.from_inspector_id != null ? Number(req.body.from_inspector_id) : undefined,
                     from_bureau_id: req.body.from_bureau_id != null ? Number(req.body.from_bureau_id) : undefined,
