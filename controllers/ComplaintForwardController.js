@@ -63,6 +63,7 @@ const selectField = {
     order_id: true,
     order_detail: true,
     receive_status: true,
+    receive_comment: true,
     state_id: true,
     created_at: true,
     created_by: true,
@@ -357,6 +358,7 @@ const methods = {
                     receive_doc_filename: receiveDocPathFile,
                     receive_user_id: Number(req.body.receive_user_id),
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
+                    receive_comment: req.body.receive_comment,
                     order_id: Number(req.body.order_id),
                     order_detail: req.body.order_detail,
                     receive_status: Number(req.body.receive_status),
@@ -411,6 +413,7 @@ const methods = {
                     receive_doc_filename: receiveDocPathFile != null ? receiveDocPathFile : undefined,
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
+                    receive_comment: req.body.receive_comment != null ? req.body.receive_comment : undefined,
 
                     order_id: req.body.order_id != null ? Number(req.body.order_id) : undefined,
                     order_detail: req.body.order_detail != null ? req.body.order_detail : undefined,

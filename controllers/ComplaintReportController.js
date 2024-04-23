@@ -60,6 +60,7 @@ const selectField = {
     receive_doc_filename: true,
     receive_user_id: true,
     receive_at: true,
+    receive_comment: true,
     state_id: true,
 
     created_at: true,
@@ -338,6 +339,7 @@ const methods = {
 
                     receive_user_id: Number(req.body.receive_user_id),
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
+                    receive_comment: req.body.receive_comment,
 
                     state_id: Number(req.body.state_id),
                     is_active: Number(req.body.is_active),
@@ -393,6 +395,7 @@ const methods = {
 
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
+                    receive_comment: req.body.receive_comment != null ? req.body.receive_comment : undefined,
 
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
 

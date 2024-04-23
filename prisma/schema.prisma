@@ -686,6 +686,7 @@ model complaint_forward {
     order_id            Int?
     order_detail        String?     @db.VarChar(100)
     receive_status      Int?        @db.TinyInt
+    receive_comment     String?     @db.VarChar(200)
     state_id            Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -758,6 +759,7 @@ model complaint_report {
     receive_doc_filename String?    @db.VarChar(200)
     receive_user_id     Int?
     receive_at          DateTime?
+    receive_comment     String?     @db.VarChar(200)
     state_id            Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -804,6 +806,7 @@ model complaint_follow {
     receive_doc_filename String?    @db.VarChar(200)
     receive_user_id     Int?
     receive_at          DateTime?
+    receive_comment     String?     @db.VarChar(200)
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
