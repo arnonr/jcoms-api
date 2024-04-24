@@ -533,15 +533,17 @@ const deleteComplaintChannelHistory = async (complaint_id) => {
 };
 
 const addComplaintChannelHistory = async (complaint_id, complaint_channel_ids, authUsername) => {
-    if(Array.isArray(complaint_channel_ids)){
-        for(let i = 0; i < complaint_channel_ids.length; i++){
-            // console.log(complaint_channel_ids[i]);
-            const complaint_history = await prisma.complaint_channel_history.create({
+
+    if (complaint_channel_ids) {
+        // console.log(channel_ids);
+        const complaint_channel_ids_array = complaint_channel_ids.split(',');
+        for (let i = 0; i < complaint_channel_ids_array.length; i++) {
+            const item = await prisma.complaint_channel_history.create({
                 data: {
                     complaint_id: Number(complaint_id),
-                    complaint_channel_id: Number(complaint_channel_ids[i]),
+                    complaint_channel_id: Number(complaint_channel_ids_array[i]),
                     created_by: authUsername,
-                    created_at: new Date()
+                    created_at: new Date(),
                 }
             });
         }
