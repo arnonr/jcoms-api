@@ -900,7 +900,7 @@ const methods = {
                     complaint_satisfaction: Number(req.body.complaint_satisfaction),
                     complaint_satisfaction_at: req.body.complaint_satisfaction_at != null ? new Date(req.body.complaint_satisfaction_at) : undefined,
 
-                    received_at: req.body.received_at != null ? new Date(req.body.received_at) : undefined,
+                    receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     receive_comment: req.body.receive_comment,
                     pol_no: req.body.pol_no,
@@ -1000,8 +1000,8 @@ const methods = {
                     tracking_satisfaction_at: req.body.tracking_satisfaction_at != null ? new Date(req.body.tracking_satisfaction_at) : undefined,
                     complaint_satisfaction: req.body.complaint_satisfaction != null ? Number(req.body.complaint_satisfaction) : undefined,
                     complaint_satisfaction_at: req.body.complaint_satisfaction_at != null ? new Date(req.body.complaint_satisfaction_at) : undefined,
-
-                    received_at: req.body.received_at != null ? new Date(req.body.received_at) : undefined,
+                    
+                    receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
                     receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
                     pol_no: req.body.pol_no != null ? req.body.pol_no : undefined,
                     receive_doc_no: req.body.receive_doc_no != null ? req.body.receive_doc_no : undefined,
