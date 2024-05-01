@@ -251,6 +251,7 @@ model user {
     login_log           login_log[]
     report_from_user         complaint_report[] @relation(name: "report_from_user")
     report_receive_by_user   complaint_report[] @relation(name: "report_receive_by_user")
+    report_return_user       complaint_report[] @relation(name: "report_return_user")
 
     forward_from_user   complaint_forward[] @relation(name: "forward_from_user")
     forward_receive_by_user   complaint_forward[] @relation(name: "forward_receive_by_user")
@@ -763,6 +764,10 @@ model complaint_report {
     receive_at          DateTime?
     receive_comment     String?     @db.VarChar(200)
     state_id            Int?
+    status              Int?        @db.TinyInt
+    return_detail       String?     @db.Text
+    return_at           DateTime?
+    return_user_id      Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -776,6 +781,7 @@ model complaint_report {
     proceed_status      proceed_status? @relation(fields: [proceed_status_id], references: [id])
     report_user         user?           @relation(name: "report_from_user", fields: [report_user_id], references: [id])
     receive_user        user?           @relation(name: "report_receive_by_user", fields: [receive_user_id], references: [id])
+    report_return_user  user?           @relation(name: "report_return_user",  fields: [return_user_id], references: [id])
 
     from_inspector      inspector?      @relation(name: "report_from_inspector", fields: [from_inspector_id], references: [id])
     from_bureau         bureau?         @relation(name: "report_from_bureau", fields: [from_bureau_id], references: [id])
@@ -788,6 +794,7 @@ model complaint_report {
     to_division         division?       @relation(name: "report_to_division", fields: [to_division_id], references: [id])
 
     state               state?          @relation(fields: [state_id], references: [id])
+
 }
 //รอดำเนินการ
 model complaint_follow {

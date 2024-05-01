@@ -63,7 +63,10 @@ const selectField = {
     receive_at: true,
     receive_comment: true,
     state_id: true,
-
+    status: true,
+    return_detail: true,
+    return_at: true,
+    return_user_id: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -82,6 +85,12 @@ const selectField = {
         }
     },
     report_user: {
+        select: {
+            firstname: true,
+            lastname: true
+        }
+    },
+    report_return_user:{
         select: {
             firstname: true,
             lastname: true
@@ -220,6 +229,14 @@ const filterData = (req) => {
         $where["state_id"] = parseInt(req.query.state_id);
     }
 
+    if (req.query.status) {
+        $where["status"] = parseInt(req.query.status);
+    }
+
+    if (req.query.return_user_id) {
+        $where["return_user_id"] = parseInt(req.query.return_user_id);
+    }
+
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
     }
@@ -345,6 +362,10 @@ const methods = {
 
                     state_id: Number(req.body.state_id),
                     is_active: Number(req.body.is_active),
+                    status: Number(req.body.status),
+                    return_detail: req.body.return_detail,
+                    return_at: req.body.return_at != null ? new Date(req.body.return_at) : undefined,
+                    return_user_id: Number(req.body.return_user_id),
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -403,7 +424,11 @@ const methods = {
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
 
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
-                    // updated_by: null,
+
+                    status: req.body.status != null ? Number(req.body.status) : undefined,
+                    return_detail: req.body.return_detail != null ? req.body.return_detail : undefined,
+                    return_at: req.body.return_at != null ? new Date(req.body.return_at) : undefined,
+                    return_user_id: req.body.return_user_id != null ? Number(req.body.return_user_id) : undefined,
                 },
             });
 
