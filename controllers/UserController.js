@@ -30,6 +30,13 @@ const prisma = new PrismaClient().$extends({
                     return file_attach;
                 },
             },
+            fullname: {
+                needs: { firstname: true, lastname: true, prefix_name_id: true },
+                compute(user) {
+                    return user.prefix_name.name_th_abbr + user.firstname + " " + user.lastname;
+                },
+            },
+
         },
     },
 });
@@ -39,6 +46,7 @@ const selectField = {
     id: true,
     uuid: true,
     prefix_name_id: true,
+    fullname: true,
     firstname: true,
     lastname: true,
     officer_code: true,
@@ -66,7 +74,8 @@ const selectField = {
     is_active: true,
     prefix_name:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     position:{
