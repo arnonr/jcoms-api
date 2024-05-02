@@ -16,6 +16,7 @@ model prefix_name {
     name_th_abbr        String?     @db.VarChar(100)
     name_en             String?     @db.VarChar(100)
     name_en_abbr        String?     @db.VarChar(100)
+    type                Int?        @db.TinyInt
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)

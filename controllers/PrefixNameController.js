@@ -1,6 +1,23 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const $table = "prefix_name";
+
+    // ฟิลด์ที่ต้องการ Select รวมถึง join
+const selectField = {
+    id: true,
+    name_th: true,
+    name_th_abbr: true,
+    name_en: true,
+    name_en_abbr: true,
+    type: true,
+    created_at: true,
+    created_by: true,
+    updated_at: true,
+    updated_by: true,
+    deleted_at: true,
+    deleted_by: true,
+    is_active: true,
+};
 const filterData = (req) => {
     let $where = {
         deleted_at: null,
@@ -54,6 +71,10 @@ const filterData = (req) => {
         };
     }
 
+    if (req.query.type) {
+        $where["type"] = parseInt(req.query.type);
+    }
+
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
     }
@@ -90,23 +111,8 @@ const countDataAndOrder = async (req, $where) => {
         $totalPage: $totalPage,
         $currentPage: $currentPage,
     };
-    };
-
-    // ฟิลด์ที่ต้องการ Select รวมถึง join
-    const selectField = {
-    id: true,
-    name_th: true,
-    name_th_abbr: true,
-    name_en: true,
-    name_en_abbr: true,
-    created_at: true,
-    created_by: true,
-    updated_at: true,
-    updated_by: true,
-    deleted_at: true,
-    deleted_by: true,
-    is_active: true,
 };
+
 
 const checkLanguage = (req) => {
     let prismaLang = prisma.$extends({

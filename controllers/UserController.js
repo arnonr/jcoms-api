@@ -204,6 +204,17 @@ const filterData = (req) => {
         $where["is_active"] = parseInt(req.query.is_active);
     }
 
+    if (req.query.fullname) {
+        const [firstName, lastName] = req.query.fullname.split(' ');
+        $where = {
+            ...$where,
+            OR: [
+                { firstname: { contains: firstName } }, { lastname: { contains: lastName } },
+                { firstname: { contains: lastName } }, { lastname: { contains: firstName } },
+            ],
+        };
+    }
+
     return $where;
 };
 
@@ -276,12 +287,12 @@ const methods = {
             });
 
             res.status(200).json({
-                data: item,
                 totalData: other.$count,
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
                 lang: req.query.lang ? req.query.lang : "",
                 msg: "success",
+                data: item,
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
