@@ -32,7 +32,20 @@ const prisma = new PrismaClient().$extends({
 
                     return receive_doc_filename;
                 }
-            }
+            },
+            return_doc_filename: { // the name of the new computed field
+                needs: { return_doc_filename: true }, /* field */
+                compute(complaint_report) {
+
+                    let return_doc_filename = null;
+
+                    if (complaint_report.return_doc_filename != null) {
+                        return_doc_filename = process.env.PATH_UPLOAD + complaint_report.return_doc_filename;
+                    }
+
+                    return return_doc_filename;
+                }
+            },
         },
     },
 });
@@ -67,6 +80,9 @@ const selectField = {
     return_detail: true,
     return_at: true,
     return_user_id: true,
+    return_doc_no: true,
+    return_doc_date: true,
+    return_doc_filename: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -237,6 +253,18 @@ const filterData = (req) => {
         $where["return_user_id"] = parseInt(req.query.return_user_id);
     }
 
+    if (req.query.return_doc_no) {
+        $where["return_doc_no"] = {
+            contains: req.query.return_doc_no,
+        }
+    }
+
+    if (req.query.return_doc_date) {
+        $where["return_doc_date"] = {
+            contains: req.query.return_doc_date,
+        }
+    }
+
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
     }
@@ -324,8 +352,9 @@ const methods = {
 
             let reportDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","report_doc_filename");
             let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","receive_doc_filename");
+            let returnDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","return_doc_filename");
 
-            if (reportDocPathFile == "error" || receiveDocPathFile == "error") {
+            if (reportDocPathFile == "error" || receiveDocPathFile == "error" || returnDocPathFile == "error") {
                 return res.status(500).send("error");
             }
 
@@ -366,6 +395,9 @@ const methods = {
                     return_detail: req.body.return_detail,
                     return_at: req.body.return_at != null ? new Date(req.body.return_at) : undefined,
                     return_user_id: Number(req.body.return_user_id),
+                    return_doc_no: req.body.return_doc_no,
+                    return_doc_date: req.body.return_doc_date != null ? new Date(req.body.return_doc_date) : undefined,
+                    return_doc_filename: returnDocPathFile,
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -383,8 +415,9 @@ const methods = {
 
             let reportDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","report_doc_filename");
             let receiveDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","receive_doc_filename");
+            let returnDocPathFile = await uploadController.onUploadFile(req,"/complaint-report/","return_doc_filename");
 
-            if (reportDocPathFile == "error" || receiveDocPathFile == "error") {
+            if (reportDocPathFile == "error" || receiveDocPathFile == "error" || returnDocPathFile == "error") {
                 return res.status(500).send("error");
             }
 
@@ -429,6 +462,9 @@ const methods = {
                     return_detail: req.body.return_detail != null ? req.body.return_detail : undefined,
                     return_at: req.body.return_at != null ? new Date(req.body.return_at) : undefined,
                     return_user_id: req.body.return_user_id != null ? Number(req.body.return_user_id) : undefined,
+                    return_doc_no: req.body.return_doc_no != null ? req.body.return_doc_no : undefined,
+                    return_doc_date: req.body.return_doc_date != null ? new Date(req.body.return_doc_date) : undefined,
+                    return_doc_filename: returnDocPathFile != null ? returnDocPathFile : undefined,
                 },
             });
 
