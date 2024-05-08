@@ -476,6 +476,18 @@ const filterData = (req) => {
     $where["is_active"] = parseInt(req.query.is_active);
   }
 
+  if(req.query.state_in){
+    const statesString = req.query.state_in;
+    const states = statesString.split(',').map(Number);
+    if (states.some(isNaN)) {
+      // Handle the case where the input contains invalid values
+      // For example, return an error or set a default value
+      console.log('Invalid input: ' + statesString);
+    } else {
+      $where['state_id'] = { in: states };
+    }
+  }
+
   return $where;
 };
 
