@@ -20,7 +20,7 @@ const sendSMS = async (msisdn, message) => {
       msisdn: msisdn,
       message: message,
       // sender: "Demo",
-      sender: "Teams",
+      sender: "JCOMS",
       force: "corporate",
       // Shorten_url: true,
       // tracking_url: true,
