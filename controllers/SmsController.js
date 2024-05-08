@@ -155,12 +155,13 @@ const methods = {
             });
 
             if (item) {
-                await methods.onUpdateOTP(otp_item.id);
+                await methods.onUpdateOTP(item.id);
                 return item;
             }
 
             return false;
         } catch (error) {
+            console.log(error);
             return false;
         }
   },
