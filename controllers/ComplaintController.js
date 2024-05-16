@@ -317,10 +317,35 @@ const filterData = (req) => {
     };
   }
 
-  if (req.query.incident_datetime) {
+  if (req.query.incident_date_from && req.query.incident_date_to) {
+    let date_from = new Date(
+      req.query.incident_date_from + "T00:00:00.000+0000"
+    ).toISOString();
+
+    let date_to = new Date(
+      req.query.incident_date_to + "T23:59:59.000+0000"
+    ).toISOString();
+
     $where["incident_datetime"] = {
-      contains: req.query.incident_datetime,
+      gte: date_from,
+      lte: date_to,
     };
+
+  } else if (req.query.incident_date_from) {
+
+    let date_from = new Date(
+      req.query.incident_date_from + "T00:00:00.000+0000"
+    ).toISOString();
+
+    let date_to = new Date(
+      req.query.incident_date_from + "T23:59:59.000+0000"
+    )
+
+    $where["incident_datetime"] = {
+      gte: date_from,
+      lte: date_to,
+    };
+
   }
 
   if (req.query.location_coordinates) {
