@@ -51,6 +51,7 @@ const selectField = {
   day_time: true,
   complaint_channel_id: true,
   channel_history_text: true,
+  evidence_url: true,
   inspector_id: true,
   bureau_id: true,
   division_id: true,
@@ -1005,8 +1006,8 @@ const methods = {
             req.body.complaint_channel_id != null
               ? Number(req.body.complaint_channel_id)
               : undefined,
-
           channel_history_text: req.body.channel_history_text,
+          evidence_url: req.body.evidence_url,
           inspector_id:
             req.body.inspector_id != null
               ? Number(req.body.inspector_id)
@@ -1199,6 +1200,9 @@ const methods = {
             req.body.channel_history_text != null
               ? req.body.channel_history_text
               : undefined,
+          evidence_url:
+            req.body.evidence_url != null ? req.body.evidence_url : undefined,
+
           inspector_id:
             req.body.inspector_id != null
               ? Number(req.body.inspector_id)

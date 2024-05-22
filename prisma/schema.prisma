@@ -555,6 +555,7 @@ model complaint {
     incident_datetime   DateTime?
     location_coordinates  String?   @db.VarChar(100)
     incident_location   String?     @db.Text
+    evidence_url        String?     @db.Text
 
     day_time            Int?        @db.TinyInt
     complaint_channel_id Int?
