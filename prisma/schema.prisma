@@ -248,8 +248,9 @@ model user {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    complaint           complaint[]
     login_log           login_log[]
+    closed_user         complaint[] @relation(name: "ClosedUser")
+    receive_user        complaint[] @relation(name: "ReceiveUser")
     report_from_user         complaint_report[] @relation(name: "report_from_user")
     report_receive_by_user   complaint_report[] @relation(name: "report_receive_by_user")
     report_return_user       complaint_report[] @relation(name: "report_return_user")
@@ -583,6 +584,10 @@ model complaint {
     jcoms_month_running Int?
     jcoms_year_running  Int?
 
+    closed_at           DateTime?
+    closed_user_id      Int?
+    closed_comment      String?     @db.Text
+
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
     updated_at          DateTime?   @default(now())     @db.DateTime(0)
@@ -591,7 +596,8 @@ model complaint {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
-    receive_user        user?               @relation(fields: [receive_user_id], references: [id])
+    closed_user         user?               @relation(name: "ClosedUser", fields: [closed_user_id], references: [id])
+    receive_user        user?               @relation(name: "ReceiveUser", fields: [receive_user_id], references: [id])
     complaint_type      complaint_type?     @relation(fields: [complaint_type_id], references: [id])
     complainant         complainant?        @relation(fields: [complainant_id], references: [id])
     complaint_channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])

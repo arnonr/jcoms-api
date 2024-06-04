@@ -80,6 +80,10 @@ const selectField = {
   forward_doc_no: true,
   forward_doc_date: true,
 
+  closed_at: true,
+  closed_user_id: true,
+  closed_comment: true,
+
   created_at: true,
   created_by: true,
   updated_at: true,
@@ -90,6 +94,14 @@ const selectField = {
   complaint_type: {
     select: {
       name_th: true,
+    },
+  },
+  closed_user: {
+    select: {
+      email: true,
+      firstname: true,
+      lastname: true,
+      officer_code: true,
     },
   },
   receive_user: {
@@ -1052,6 +1064,13 @@ const methods = {
               ? new Date(req.body.forward_doc_date)
               : undefined,
 
+          closed_at: req.body.closed_at != null ? new Date(req.body.closed_at) : undefined,
+          closed_user_id:
+            req.body.closed_user_id != null
+              ? Number(req.body.closed_user_id)
+              : undefined,
+          closed_comment: req.body.closed_comment,
+
           created_by: authUsername,
           updated_by: authUsername,
           created_at: new Date(),
@@ -1251,6 +1270,19 @@ const methods = {
           forward_doc_date:
             req.body.forward_doc_date != null
               ? new Date(req.body.forward_doc_date)
+              : undefined,
+
+          closed_at:
+            req.body.closed_at != null
+              ? new Date(req.body.closed_at)
+              : undefined,
+          closed_user_id:
+            req.body.closed_user_id != null
+              ? Number(req.body.closed_user_id)
+              : undefined,
+          closed_comment:
+            req.body.closed_comment != null
+              ? req.body.closed_comment
               : undefined,
 
           updated_by: authUsername,
