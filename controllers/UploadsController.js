@@ -70,7 +70,7 @@ const methods = {
             /* Move to path */
             uploadFile.mv(pathUpload, function (err) {
                 if (err) return err;
-                console.log('File uploaded and moved!');
+                // console.log('File uploaded and moved!');
             });
 
             pathFile = real_path + nameFile;

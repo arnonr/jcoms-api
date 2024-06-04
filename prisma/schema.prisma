@@ -74,6 +74,7 @@ model inspector {
     accused             accused[]
     complaint_follow    complaint_follow[]
     complainant         complainant[]
+    extend_aproved_inspector    complaint_extend[]
 
     forward_from_inspector  complaint_forward[]     @relation(name: "forward_from_inspector")
     forward_to_inspector    complaint_forward[]     @relation(name: "forward_to_inspector")
@@ -106,6 +107,7 @@ model bureau {
     complaint           complaint[]
     accused             accused[]
     complainant         complainant[]
+    extend_aproved_bureau    complaint_extend[]
 
     inspector           inspector     @relation(fields: [inspector_id], references: [id])
     forward_from_bureau         complaint_forward[]     @relation(name: "forward_from_bureau")
@@ -260,6 +262,9 @@ model user {
 
     follow_from_user   complaint_follow[] @relation(name: "follow_from_user")
     follow_receive_by_user   complaint_follow[] @relation(name: "follow_receive_by_user")
+
+    extend_user          complaint_extend[] @relation(name: "ExtendUser")
+    approved_extend_user complaint_extend[] @relation(name: "ApprovedUser")
 
     prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
     position            position?        @relation(fields: [position_id], references: [id])
@@ -509,6 +514,41 @@ model topic_type {
     complaint           complaint[]
 }
 
+
+model complaint_extend {
+    id                  Int         @id @default(autoincrement())
+    complaint_id        Int
+    extend_comment      String?     @db.Text
+    extend_user_id      Int?
+    bureau_id           Int?
+    extend_doc_no       String?     @db.VarChar(100)
+    extend_doc_date     DateTime?   @db.Date
+    extend_doc_filename String?     @db.VarChar(200)
+
+    approved_at         DateTime?
+    approved_user_id    Int?
+    approved_comment    String?     @db.Text
+    inspector_id        Int?
+    approved_doc_no     String?     @db.VarChar(100)
+    approved_doc_date   DateTime?   @db.Date
+    approved_doc_filename String?    @db.VarChar(200)
+    status              Int?        @db.TinyInt
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+
+    complaint           complaint?  @relation(fields: [complaint_id], references: [id])
+    extend_user         user?       @relation(name: "ExtendUser", fields: [extend_user_id], references: [id])
+    approved_user user?      @relation(name: "ApprovedUser", fields: [approved_user_id], references: [id])
+    approved_inspector   inspector?  @relation(fields: [inspector_id], references: [id])
+    extend_bureau        bureau?     @relation(fields: [bureau_id], references: [id])
+
+}
 model state {
     id                  Int         @id @default(autoincrement())
 
@@ -616,6 +656,7 @@ model complaint {
     complaint_report complaint_report[]
     complaint_follow    complaint_follow[]
     channel_history   complaint_channel_history[]
+    complaint_extend  complaint_extend[]
 
 }
 
