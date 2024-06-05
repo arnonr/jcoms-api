@@ -203,7 +203,7 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
-                    prefix_name_id: Number(req.body.prefix_name_id),
+                    prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
                     position_id: req.body.position_id != null ? Number(req.body.position_id) : undefined,
