@@ -1290,11 +1290,13 @@ const methods = {
         },
       });
 
-      await deleteComplaintChannelHistory(req.params.id);
-      await addComplaintChannelHistory(
-        req.params.id,
-        req.body.complaint_channel_ids
-      );
+      if(req.body.complaint_channel_ids !== undefined){
+        await deleteComplaintChannelHistory(req.params.id);
+        await addComplaintChannelHistory(
+          req.params.id,
+          req.body.complaint_channel_ids
+        );
+      }
 
       if (item.jcoms_no == null) {
         // const JcomsCode = await generateJcomsCode(req.params.id);
