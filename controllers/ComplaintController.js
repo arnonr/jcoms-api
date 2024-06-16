@@ -67,6 +67,7 @@ const selectField = {
   district_id: true,
   province_id: true,
   state_id: true,
+  inspector_state_id: true,
   notice_type: true,
 
   /* การรับเรื่อง ฝ่ายรับเรื่องร้องเรียน */
@@ -181,6 +182,11 @@ const selectField = {
     },
   },
   state: {
+    select: {
+      name_th: true,
+    },
+  },
+  inspector_state: {
     select: {
       name_th: true,
     },
@@ -464,6 +470,10 @@ const filterData = (req) => {
 
   if (req.query.state_id) {
     $where["state_id"] = parseInt(req.query.state_id);
+  }
+
+  if(req.query.inspector_state_id){
+    $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
   }
 
   if (req.query.notice_type) {
@@ -1057,6 +1067,7 @@ const methods = {
           state_id:
             req.body.state_id != null ? Number(req.body.state_id) : undefined,
           notice_type: parseInt(req.body.notice_type),
+          inspector_state_id: req.body.inspector_state_id != null ? Number(req.body.inspector_state_id) : undefined,
 
           forward_doc_no: req.body.forward_doc_no,
           forward_doc_date:
@@ -1260,6 +1271,10 @@ const methods = {
               : undefined,
           state_id:
             req.body.state_id != null ? Number(req.body.state_id) : undefined,
+          inspector_state_id:
+            req.body.inspector_state_id != null
+              ? Number(req.body.inspector_state_id)
+              : undefined,
           notice_type:
             req.body.notice_type != null ? req.body.notice_type : undefined,
 

@@ -570,6 +570,25 @@ model state {
     complaint_forward   complaint_forward[]
 }
 
+model inspector_state {
+    id                  Int         @id @default(autoincrement())
+
+    name_th             String?     @db.VarChar(100)
+    name_en             String?     @db.VarChar(100)
+    parent_state        Int?
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+
+    complaint           complaint[]
+    complaint_forward   complaint_forward[]
+}
+
 model complaint {
     id                  Int         @id @default(autoincrement())
     uuid                String?     @db.VarChar(100)
@@ -617,6 +636,7 @@ model complaint {
     province_id         Int?
     state_id            Int?
     notice_type         Int?        @db.TinyInt
+    inspector_state_id  Int?
 
     forward_doc_no      String?     @db.VarChar(100)
     forward_doc_date    DateTime?   @db.Date
@@ -650,6 +670,7 @@ model complaint {
     district            district?           @relation(fields: [district_id], references: [id])
     province            province?           @relation(fields: [province_id], references: [id])
     state               state?              @relation(fields: [state_id], references: [id])
+    inspector_state      inspector_state?     @relation(fields: [inspector_state_id], references: [id])
 
     accused             accused[]
     complaint_forward   complaint_forward[]
@@ -739,6 +760,7 @@ model complaint_forward {
     receive_status      Int?        @db.TinyInt
     receive_comment     String?     @db.VarChar(200)
     state_id            Int?
+    inspector_state_id  Int?
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)
@@ -751,6 +773,7 @@ model complaint_forward {
     complaint           complaint?      @relation(fields: [complaint_id], references: [id])
     order               order?          @relation(fields: [order_id], references: [id])
     state               state?          @relation(fields: [state_id], references: [id])
+    inspector_state     inspector_state? @relation(fields: [inspector_state_id], references: [id])
 
     forward_user        user?           @relation(name: "forward_from_user", fields: [forward_user_id], references: [id])
     receive_user        user?           @relation(name: "forward_receive_by_user", fields: [receive_user_id], references: [id])

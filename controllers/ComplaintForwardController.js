@@ -65,6 +65,7 @@ const selectField = {
     receive_status: true,
     receive_comment: true,
     state_id: true,
+    inspector_state_id: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -78,6 +79,11 @@ const selectField = {
         }
     },
     state: {
+        select: {
+            name_th: true
+        }
+    },
+    inspector_state: {
         select: {
             name_th: true
         }
@@ -248,6 +254,10 @@ const filterData = (req) => {
         $where["state_id"] = parseInt(req.query.state_id);
     }
 
+    if (req.query.inspector_state_id) {
+        $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
+    }
+
     return $where;
 };
 
@@ -363,6 +373,7 @@ const methods = {
                     order_detail: req.body.order_detail,
                     receive_status: Number(req.body.receive_status),
                     state_id: Number(req.body.state_id),
+                    inspector_state_id: req.body.inspector_state_id != null ? Number(req.body.inspector_state_id) : undefined,
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -419,7 +430,7 @@ const methods = {
                     order_detail: req.body.order_detail != null ? req.body.order_detail : undefined,
                     receive_status: req.body.receive_status != null ? Number(req.body.receive_status) : undefined,
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
-                    // updated_by: null,
+                    inspector_state_id: req.body.inspector_state_id != null ? Number(req.body.inspector_state_id) : undefined,
                 },
             });
 
