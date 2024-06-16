@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const SmsController = require("./SmsController");
 const uploadController = require("./UploadsController");
+const helperController = require("./HelperController");
 const { v4: uuidv4 } = require("uuid");
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
@@ -751,31 +752,31 @@ const getComplainantUUIDbyPhoneNumber = async (phoneNumber) => {
 };
 
 const methods = {
-    
+
     async onGetPhoneNumber(req, res) {
-    
+
         if (!req.body.jcoms_no && !req.body.phone_number && !req.body.id_card) {
           return res
             .status(400)
             .json({ msg: "jcoms_no or phone_number or id_card is required" });
         }
-    
+
         let $where = {
           complainant: {},
         };
-    
+
         if (req.body.jcoms_no) {
           $where["jcoms_no"] = req.body.jcoms_no;
         }
-    
+
         if (req.body.phone_number) {
           $where["complainant"]["phone_number"] = req.body.phone_number;
         }
-    
+
         if (req.body.id_card) {
           $where["complainant"]["id_card"] = req.body.id_card;
         }
-    
+
         try {
           const item = await prisma[$table].findFirstOrThrow({
             select: {
@@ -791,11 +792,11 @@ const methods = {
           if(!item){
             throw new Error({code:"P2025" });
           }
-    
+
           const phone_number = item.complainant.phone_number;
           const secret_phone_number = "xxx-xxx-" + phone_number.slice(6, 10);
-    
-    
+
+
           res.status(200).json({
             data:{phone_number: secret_phone_number},
             msg: "success",
@@ -804,7 +805,7 @@ const methods = {
           if (error.code == "P2025") {
             return res.status(404).json({ msg: "data not found" });
           }
-    
+
           res.status(500).json({ msg: error.message });
         }
       },

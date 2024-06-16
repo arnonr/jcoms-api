@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const uploadController = require("./UploadsController");
+const helperController = require("./HelperController");
 const $table = "complainant";
 const { v4: uuidv4 } = require('uuid');
 
@@ -20,6 +21,19 @@ const prisma = new PrismaClient().$extends({
                     return card_photo;
                 },
             },
+            id_card: {
+                needs: { id_card: true } ,
+                compute(model) {
+                    let id_card = null;
+
+                    if (model.id_card != null) {
+                        id_card = helperController.base64DecodeWithKey(model.id_card);
+                    }
+
+                    return id_card;
+                }
+            },
+
         },
     },
 });
@@ -333,7 +347,7 @@ const methods = {
                 data: {
                     uuid: uuidv4(),
                     card_type: Number(req.body.card_type),
-                    id_card: req.body.id_card,
+                    id_card: req.body.id_card != null ? helperController.base64EncodeWithKey(req.body.id_card) : undefined,
                     card_photo: pathFile,
                     prefix_name_id: Number(req.body.prefix_name_id),
                     firstname: req.body.firstname,
@@ -387,7 +401,7 @@ const methods = {
                 },
                 data: {
                     card_type: req.body.card_type != null ? Number(req.body.card_type) : undefined,
-                    id_card: req.body.id_card != null ? req.body.id_card : undefined,
+                    id_card: req.body.id_card != null ? helperController.base64EncodeWithKey(req.body.id_card) : undefined,
 
                     prefix_name_id: req.body.prefix_name_id != null ? Number(req.body.prefix_name_id) : undefined,
                     firstname: req.body.firstname != null ? req.body.firstname : undefined,
