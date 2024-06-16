@@ -890,6 +890,7 @@ model complaint_follow {
     receive_doc_filename String?    @db.VarChar(200)
     receive_user_id     Int?
     receive_at          DateTime?
+    receive_status      Int?        @db.TinyInt
     receive_comment     String?     @db.VarChar(200)
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)

@@ -40,7 +40,6 @@ const prisma = new PrismaClient().$extends({
 const selectField = {
     id: true,
     complaint_id: true,
-    detail: true,
     follow_doc_no: true,
     follow_doc_date: true,
     follow_doc_filename: true,
@@ -56,6 +55,7 @@ const selectField = {
     follow_detail: true,
     time_no: true,
     bureau_id: true,
+    receive_status: true,
 
     created_at: true,
     created_by: true,
@@ -100,9 +100,9 @@ const filterData = (req) => {
         $where["inspector_id"] = parseInt(req.query.inspector_id);
     }
 
-    if (req.query.detail) {
-        $where["detail"] = {
-            contains: req.query.detail,
+    if (req.query.follow_detail) {
+        $where["follow_detail"] = {
+            contains: req.query.follow_detail,
         }
     }
 
@@ -140,6 +140,10 @@ const filterData = (req) => {
 
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
+    }
+
+    if (req.query.receive_status) {
+        $where["receive_status"] = parseInt(req.query.receive_status);
     }
 
     return $where;
@@ -254,6 +258,7 @@ const methods = {
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
 
                     is_active: Number(req.body.is_active),
+                    receive_status: req.body.receive_status != null ? Number(req.body.receive_status) : undefined,
                     // created_by: null,
                     // updated_by: null,
                 },
@@ -313,6 +318,7 @@ const methods = {
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     time_no: req.body.time_no != null ? Number(req.body.time_no) : undefined,
                     bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
+                    receive_status: req.body.receive_status != null ? Number(req.body.receive_status) : undefined,
                     // updated_by: null,
                 },
             });
