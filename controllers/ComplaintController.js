@@ -698,6 +698,7 @@ const generateJcomsYearCode = async (id) => {
   /* Update JCOMS Year Running */
 
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1; // Months are zero-based
 
   const maxRunning = await prisma[$table].aggregate({
     _max: {
@@ -713,9 +714,11 @@ const generateJcomsYearCode = async (id) => {
 
   const newRunningYear = maxRunning._max.jcoms_year_running + 1;
   const newRunningCode = newRunningYear.toString().padStart(5, "0");
-  const yearCode = (currentYear + 543).toString();
+  // const yearCode = (currentYear + 543).toString();
+  const yearCode = (currentYear + 543).toString().substring(2, 4);
+  const monthCode = currentMonth.toString().padStart(2, "0");
 
-  const jcoms_code = `JCOMS${yearCode}${newRunningCode}`;
+  const jcoms_code = `JC${yearCode}${monthCode}${newRunningCode}`;
 
   if (item.jcoms_no == null) {
     await prisma[$table].update({
@@ -1148,7 +1151,13 @@ const methods = {
         },
       });
 
-      await addComplaintChannelHistory(item.id, req.body.complaint_channel_ids);
+      if(req.body.complaint_channel_ids !== undefined){
+        // await deleteComplaintChannelHistory(item.id);
+        await addComplaintChannelHistory(
+          item.id,
+          req.body.complaint_channel_ids
+        );
+      }
       // const JcomsCode = await generateJcomsCode(item.id);
       const JcomsCode = await generateJcomsYearCode(item.id);
       item.jcoms_no = JcomsCode.jcoms_code;
