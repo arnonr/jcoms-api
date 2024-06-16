@@ -54,6 +54,8 @@ const selectField = {
     receive_at: true,
     receive_comment: true,
     follow_detail: true,
+    time_no: true,
+    bureau_id: true,
 
     created_at: true,
     created_by: true,
@@ -248,6 +250,8 @@ const methods = {
                     receive_user_id: Number(req.body.receive_user_id),
                     receive_at: req.body.receive_at != null ? new Date(req.body.receive_at) : undefined,
                     receive_comment: req.body.receive_comment,
+                    time_no: req.body.time_no != null ? new Date(req.body.time_no) : undefined,
+                    bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
 
                     is_active: Number(req.body.is_active),
                     // created_by: null,
@@ -307,6 +311,8 @@ const methods = {
                     state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
 
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
+                    time_no: req.body.time_no != null ? new Date(req.body.time_no) : undefined,
+                    bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
                     // updated_by: null,
                 },
             });

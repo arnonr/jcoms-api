@@ -899,6 +899,8 @@ model complaint_follow {
     deleted_at          DateTime?
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
+    time_no             Int?        @default(0)
+    bureau_id           Int?
 
     complaint           complaint?          @relation(fields: [complaint_id], references: [id])
     inspector           inspector?          @relation(fields: [inspector_id], references: [id])
