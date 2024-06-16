@@ -59,6 +59,9 @@ const selectField = {
     approved_doc_date: true,
     approved_doc_filename: true,
     status: true,
+    time_no: true,
+    extend_day: true,
+    due_date: true,
 
     created_at: true,
     created_by: true,
@@ -249,6 +252,9 @@ const methods = {
                     approved_doc_filename: approvedDocPathFile,
 
                     status: Number(req.body.status),
+                    time_no: req.body.time_no != null ? Number(req.body.time_no) : undefined,
+                    extend_day: req.body.extend_day != null ? Number(req.body.extend_day) : undefined,
+                    due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
 
                     is_active: Number(req.body.is_active),
                     // created_by: null,
@@ -294,6 +300,9 @@ const methods = {
                     approved_doc_filename: approvedDocPathFile,
 
                     status: req.body.status != null ? Number(req.body.status) : undefined,
+                    time_no: req.body.time_no != null ? Number(req.body.time_no) : undefined,
+                    extend_day: req.body.extend_day != null ? Number(req.body.extend_day) : undefined,
+                    due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
 
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     // updated_by: null,
