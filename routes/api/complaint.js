@@ -6,6 +6,7 @@ const controllers = require("../../controllers/ComplaintController");
 router.get("/count", controllers.onGetCount);
 router.get("/", controllers.onGetAll);
 
+router.post("/get-phonenumber", controllers.onGetPhoneNumber);
 router.post("/get-otp-tracking", controllers.onGetOTPTracking);
 router.post("/verify-otp-tracking", controllers.onVertifyOTPTracking);
 router.get("/get-complaint-by-otp", controllers.onGetAllByOTP);
