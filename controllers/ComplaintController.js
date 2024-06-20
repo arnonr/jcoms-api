@@ -85,6 +85,8 @@ const selectField = {
   closed_at: true,
   closed_user_id: true,
   closed_comment: true,
+  due_day: true,
+  due_date: true,
 
   created_at: true,
   created_by: true,
@@ -1143,6 +1145,8 @@ const methods = {
               ? Number(req.body.closed_user_id)
               : undefined,
           closed_comment: req.body.closed_comment,
+          due_day: req.body.due_day != null ? parseInt(req.body.due_day) : undefined,
+          due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
 
           created_by: authUsername,
           updated_by: authUsername,
@@ -1367,6 +1371,9 @@ const methods = {
             req.body.closed_comment != null
               ? req.body.closed_comment
               : undefined,
+
+          due_day: req.body.due_day != null ? parseInt(req.body.due_day) : undefined,
+          due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
 
           updated_by: authUsername,
           updated_at: new Date(),
