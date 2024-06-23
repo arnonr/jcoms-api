@@ -183,6 +183,20 @@ const methods = {
         }
     },
 
+    async onGetId(name){
+        try {
+            const item = await prisma[$table].findFirstOrThrow({
+                select: selectField,
+                where: {
+                    name_th: {contains: name},
+                },
+            });
+            return item.id
+        } catch (error) {
+            return null
+        }
+    },
+
     async onGetById(req, res) {
         try {
             let prismaLang = checkLanguage(req);

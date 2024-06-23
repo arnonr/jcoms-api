@@ -90,9 +90,7 @@ const countDataAndOrder = async (req, $where) => {
         $totalPage: $totalPage,
         $currentPage: $currentPage,
     };
-    };
-
-
+};
 
     const checkLanguage = (req) => {
         let prismaLang = prisma.$extends({
@@ -139,6 +137,20 @@ const methods = {
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onGetId(name){
+        try {
+            const item = await prisma[$table].findFirstOrThrow({
+                select: selectField,
+                where: {
+                    name_th: {contains: name},
+                },
+            });
+            return item.id
+        } catch (error) {
+            return null
         }
     },
 

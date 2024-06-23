@@ -2,7 +2,25 @@ const { PrismaClient } = require("@prisma/client");
 const SmsController = require("./SmsController");
 const uploadController = require("./UploadsController");
 const helperController = require("./HelperController");
+
+const provinceController = require("./ProvinceController");
+const districtController = require("./DistrictController");
+const subDistrictController = require("./SubDistrictController");
+
+const inspectorController = require("./InspectorController");
+const bureauController = require("./BureauController");
+const agencyController = require("./AgencyController");
+const divisionController = require("./DivisionController");
+const positionController = require("./PositionController");
+const prefixNameController = require("./PrefixNameController");
+const sectionController = require("./SectionController");
+
+const complaintTypeController = require("./ComplaintTypeController");
+const topicCategoryController = require("./TopicCategoryController");
+const topicTypeController = require("./TopicTypeController");
+
 const { v4: uuidv4 } = require("uuid");
+const { body } = require("express-validator");
 const $table = "complaint";
 const $table_file_attach = "complaint_file_attach";
 
@@ -1182,6 +1200,159 @@ const methods = {
     } catch (error) {
       res.status(400).json({ msg: error.message });
     }
+  },
+
+  async onRpaImport(req, res) {
+
+    let authUsername = null;
+    if (req.headers.authorization !== undefined) {
+      const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+      authUsername = decoded.username;
+    }
+
+    console.log("----------------------")
+
+    const inspector = req.body.inspector != null ? req.body.inspector : null;
+    const bureau = req.body.bureau != null ? req.body.bureau : null;
+    const division = req.body.division != null ? req.body.division : null;
+    const agency = req.body.agency != null ? req.body.agency : null;
+    const topic_type = req.body.topic_type != null ? req.body.topic_type : null;
+    const topic_category = req.body.topic_category != null ? req.body.topic_category : null;
+    const complaint_type = req.body.complaint_type != null ? req.body.complaint_type : null;
+    const province = req.body.province != null ? req.body.province : null;
+    const district = req.body.district != null ? req.body.district : null;
+    const sub_district = req.body.sub_district != null ? req.body.sub_district : null;
+
+    const complainant_prefix_name = req.body.complainant.prefix_name != null ? req.body.complainant.prefix_name : null;
+    const complainant_province = req.body.complainant.province != null ? req.body.complainant.province : null;
+    const complainant_district = req.body.complainant.district != null ? req.body.complainant.district : null;
+    const complainant_sub_district = req.body.complainant.sub_district != null ? req.body.complainant.sub_district : null;
+
+    const accused_prefix_name = req.body.accused.prefix_name != null ? req.body.accused.prefix_name : null;
+    const accused_agency = req.body.accused.agency != null ? req.body.accused.agency : null;
+    const accused_inspector = req.body.accused.inspector != null ? req.body.accused.inspector : null;
+    const accused_bureau = req.body.accused.bureau != null ? req.body.accused.bureau : null;
+    const accused_division = req.body.accused.division != null ? req.body.accused.division : null;
+
+    const inspector_id = await inspectorController.onGetId(inspector);
+    console.log("inspector_id: " + inspector_id);
+
+    const bureau_id = await bureauController.onGetId(bureau);
+    console.log("bureau_id: " + bureau_id);
+
+    const division_id = await divisionController.onGetId(division);
+    console.log("division_id: " + division_id);
+
+    const agency_id = await agencyController.onGetId(agency);
+    console.log("agency_id: " + agency_id);
+
+    const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
+    console.log("complaint_type_id: " + complaint_type_id);
+
+    const topic_type_id = await topicTypeController.onGetId(topic_type);
+    console.log("topic_type_id: " + topic_type_id);
+
+    const province_id = await provinceController.onGetId(province);
+    console.log("province_id: " + province_id);
+
+    const sub_district_id = await subDistrictController.onGetId(sub_district);
+    console.log("sub_district_id: " + sub_district_id);
+
+    const district_id = await districtController.onGetId(district);
+    console.log("district_id: " + district_id);
+
+    const complainant_province_id = await provinceController.onGetId(complainant_province);
+    console.log("complainant_province_id: " + complainant_province_id);
+
+    const complainant_district_id = await districtController.onGetId(complainant_district);
+    console.log("complainant_district_id: " + complainant_district_id);
+
+    const complainant_sub_district_id = await subDistrictController.onGetId(complainant_sub_district);
+    console.log("complainant_sub_district_id: " + complainant_sub_district_id);
+
+    const complainant_prefix_name_id = await prefixNameController.onGetId(complainant_prefix_name);
+    console.log("complainant_prefix_name_id: " + complainant_prefix_name_id);
+
+    const accused_prefix_name_id = await prefixNameController.onGetId(accused_prefix_name);
+    console.log("accused_prefix_name_id: " + accused_prefix_name_id);
+
+    const accused_agency_id = await agencyController.onGetId(accused_agency);
+    console.log("accused_agency_id: " + accused_agency_id);
+
+    const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
+    console.log("accused_inspector_id: " + accused_inspector_id);
+
+    const accused_bureau_id = await bureauController.onGetId(accused_bureau);
+    console.log("accused_bureau_id: " + accused_bureau_id);
+
+    const accused_division_id = await divisionController.onGetId(accused_division);
+    console.log("accused_division_id: " + accused_division_id);
+
+    // const complaint_type_id = await complaintTypeController.onGetId("ร้องทุกข์ขอความช่วยเหลือ/แจ้งเบาะแส");
+    // console.log("complaint_type_id: " + complaint_type_id);
+
+    // console.log(req.body);
+
+    // // try {
+    // //   const item = await prisma[$table].create({
+    // //     data: {
+    // //       is_active: 1,
+    // //       uuid: uuidv4(),
+    // //       receive_at: new Date(),
+    // //       receive_user_id: req.body.receive_user_id != null ? Number(req.body.receive_user_id) : undefined,
+
+    // //       receive_status: Number(req.body.receive_status),
+
+    // //       complaint_type_id: req.body.complaint_type_id != null ? Number(req.body.complaint_type_id) : undefined,
+    // //       complainant_id: req.body.complainant_id != null ? Number(req.body.complainant_id) : undefined,
+
+    // //       is_anonymous: Number(req.body.is_anonymous),
+
+    // //       complaint_title: req.body.complaint_title != null ? req.body.complaint_title : undefined,
+    // //       complaint_detail: req.body.complaint_detail != null ? req.body.complaint_detail : undefined,
+
+    // //       incident_datetime: req.body.incident_datetime != null ? new Date(req.body.incident_datetime) : undefined,
+
+    // //       location_coordinates: req.body.location_coordinates != null ? req.body.location_coordinates : undefined,
+    // //       incident_location: req.body.incident_location != null ? req.body.incident_location : undefined,
+    // //       day_time: req.body.day_time != null ? parseInt(req.body.day_time) : undefined,
+
+    // //       complaint_channel_id: req.body.complaint_channel_id != null ? Number(req.body.complaint_channel_id) : undefined,
+    // //       channel_history_text: req.body.channel_history_text != null ? req.body.channel_history_text : undefined,
+    // //       evidence_url: req.body.evidence_url != null ? req.body.evidence_url : undefined,
+    // //       inspector_id: req.body.inspector_id != null ? Number(req.body.inspector_id) : undefined,
+    // //       bureau_id: req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
+    // //       division_id: req.body.division_id != null ? Number(req.body.division_id) : undefined,
+    // //       agency_id: req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+    // //       topic_type_id: req.body.topic_type_id != null ? Number(req.body.topic_type_id) : undefined,
+    // //       house_number: req.body.house_number != null ? req.body.house_number : undefined,
+    // //       building: req.body.building != null ? req.body.building : undefined,
+    // //       moo: req.body.moo != null ? req.body.moo : undefined,
+    // //       soi: req.body.soi != null ? req.body.soi : undefined,
+    // //       road: req.body.road != null ? req.body.road : undefined,
+    // //       postal_code: req.body.postal_code != null ? req.body.postal_code : undefined,
+    // //       sub_district_id: req.body.sub_district_id != null ? Number(req.body.sub_district_id) : undefined,
+    // //       district_id: req.body.district_id != null ? Number(req.body.district_id) : undefined,
+    // //       province_id: req.body.province_id != null ? Number(req.body.province_id) : undefined,
+    // //       state_id: req.body.state_id != null ? Number(req.body.state_id) : undefined,
+
+    // //       inspector_state_id: req.body.inspector_state_id != null ? Number(req.body.inspector_state_id) : undefined,
+
+    // //       created_by: authUsername,
+    // //       updated_by: authUsername,
+    // //       created_at: new Date(),
+    // //       updated_at: new Date(),
+    // //     },
+    // //   });
+
+    // //   const JcomsCode = await generateJcomsYearCode(item.id);
+    // //   item.jcoms_no = JcomsCode.jcoms_code;
+
+    // //   res.status(201).json({ ...item, msg: "success" });
+    // } catch (error) {
+    //   res.status(400).json({ msg: error.message });
+    // }
+    return res.status(200).json({ ...req.body, msg: "success" });
   },
 
   // แก้ไข
