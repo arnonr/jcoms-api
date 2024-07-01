@@ -75,7 +75,6 @@ const countDataAndOrder = async (req, $where) => {
     };
 };
 
-
 const methods = {
     async onGetAll(req, res) {
         try {
@@ -181,6 +180,20 @@ const methods = {
         } catch (error) {
             res.status(400).json({ msg: error.message });
         }
+    },
+
+    async onSaveLog(user_id, username, status =  null, ip_address = null, user_agent = null) {
+        const item = await prisma[$table].create({
+            data: {
+                user_id: Number(user_id),
+                ip_address: ip_address,
+                user_agent: user_agent,
+                status: status,
+                created_at: new Date(),
+                created_by: username,
+                // updated_by: null,
+            },
+        });
     },
 };
 

@@ -1,10 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const uploadController = require("./UploadsController");
+const loginLogController = require("./LoginLogController");
 
 const $table = "user";
 const { v4: uuidv4 } = require("uuid");
 jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const LoginLogController = require("./LoginLogController");
 const saltRounds = 10;
 
 const encrypt = (text) => {
@@ -557,6 +559,9 @@ const methods = {
       if (item.status == 2) {
         throw new Error("Not Confirm Email");
       }
+
+      await LoginLogController.onSaveLog(item.id, item.email, 1, req.clientInfo.ip, req.clientInfo.userAgent);
+      // console.log(req.clientInfo);
 
       const payload = item;
       const secretKey = process.env.SECRET_KEY;
