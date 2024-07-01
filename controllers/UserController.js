@@ -3,6 +3,9 @@ const uploadController = require("./UploadsController");
 const loginLogController = require("./LoginLogController");
 
 const $table = "user";
+const $permission_table = "permission";
+const $user_permission_table = "user_permission";
+
 const { v4: uuidv4 } = require("uuid");
 jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -44,6 +47,58 @@ const prisma = new PrismaClient().$extends({
     },
   },
 });
+
+async function getAbilities(user_id, role_id) {
+
+  let permissions;
+  console.log("Role ID",role_id)
+  if(role_id != null){
+
+    permissions = await prisma[$permission_table].findMany({
+      where: {
+        role_id: role_id,
+        is_active: 1
+      },
+      select: {
+        menu: true,
+        action_view: true,
+        action_create: true,
+        action_update: true,
+        action_delete: true,
+        action_export: true
+      }
+    })
+
+  }else{
+
+    permissions = await prisma[$user_permission_table].findMany({
+      where: {
+        user_id: user_id,
+      },
+      select: {
+        menu: true,
+        action_view: true,
+        action_create: true,
+        action_update: true,
+        action_delete: true,
+        action_export: true
+      }
+    })
+
+  }
+
+  const abilities = permissions.flatMap(permission => {
+    const { menu, ...actions } = permission
+    return Object.entries(actions)
+      .filter(([_, value]) => value)
+      .map(([action]) => ({
+        menu,
+        action: action.replace('action_', '')
+      }))
+  })
+
+  return abilities
+}
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
@@ -313,6 +368,9 @@ const methods = {
         },
       });
 
+      item.abilities = {};
+      item.abilities = await getAbilities(item.id, item.role_id);
+
       res.status(200).json({
         data: item,
         msg: "success",
@@ -559,6 +617,9 @@ const methods = {
       if (item.status == 2) {
         throw new Error("Not Confirm Email");
       }
+
+      item.abilities = {};
+      item.abilities = await getAbilities(item.id, item.role_id);
 
       await LoginLogController.onSaveLog(item.id, item.email, 1, req.clientInfo.ip, req.clientInfo.userAgent);
       // console.log(req.clientInfo);

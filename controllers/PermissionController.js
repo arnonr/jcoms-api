@@ -1,15 +1,18 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const $table = "login_log";
+const $table = "permission";
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,
-    user_id: true,
-    logined_at: true,
-    ip_address: true,
-    user_agent: true,
-    status: true,
+    role_id: true,
+    menu: true,
+    description: true,
+    action_view: true,
+    action_create: true,
+    action_update: true,
+    action_delete: true,
+    action_export: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -27,14 +30,14 @@ const filterData = (req) => {
         $where["id"] = parseInt(req.query.id);
     }
 
-    if (req.query.user_id) {
-        $where["user_id"] = parseInt(req.query.user_id);
+    if (req.query.role_id) {
+        $where["role_id"] = parseInt(req.query.role_id);
     }
 
-    if (req.query.logined_at) {
-        $where["logined_at"] = {
-            contains: req.query.logined_at,
-        }
+    if (req.query.menu) {
+        $where["menu"] = {
+            contains: req.query.menu,
+        };
     }
 
     if (req.query.is_active) {
@@ -73,42 +76,12 @@ const countDataAndOrder = async (req, $where) => {
         $totalPage: $totalPage,
         $currentPage: $currentPage,
     };
-};
+    };
 
 const methods = {
     async onGetAll(req, res) {
         try {
             let $where = filterData(req);
-            let other = await countDataAndOrder(req, $where);
-
-            const item = await prisma[$table].findMany({
-                select: selectField,
-                where: $where,
-                orderBy: other.$orderBy,
-                skip: other.$offset,
-                take: other.$perPage,
-            });
-
-            res.status(200).json({
-                data: item,
-                totalData: other.$count,
-                totalPage: other.$totalPage,
-                currentPage: other.$currentPage,
-                lang: req.query.lang ? req.query.lang : "",
-                msg: "success",
-            });
-        } catch (error) {
-            res.status(500).json({ msg: error.message });
-        }
-    },
-
-    async onGetByUserId(req, res) {
-
-        try {
-            let $where = filterData(req);
-
-            $where["user_id"] = Number(req.params.id);
-
             let other = await countDataAndOrder(req, $where);
 
             const item = await prisma[$table].findMany({
@@ -155,12 +128,16 @@ const methods = {
         try {
             const item = await prisma[$table].create({
                 data: {
-                    user_id: Number(req.body.user_id),
-                    logined_at: req.body.logined_at != null ? new Date(req.body.logined_at) : undefined,
-                    ip_address: req.body.ip_address,
-                    user_agent: req.body.user_agent,
-                    // created_by: null,
-                    // updated_by: null,
+                    role_id: Number(req.body.role_id),
+                    menu: req.body.menu,
+                    description: req.body.description != null ? req.body.description : null,
+                    action_view: req.body.action_view != null ? Number(req.body.action_view) : null,
+                    action_create: req.body.action_create != null ? Number(req.body.action_create) : null,
+                    action_update: req.body.action_update != null ? Number(req.body.action_update) : null,
+                    action_delete: req.body.action_delete != null ? Number(req.body.action_delete) : null,
+                    action_export: req.body.action_export != null ? Number(req.body.action_export) : null,
+
+                    is_active: Number(req.body.is_active),
                 },
             });
 
@@ -178,11 +155,15 @@ const methods = {
                     id: Number(req.params.id),
                 },
                 data: {
-                    user_id: req.body.user_id != null ? Number(req.body.user_id) : undefined,
-                    logined_at: req.body.logined_at != null ? new Date(req.body.logined_at) : undefined,
-                    ip_address: req.body.ip_address != null ? req.body.ip_address : undefined,
-                    user_agent: req.body.user_agent != null ? req.body.user_agent : undefined,
-                    // updated_by: null,
+                    role_id: req.body.role_id != null ? Number(req.body.role_id) : undefined,
+                    menu: req.body.menu != null ? req.body.menu : undefined,
+                    description: req.body.description != null ? req.body.description : undefined,
+                    action_view: req.body.action_view != null ? Number(req.body.action_view) : null,
+                    action_create: req.body.action_create != null ? Number(req.body.action_create) : null,
+                    action_update: req.body.action_update != null ? Number(req.body.action_update) : null,
+                    action_delete: req.body.action_delete != null ? Number(req.body.action_delete) : null,
+                    action_export: req.body.action_export != null ? Number(req.body.action_export) : null,
+                    is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
                 },
             });
 
@@ -195,12 +176,9 @@ const methods = {
     async onDelete(req, res) {
         try {
 
-            await prisma[$table].update({
+            await prisma[$table].delete({
                 where: {
                     id: Number(req.params.id),
-                },
-                data: {
-                    deleted_at: new Date().toISOString(),
                 },
             });
 
@@ -210,20 +188,6 @@ const methods = {
         } catch (error) {
             res.status(400).json({ msg: error.message });
         }
-    },
-
-    async onSaveLog(user_id, username, status =  null, ip_address = null, user_agent = null) {
-        const item = await prisma[$table].create({
-            data: {
-                user_id: Number(user_id),
-                ip_address: ip_address,
-                user_agent: user_agent,
-                status: status,
-                created_at: new Date(),
-                created_by: username,
-                // updated_by: null,
-            },
-        });
     },
 };
 

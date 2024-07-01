@@ -194,8 +194,56 @@ model role {
     is_active           Int?        @default(1)
 
     user                user[]
+    permission          permission[]
 
 }
+model permission {
+    id                  Int         @id @default(autoincrement())
+    role_id             Int
+    menu                String      @db.VarChar(100)
+    description         String?     @db.VarChar(100)
+    action_view         Int?        @db.TinyInt    @default(0)
+    action_create       Int?        @db.TinyInt    @default(0)
+    action_update       Int?        @db.TinyInt    @default(0)
+    action_delete       Int?        @db.TinyInt    @default(0)
+    action_export       Int?        @db.TinyInt    @default(0)
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+
+    @@unique([role_id, menu])
+
+    role                role        @relation(fields: [role_id], references: [id])
+}
+
+model user_permission {
+    id                  Int         @id @default(autoincrement())
+    user_id             Int
+    menu                String      @db.VarChar(100) @unique
+    description         String?     @db.VarChar(100)
+    action_view         Int?        @db.TinyInt    @default(0)
+    action_create       Int?        @db.TinyInt    @default(0)
+    action_update       Int?        @db.TinyInt    @default(0)
+    action_delete       Int?        @db.TinyInt    @default(0)
+    action_export       Int?        @db.TinyInt    @default(0)
+
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+    @@unique([user_id, menu])
+
+    user                user        @relation(fields: [user_id], references: [id])
+}
+
 
 model section {
     id                  Int         @id @default(autoincrement())
@@ -250,6 +298,7 @@ model user {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
+    user_permission     user_permission[]
     login_log           login_log[]
     closed_user         complaint[] @relation(name: "ClosedUser")
     receive_user        complaint[] @relation(name: "ReceiveUser")

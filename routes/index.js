@@ -35,6 +35,8 @@ const sms = require("./api/sms");
 const email = require("./api/email");
 const complaintExtend = require("./api/complaint-extend");
 const inspectorState = require("./api/inspector-state");
+const permission = require("./api/permission");
+const userPermission = require("./api/user-permission");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -71,7 +73,9 @@ router.use(
   router.use("/sms", sms),
   router.use("/email", email),
   router.use("/complaint-extend", complaintExtend),
-  router.use("/inspector-state", inspectorState)
+  router.use("/inspector-state", inspectorState),
+  router.use("/permission", permission),
+  router.use("/user-permission", userPermission)
 );
 
 module.exports = router;

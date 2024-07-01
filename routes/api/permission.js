@@ -1,12 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const controllers = require("../../controllers/LoginLogController");
+const controllers = require("../../controllers/PermissionController");
 
 router.get("/", controllers.onGetAll);
 router.get("/:id", controllers.onGetById);
-
-router.get("/get-by-user/:id", controllers.onGetByUserId);
 
 router.post("/", controllers.onCreate);
 

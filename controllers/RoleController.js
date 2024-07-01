@@ -15,6 +15,18 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    permission:{
+        select:{
+            id: true,
+            menu: true,
+            description: true,
+            action_view: true,
+            action_create: true,
+            action_update: true,
+            action_delete: true,
+            action_export: true,
+        }
+    }
 };
 const filterData = (req) => {
     let $where = {
