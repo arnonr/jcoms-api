@@ -17,9 +17,7 @@ function getClientIp(req) {
     if (forwardedFor) {
         return forwardedFor.split(',')[0].trim();
     }
-    return req.connection.remoteAddress ||
-           req.socket.remoteAddress ||
-           (req.connection.socket ? req.connection.socket.remoteAddress : null);
+    return req.connection.remoteAddress || req.socket.remoteAddress || (req.connection.socket ? req.connection.socket.remoteAddress : null);
 }
 
 // Middleware to attach client info to the request object
