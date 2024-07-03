@@ -19,14 +19,17 @@ const helperController = require("./HelperController");
     // This function handles getting the token
 const getToken = async () => {
     try {
-        const user = process.env.USER || $user;
-        const password = process.env.PASSWORD || $password;
+        // const user = process.env.USER || $user;
+        // const password = process.env.PASSWORD || $password;
+
+        const user = $user;
+        const password = $password;
 
         let params = {
             'user': user,
             'password': password,
             'authen_from': 'S',
-            'ip_address': '202.44.41.31'
+            'ip_address': ':::1'
         };
 
         const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/GetToken";
