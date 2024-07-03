@@ -161,21 +161,25 @@ const selectField = {
   inspector: {
     select: {
       name_th: true,
+      name_th_abbr: true,
     },
   },
   bureau: {
     select: {
       name_th: true,
+      name_th_abbr: true,
     },
   },
   division: {
     select: {
       name_th: true,
+      name_th_abbr: true,
     },
   },
   agency: {
     select: {
       name_th: true,
+      name_th_abbr: true,
     },
   },
   topic_type: {
