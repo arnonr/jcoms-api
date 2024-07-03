@@ -298,6 +298,7 @@ model user {
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
 
+    recovery_password   recovery_password[]
     user_permission     user_permission[]
     login_log           login_log[]
     closed_user         complaint[] @relation(name: "ClosedUser")
@@ -1014,4 +1015,23 @@ model otp {
     deleted_at          DateTime?
     deleted_by          String?     @db.VarChar(32)
     is_active           Int?        @default(1)
+}
+
+model recovery_password {
+    id                  Int         @id @default(autoincrement())
+    user_id             Int
+    email               String      @db.VarChar(100)
+    ref_code            String      @db.VarChar(100)
+    code                String      @db.VarChar(100)
+    status              Int?        @db.TinyInt
+    expired_at          DateTime?
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    deleted_by          String?     @db.VarChar(32)
+    is_active           Int?        @default(1)
+
+    user                user?          @relation(fields: [user_id], references: [id])
 }

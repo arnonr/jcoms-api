@@ -4,6 +4,7 @@ const loginLogController = require("./LoginLogController");
 
 const $table = "user";
 const $permission_table = "permission";
+const $recovery_password_table = "recovery_password";
 const $user_permission_table = "user_permission";
 
 const { v4: uuidv4 } = require("uuid");
@@ -11,11 +12,22 @@ jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const LoginLogController = require("./LoginLogController");
 const saltRounds = 10;
+const nodemailer = require("nodemailer");
 
 const encrypt = (text) => {
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(text, salt);
   return hash;
+};
+
+const randomNumber = async () => {
+  const min = 100000; // Minimum 6-digit number
+  const max = 999999; // Maximum 6-digit number
+
+  // Generate a random number between min and max (inclusive)
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  return randomNumber.toString();
 };
 
 // const prisma = new PrismaClient();
@@ -640,6 +652,117 @@ const methods = {
       res.status(404).json({ msg: error.message });
     }
   },
+
+    async onForgotPassword(req, res) {
+        try {
+
+            const item = await prisma[$table].findFirst({
+                where: {
+                email: req.body.email,
+                },
+            });
+
+            if (!item) {
+                throw new Error("Email Not Found");
+            }
+
+            if(item.status != 1) {
+                throw new Error("Not Confirm Email");
+            }
+
+            $random = Math.floor(100000 + Math.random() * 900000);
+            let itemRecovery = await prisma[$recovery_password_table].create({
+                data: {
+                    user_id: item.id,
+                    email: item.email,
+                    ref_code: req.body.ref_code,
+                    code: String($random),
+                    status: 0,
+                    expired_at: new Date(Date.now() + 10 * 60 * 1000),
+                },
+            });
+
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                // ข้อมูลการเข้าสู่ระบบ
+                user: "cwie@kmutnb.ac.th", // email user ของเรา
+                pass: "xhqqcypawtnyfnhl", // email password
+                },
+            });
+
+            $html = "<b>OTP สําหรับรีเซ็ตรหัสผ่านของคุณคือ : " + $random + "</b>";
+            await transporter.sendMail({
+                from: "JCOMS <jcoms@kmutnb.ac.th>", // อีเมลผู้ส่ง
+                to: item.email, // อีเมลผู้รับ สามารถกำหนดได้มากกว่า 1 อีเมล โดยขั้นด้วย ,(Comma)
+                subject:"JCOMS reset password", // หัวข้ออีเมล
+                html: $html, // html body
+            });
+
+            res.status(201).json({ "email": item.email, "ref_code": itemRecovery.ref_code, msg: "success", password: undefined });
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
+        }
+    },
+
+    async onResetPassword(req, res) {
+
+        try {
+
+            if(req.body.password == null) {
+                throw new Error("Password cannot be empty");
+            }
+
+            if(req.body.ref_code == null) {
+                throw new Error("Ref code cannot be empty");
+            }
+
+            if(req.body.code == null) {
+                throw new Error("Code cannot be empty");
+            }
+
+            const item = await prisma[$recovery_password_table].findFirst({
+                where: {
+                    email: req.body.email,
+                    ref_code: req.body.ref_code,
+                    code: req.body.code,
+                    status: 0,
+                    // expired_at: {
+                    //     gte: new Date(),
+                    // },
+                },
+            });
+
+            if(!item) {
+                throw new Error("Invalid code or expired code");
+            }
+
+            const recoveryItem = await prisma[$recovery_password_table].update({
+                where: {
+                    id: item.id,
+                },
+                data: {
+                    status: 1,
+                    updated_at: new Date(),
+                },
+            });
+
+            const userItem = await prisma[$table].update({
+                where: {
+                    id: Number(item.user_id),
+                },
+                data: {
+                    password:req.body.password != null ? encrypt(req.body.password) : undefined,
+                },
+            });
+
+            res.status(200).json({"email": item.email, "ref_code": item.ref_code, msg: "success" });
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
+        }
+    },
 };
 
 module.exports = { ...methods };

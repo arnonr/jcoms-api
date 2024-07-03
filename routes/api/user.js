@@ -49,6 +49,8 @@ router.get("/:id", controllers.onGetById);
 
 router.post("/register", controllers.onRegister);
 router.post("/", controllers.onCreate);
+router.post("/forgot-password", controllers.onForgotPassword);
+router.post("/reset-password", controllers.onResetPassword);
 
 
 // router.put("/:id", controllers.onUpdate);
