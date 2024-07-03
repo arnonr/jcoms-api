@@ -108,6 +108,8 @@ const selectField = {
   due_day: true,
   due_date: true,
 
+  case_id: true,
+
   created_at: true,
   created_by: true,
   updated_at: true,

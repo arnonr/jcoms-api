@@ -663,7 +663,7 @@ model complaint {
     complaint_type_id   Int?
     complainant_id      Int?
     is_anonymous        Int?        @db.TinyInt
-    complaint_title     String?     @db.VarChar(200)
+    complaint_title     String?     @db.Text
     complaint_detail    String?     @db.Text
     incident_datetime   DateTime?
     location_coordinates  String?   @db.VarChar(100)
@@ -703,6 +703,8 @@ model complaint {
 
     due_day             Int?
     due_date            DateTime?   @db.Date
+
+    case_id             String?     @db.VarChar(100) @unique
 
     created_at          DateTime?   @default(now())     @db.DateTime(0)
     created_by          String?     @db.VarChar(32)

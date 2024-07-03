@@ -37,6 +37,7 @@ const complaintExtend = require("./api/complaint-extend");
 const inspectorState = require("./api/inspector-state");
 const permission = require("./api/permission");
 const userPermission = require("./api/user-permission");
+const opm = require("./api/opm");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -75,7 +76,8 @@ router.use(
   router.use("/complaint-extend", complaintExtend),
   router.use("/inspector-state", inspectorState),
   router.use("/permission", permission),
-  router.use("/user-permission", userPermission)
+  router.use("/user-permission", userPermission),
+  router.use("/opm", opm)
 );
 
 module.exports = router;
