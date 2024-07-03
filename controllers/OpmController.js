@@ -1,11 +1,19 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const $table_complaint = "complaint";
+const $table_complainant = "complainant";
 const { v4: uuidv4 } = require("uuid");
 const axios = require('axios');
 const xml2js = require('xml2js');
+
 const $user = "servicejaray";
 const $password = "53ad4e7726f820b84c1fa474098e4b6b";
+
+const provinceController = require("./ProvinceController");
+const districtController = require("./DistrictController");
+const subDistrictController = require("./SubDistrictController");
+const prefixNameController = require("./PrefixNameController");
+const helperController = require("./HelperController");
 // const $authen_from = "S";
 
     // This function handles getting the token
@@ -41,7 +49,7 @@ const getTimelineHeader = async () => {
             'last_get_date_time': "",
             'timeline_type': "A", //A=ทั้งหมด, I=รายการรับ, P=กำลังดำเนินการ, N=รายการแจ้งเตือน
             'skip': 0,
-            'take': 1,
+            'take': 10,
             'token_id': tokenId
         };
 
@@ -98,73 +106,108 @@ const parseXmlResponse = async (xmlData) => {
     });
 };
 
-    const convertTimestampToDate = (dateString) => {
+const convertDateString = (dateString) => {
 
-        // Check if the input is a string and matches the expected format
-        if (typeof dateString !== 'string' || !/^Date\(\d+\)$/.test(dateString)) {
-            throw new Error('Input must be a string in the format Date(timestamp)');
-        }
+           // Check if the input is a string and matches the expected format
+    if (typeof dateString !== 'string' || !/^\/Date\(\d+\)\/$/.test(dateString)) {
+        throw new Error('Input must be a string in the format /Date(timestamp)/');
+    }
 
-        // Extract the timestamp from the string
-        const timestamp = parseInt(dateString.match(/\d+/)[0], 10);
+    // Extract the timestamp from the string
+    const timestamp = parseInt(dateString.match(/\d+/)[0], 10);
 
-        // Check if the input is a number
-        if (typeof timestamp !== 'number') {
-            throw new Error('Input must be a number');
-        }
+    // Check if the extracted timestamp is a valid number
+    if (isNaN(timestamp)) {
+        throw new Error('Invalid timestamp in the input string');
+    }
 
-        // Check if the timestamp is within a reasonable range
-        // Unix timestamp should be positive and not too far in the future
-        const currentTime = Date.now();
-        const maxFutureTime = currentTime + (100 * 365 * 24 * 60 * 60 * 1000); // 100 years in the future
+    // Create a Date object
+    const date = new Date(timestamp);
 
-        if (timestamp < 0 || timestamp > maxFutureTime) {
-            throw new Error('Timestamp is out of reasonable range');
-        }
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+        throw new Error('Invalid date');
+    }
 
-        // Create a Date object
-        const date = new Date(timestamp);
-
-        // Check if the date is valid
-        if (isNaN(date.getTime())) {
-            throw new Error('Invalid date');
-        }
-
-        return date;
-    };
+    return date;
+};
 
 const saveComplaint = async (caseItem) => {
-    try {
 
+    try {
         const case_id = caseItem.case_id;
         const complaint_title = caseItem.summary;
         const complaint_detail = caseItem.detail;
         const is_anonymous = caseItem.is_secret == "T" ? 1 : 0;
         const complaint_channel_id = 3; // ศูนย์รับเรื่องราวร้องทุกข์ของรัฐบาล 1111
+        const case_area = caseItem.case_area;
+
+        let complainant_id = null;
+
+        let subdistrict_text = null;
+        let district_text = null;
+        let province_text = null;
+        let postcode = null;
+        let prename = null;
+        let firstname = null;
+        let lastname = null;
+        let citizen_id = null;
+
+        if(caseItem.customer != null) {
+            subdistrict_text = caseItem.customer.subdistrict_text;
+            district_text = caseItem.customer.district_text;
+            province_text = caseItem.customer.province_text;
+            postcode = caseItem.customer.postcode;
+
+            prename = caseItem.customer.salutation_th;
+            firstname = caseItem.customer.firstname_th;
+            lastname = caseItem.customer.lastname_th;
+            citizen_id = caseItem.customer.citizen_id;
+        }
+
+        if(postcode != null) {
+            postcode = postcode.trim();
+        }
 
         const date_occurrenced_from = caseItem.date_occurrenced_from;
-        console.log("date "+date_occurrenced_from);
-        // convertTimestampToDate(date_occurrenced_from);
+        const date_from = convertDateString(date_occurrenced_from);
+        const date_from_iso = date_from.toISOString();
 
-    // // Unix timestamp in milliseconds
-    // const timestamp = date_occurrenced_from;
+        const province_id = await provinceController.onGetId(province_text);
+        const sub_district_id = await subDistrictController.onGetId(subdistrict_text);
+        const district_id = await districtController.onGetId(district_text);
+        const prefix_name_id = await prefixNameController.onGetId(prename);
 
-    // // Create a Date object
-    // const date = new Date(timestamp);
+        const upsertComplainant = await prisma[$table_complainant].upsert({
+            where: {
+                // Assuming case_id is unique
+                case_id: case_id,
+            },
+            update: {
+                uuid: uuidv4(),
+                prefix_name_id: prefix_name_id != null ? Number(prefix_name_id) : undefined,
+                firstname: firstname,
+                lastname: lastname,
+                phone_number : uuidv4(),
+                id_card: citizen_id != null ? helperController.base64EncodeWithKey(citizen_id) : undefined,
+            },
+            create: {
+                uuid: uuidv4(),
+                case_id: case_id,
+                prefix_name_id: prefix_name_id != null ? Number(prefix_name_id) : undefined,
+                firstname: firstname,
+                lastname: lastname,
+                phone_number : uuidv4(),
+                id_card: citizen_id != null ? helperController.base64EncodeWithKey(citizen_id) : undefined,
+            }
+        });
 
-    // // Now you can use various methods to format the date
-    // console.log('Full date string:', date.toString());
-    // console.log('ISO format:', date.toISOString());
-    // console.log('Local date string:', date.toLocaleDateString());
-    // console.log('Local time string:', date.toLocaleTimeString());
+        // console.log(upsertComplainant);
 
-    // // You can also extract specific components
-    // console.log('Year:', date.getFullYear());
-    // console.log('Month:', date.getMonth() + 1); // Note: months are 0-indexed
-    // console.log('Day:', date.getDate());
-    // console.log('Hours:', date.getHours());
-    // console.log('Minutes:', date.getMinutes());
-    // console.log('Seconds:', date.getSeconds());
+        if(upsertComplainant) {
+            complainant_id = upsertComplainant.id;
+            // console.log("decode_id" + helperController.base64DecodeWithKey(upsertComplainant.id_card));
+        }
 
         const upsertedCase = await prisma[$table_complaint].upsert({
             where: {
@@ -177,6 +220,13 @@ const saveComplaint = async (caseItem) => {
                 complaint_detail: complaint_detail,
                 is_anonymous: is_anonymous,
                 complaint_channel_id: complaint_channel_id,
+                incident_datetime: date_from_iso,
+                incident_location: case_area,
+                sub_district_id: sub_district_id,
+                district_id: district_id,
+                province_id: province_id,
+                postal_code: postcode,
+                complainant_id: complainant_id,
             },
             create: {
                 uuid: uuidv4(),
@@ -185,6 +235,12 @@ const saveComplaint = async (caseItem) => {
                 complaint_detail: complaint_detail,
                 is_anonymous: is_anonymous,
                 complaint_channel_id: complaint_channel_id,
+                incident_datetime: date_from_iso,
+                incident_location: case_area,
+                sub_district_id: sub_district_id,
+                district_id: district_id,
+                province_id: province_id,
+                postal_code: postcode,
             }
         });
 
