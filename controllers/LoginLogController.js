@@ -17,6 +17,13 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
+    user: {
+        select: {
+            email: true,
+            firstname: true,
+            lastname: true,
+        },
+    },
 };
 const filterData = (req) => {
     let $where = {
