@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
 const $table_complaint = "complaint";
 const $table_complainant = "complainant";
 const { v4: uuidv4 } = require("uuid");
@@ -78,6 +79,73 @@ const getCase = async (case_id) => {
         return await parseXmlResponse(response.data);
     } catch (error) {
         console.error('Error getting case:', error);
+        throw error;
+    }
+};
+
+const addOperating = async (complaint_id, req) => {
+    try {
+
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        const item = await prisma[$table_complaint].findUnique({
+            // select: select,
+            where: {
+                id: Number(complaint_id),
+            },
+        });
+
+        if (!item) {
+            throw new Error('Complaint not found');
+        }
+
+        if(item.case_id == null) {
+            throw new Error('Case not found');
+        }
+
+        const case_id = item.case_id;
+        const detail = req.body.detail;
+        const date_opened = req.body.date_opened;
+        const date_closed = req.body.date_closed;
+
+        if(detail == null) {
+            throw new Error('Detail required');
+        }
+
+        if(date_opened == null) {
+            throw new Error('Date opened required');
+        }
+
+        if(date_closed == null) {
+            throw new Error('Date closed required');
+        }
+
+        let params = {
+            'token_id': tokenId,
+            'case_id': case_id,
+            'type_id': '14',
+            'objective_id': '1',
+            'terminal_org_id': '2608',
+            'terminal_owner_id': 'DF28B6CA3C694C959521B3F7180CB236',
+            'channel_id': '5899EE5D72CF3652A4AAE69E429D9DED',
+            'contact_detail': '',
+            'date_opened': date_opened, // '2015-12-31 15:32:12'
+            'date_closed': date_closed, // '2015-12-31 15:32:12'
+            'detail': detail,
+            'severity_id': '1',
+            'secret_id': '1',
+        };
+
+        const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/AddOperating";
+        const response = await axios.get(url, { params });
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error adding operating:', error);
         throw error;
     }
 };
@@ -281,6 +349,11 @@ const methods = {
         try {
             const jsonData = await getToken();
             const tokenId = jsonData.token_id;
+
+            if(tokenId == null) {
+                res.status(500).json({ msg: "Token not found" });
+            }
+
             res.status(200).json({ token_id: tokenId, msg: "success" });
         } catch (error) {
             res.status(500).json({ msg: error.message });
@@ -332,6 +405,16 @@ const methods = {
             // console.log('All cases processed:', results);
             res.status(200).json({ "results": results, msg: "success" });
             // res.status(200).json({ msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onAddOperating(req, res) {
+        try {
+            const jsonData = await addOperating(req.params.id, req);
+            const operating = jsonData;
+            res.status(200).json({ "operating": operating, msg: "success" });
         } catch (error) {
             res.status(500).json({ msg: error.message });
         }
