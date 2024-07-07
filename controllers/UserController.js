@@ -63,7 +63,6 @@ const prisma = new PrismaClient().$extends({
 async function getAbilities(user_id, role_id) {
 
   let permissions;
-  console.log("Role ID",role_id)
   if(role_id != null){
 
     permissions = await prisma[$permission_table].findMany({
@@ -79,10 +78,24 @@ async function getAbilities(user_id, role_id) {
         action_delete: true,
         action_export: true
       }
-    })
+    });
+  }
 
-  }else{
+  const abilities = permissions.flatMap(permission => {
+    const { menu, ...actions } = permission
+    return Object.entries(actions)
+      .filter(([_, value]) => value)
+      .map(([action]) => ({
+        menu,
+        action: action.replace('action_', '')
+      }))
+  })
 
+  return abilities
+};
+async function getCustomAbilities(user_id) {
+
+  let permissions;
     permissions = await prisma[$user_permission_table].findMany({
       where: {
         user_id: user_id,
@@ -95,9 +108,7 @@ async function getAbilities(user_id, role_id) {
         action_delete: true,
         action_export: true
       }
-    })
-
-  }
+  });
 
   const abilities = permissions.flatMap(permission => {
     const { menu, ...actions } = permission
@@ -135,6 +146,7 @@ const selectField = {
   line_id: true,
   birthday: true,
   file_attach: true,
+  is_custom_role: true,
   // password: true,
   created_at: true,
   created_by: true,
@@ -383,6 +395,11 @@ const methods = {
       item.abilities = {};
       item.abilities = await getAbilities(item.id, item.role_id);
 
+      if(item.is_custom_role == 1){
+        item.custom_abilities = {};
+        item.custom_abilities = await getCustomAbilities(item.id);
+      }
+
       res.status(200).json({
         data: item,
         msg: "success",
@@ -441,7 +458,7 @@ const methods = {
           birthday:
             req.body.birthday != null ? new Date(req.body.birthday) : undefined,
           file_attach: pathFile,
-
+          is_custom_role: req.body.is_custom_role != null ? Number(req.body.is_custom_role) : undefined,
           // created_by: null,
           // updated_by: null,
         },
@@ -577,6 +594,7 @@ const methods = {
             req.body.birthday != null ? new Date(req.body.birthday) : undefined,
 
           file_attach: pathFile != null ? pathFile : undefined,
+          is_custom_role: req.body.is_custom_role != null ? Number(req.body.is_custom_role) : undefined,
 
           // updated_by: null,
         },
