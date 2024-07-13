@@ -224,7 +224,7 @@ model permission {
 model user_permission {
     id                  Int         @id @default(autoincrement())
     user_id             Int
-    menu                String      @db.VarChar(100) @unique
+    menu                String      @db.VarChar(100)
     description         String?     @db.VarChar(100)
     action_view         Int?        @db.TinyInt    @default(0)
     action_create       Int?        @db.TinyInt    @default(0)
