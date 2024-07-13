@@ -84,12 +84,14 @@ const selectField = {
     },
     approved_inspector: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     extend_bureau: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     }
 };

@@ -102,42 +102,50 @@ const selectField = {
     }  ,
     from_inspector: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     from_bureau: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     from_division: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     from_agency: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     to_inspector: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     to_bureau: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     to_division: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     to_agency: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
 

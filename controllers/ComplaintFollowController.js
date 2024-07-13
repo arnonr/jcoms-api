@@ -79,7 +79,8 @@ const selectField = {
     },
     inspector: {
         select: {
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     }
 };
