@@ -314,7 +314,7 @@ const methods = {
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
-        }
+        } 
     },
 
     async onGetById(req, res) {

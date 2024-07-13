@@ -11,1031 +11,1029 @@ datasource db {
 }
 
 model prefix_name {
-    id                  Int         @id @default(autoincrement())
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
-    type                Int?        @db.TinyInt
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @db.TinyInt @default(1)
+    id           Int       @id @default(autoincrement())
+    name_th      String?   @db.VarChar(100)
+    name_th_abbr String?   @db.VarChar(100)
+    name_en      String?   @db.VarChar(100)
+    name_en_abbr String?   @db.VarChar(100)
+    type         Int?      @db.TinyInt
+    created_at   DateTime? @default(now()) @db.DateTime(0)
+    created_by   String?   @db.VarChar(32)
+    updated_at   DateTime? @default(now()) @db.DateTime(0)
+    updated_by   String?   @db.VarChar(32)
+    deleted_at   DateTime?
+    deleted_by   String?   @db.VarChar(32)
+    is_active    Int?      @default(1) @db.TinyInt
 
-    user                user[]
-    complainant         complainant[]
-    accused             accused[]
+    user        user[]
+    complainant complainant[]
+    accused     accused[]
 }
 
-
 model position {
-    id                  Int         @id @default(autoincrement())
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
+    id           Int     @id @default(autoincrement())
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    user                user[]
-    accused             accused[]
-    complainant         complainant[]
+    user        user[]
+    accused     accused[]
+    complainant complainant[]
 }
 
 model inspector {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
-    sort_order          Int?
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
+    sort_order   Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    bureau              bureau[]
-    user                user[]
-    complaint           complaint[]
-    accused             accused[]
-    complaint_follow    complaint_follow[]
-    complainant         complainant[]
-    extend_aproved_inspector    complaint_extend[]
+    bureau                   bureau[]
+    user                     user[]
+    complaint                complaint[]
+    accused                  accused[]
+    complaint_follow         complaint_follow[]
+    complainant              complainant[]
+    extend_aproved_inspector complaint_extend[]
 
-    forward_from_inspector  complaint_forward[]     @relation(name: "forward_from_inspector")
-    forward_to_inspector    complaint_forward[]     @relation(name: "forward_to_inspector")
+    forward_from_inspector complaint_forward[] @relation(name: "forward_from_inspector")
+    forward_to_inspector   complaint_forward[] @relation(name: "forward_to_inspector")
 
-    report_from_inspector  complaint_report[]     @relation(name: "report_from_inspector")
-    report_to_inspector    complaint_report[]     @relation(name: "report_to_inspector")
+    report_from_inspector complaint_report[] @relation(name: "report_from_inspector")
+    report_to_inspector   complaint_report[] @relation(name: "report_to_inspector")
 }
 
 model bureau {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
-    sort_order          Int?
-    inspector_id        Int
-    is_master           String?     @db.Char(1)
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
+    sort_order   Int?
+    inspector_id Int
+    is_master    String? @db.Char(1)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    divisions           division[]
-    user                user[]
-    complaint           complaint[]
-    accused             accused[]
-    complainant         complainant[]
-    extend_aproved_bureau    complaint_extend[]
+    divisions             division[]
+    user                  user[]
+    complaint             complaint[]
+    accused               accused[]
+    complainant           complainant[]
+    extend_aproved_bureau complaint_extend[]
 
-    inspector           inspector     @relation(fields: [inspector_id], references: [id])
-    forward_from_bureau         complaint_forward[]     @relation(name: "forward_from_bureau")
-    forward_to_bureau           complaint_forward[]     @relation(name: "forward_to_bureau")
+    inspector           inspector           @relation(fields: [inspector_id], references: [id])
+    forward_from_bureau complaint_forward[] @relation(name: "forward_from_bureau")
+    forward_to_bureau   complaint_forward[] @relation(name: "forward_to_bureau")
 
-    report_from_bureau  complaint_report[]   @relation(name: "report_from_bureau")
-    report_to_bureau    complaint_report[]   @relation(name: "report_to_bureau")
+    report_from_bureau complaint_report[] @relation(name: "report_from_bureau")
+    report_to_bureau   complaint_report[] @relation(name: "report_to_bureau")
 }
+
 model division {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
-    sort_order          Int?
-    bureau_id           Int?
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
+    sort_order   Int?
+    bureau_id    Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    agencies            agency[]
-    user                user[]
-    complainant         complainant[]
+    agencies    agency[]
+    user        user[]
+    complainant complainant[]
 
-    bureau              bureau?     @relation(fields: [bureau_id], references: [id])
-    complaint           complaint[]
-    accused             accused[]
-    forward_from_division       complaint_forward[]     @relation(name: "forward_from_division")
-    forward_to_division         complaint_forward[]     @relation(name: "forward_to_division")
+    bureau                bureau?             @relation(fields: [bureau_id], references: [id])
+    complaint             complaint[]
+    accused               accused[]
+    forward_from_division complaint_forward[] @relation(name: "forward_from_division")
+    forward_to_division   complaint_forward[] @relation(name: "forward_to_division")
 
-    report_from_division  complaint_report[]   @relation(name: "report_from_division")
-    report_to_division    complaint_report[]   @relation(name: "report_to_division")
+    report_from_division complaint_report[] @relation(name: "report_from_division")
+    report_to_division   complaint_report[] @relation(name: "report_to_division")
 }
+
 model agency {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
-    sort_order          Int?
-    division_id         Int
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
+    sort_order   Int?
+    division_id  Int
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    division            division     @relation(fields: [division_id], references: [id])
+    division division @relation(fields: [division_id], references: [id])
 
-    user                user[]
-    complaint           complaint[]
-    accused             accused[]
-    complainant         complainant[]
+    user        user[]
+    complaint   complaint[]
+    accused     accused[]
+    complainant complainant[]
 
-    forward_from_agency         complaint_forward[]     @relation(name: "forward_from_agency")
-    forward_to_agency           complaint_forward[]     @relation(name: "forward_to_agency")
+    forward_from_agency complaint_forward[] @relation(name: "forward_from_agency")
+    forward_to_agency   complaint_forward[] @relation(name: "forward_to_agency")
 
-    report_from_agency  complaint_report[]   @relation(name: "report_from_agency")
-    report_to_agency    complaint_report[]   @relation(name: "report_to_agency")
+    report_from_agency complaint_report[] @relation(name: "report_from_agency")
+    report_to_agency   complaint_report[] @relation(name: "report_to_agency")
 }
 
 model role {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    description         String?     @db.VarChar(200)
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    name_th     String?   @db.VarChar(100)
+    name_en     String?   @db.VarChar(100)
+    description String?   @db.VarChar(200)
+    created_at  DateTime? @default(now()) @db.DateTime(0)
+    created_by  String?   @db.VarChar(32)
+    updated_at  DateTime? @default(now()) @db.DateTime(0)
+    updated_by  String?   @db.VarChar(32)
+    deleted_at  DateTime?
+    deleted_by  String?   @db.VarChar(32)
+    is_active   Int?      @default(1)
 
-    user                user[]
-    permission          permission[]
-
+    user       user[]
+    permission permission[]
 }
-model permission {
-    id                  Int         @id @default(autoincrement())
-    role_id             Int
-    menu                String      @db.VarChar(100)
-    description         String?     @db.VarChar(100)
-    action_view         Int?        @db.TinyInt    @default(0)
-    action_create       Int?        @db.TinyInt    @default(0)
-    action_update       Int?        @db.TinyInt    @default(0)
-    action_delete       Int?        @db.TinyInt    @default(0)
-    action_export       Int?        @db.TinyInt    @default(0)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+model permission {
+    id            Int     @id @default(autoincrement())
+    role_id       Int
+    menu          String  @db.VarChar(100)
+    description   String? @db.VarChar(100)
+    action_view   Int?    @default(0) @db.TinyInt
+    action_create Int?    @default(0) @db.TinyInt
+    action_update Int?    @default(0) @db.TinyInt
+    action_delete Int?    @default(0) @db.TinyInt
+    action_export Int?    @default(0) @db.TinyInt
+
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
+
+    role role @relation(fields: [role_id], references: [id])
 
     @@unique([role_id, menu])
-
-    role                role        @relation(fields: [role_id], references: [id])
 }
 
 model user_permission {
-    id                  Int         @id @default(autoincrement())
-    user_id             Int
-    menu                String      @db.VarChar(100)
-    description         String?     @db.VarChar(100)
-    action_view         Int?        @db.TinyInt    @default(0)
-    action_create       Int?        @db.TinyInt    @default(0)
-    action_update       Int?        @db.TinyInt    @default(0)
-    action_delete       Int?        @db.TinyInt    @default(0)
-    action_export       Int?        @db.TinyInt    @default(0)
+    id            Int     @id @default(autoincrement())
+    user_id       Int
+    menu          String  @db.VarChar(100)
+    description   String? @db.VarChar(100)
+    action_view   Int?    @default(0) @db.TinyInt
+    action_create Int?    @default(0) @db.TinyInt
+    action_update Int?    @default(0) @db.TinyInt
+    action_delete Int?    @default(0) @db.TinyInt
+    action_export Int?    @default(0) @db.TinyInt
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
+
+    user user @relation(fields: [user_id], references: [id])
+
     @@unique([user_id, menu])
-
-    user                user        @relation(fields: [user_id], references: [id])
 }
 
-
 model section {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_th_abbr        String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    name_en_abbr        String?     @db.VarChar(100)
+    name_th      String? @db.VarChar(100)
+    name_th_abbr String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    name_en_abbr String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    user                user[]
-    accused             accused[]
-    complainant         complainant[]
+    user        user[]
+    accused     accused[]
+    complainant complainant[]
 }
 
 //รอดำเนินการ
 model user {
-    id                  Int        @id @default(autoincrement())
-    uuid                String     @db.VarChar(100) @unique
-    email               String     @db.VarChar(100) @unique
-    prefix_name_id      Int?
-    firstname           String?     @db.VarChar(100)
-    lastname            String?     @db.VarChar(100)
-    officer_code        String?     @db.VarChar(100)
-    id_card             String?     @db.VarChar(100)
-    position_id         Int?
-    section_id          Int?
-    role_id             Int?
-    inspector_id        Int?
-    bureau_id           Int?
-    division_id         Int?
-    agency_id           Int?
-    phone_number        String?     @db.VarChar(100)
-    status              Int?        @db.TinyInt
-    line_id             String?     @db.VarChar(100)
-    birthday            DateTime?   @db.Date
-    file_attach         String?     @db.VarChar(200)
-    password            String?     @db.VarChar(100)
-    is_custom_role      Int?        @db.TinyInt
+    id             Int       @id @default(autoincrement())
+    uuid           String    @unique @db.VarChar(100)
+    email          String    @unique @db.VarChar(100)
+    prefix_name_id Int?
+    firstname      String?   @db.VarChar(100)
+    lastname       String?   @db.VarChar(100)
+    officer_code   String?   @db.VarChar(100)
+    id_card        String?   @db.VarChar(100)
+    position_id    Int?
+    section_id     Int?
+    role_id        Int?
+    inspector_id   Int?
+    bureau_id      Int?
+    division_id    Int?
+    agency_id      Int?
+    phone_number   String?   @db.VarChar(100)
+    status         Int?      @db.TinyInt
+    line_id        String?   @db.VarChar(100)
+    birthday       DateTime? @db.Date
+    file_attach    String?   @db.VarChar(200)
+    password       String?   @db.VarChar(100)
+    is_custom_role Int?      @db.TinyInt
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    recovery_password   recovery_password[]
-    user_permission     user_permission[]
-    login_log           login_log[]
-    closed_user         complaint[] @relation(name: "ClosedUser")
-    receive_user        complaint[] @relation(name: "ReceiveUser")
-    report_from_user         complaint_report[] @relation(name: "report_from_user")
-    report_receive_by_user   complaint_report[] @relation(name: "report_receive_by_user")
-    report_return_user       complaint_report[] @relation(name: "report_return_user")
+    recovery_password      recovery_password[]
+    user_permission        user_permission[]
+    login_log              login_log[]
+    closed_user            complaint[]         @relation(name: "ClosedUser")
+    receive_user           complaint[]         @relation(name: "ReceiveUser")
+    report_from_user       complaint_report[]  @relation(name: "report_from_user")
+    report_receive_by_user complaint_report[]  @relation(name: "report_receive_by_user")
+    report_return_user     complaint_report[]  @relation(name: "report_return_user")
 
-    forward_from_user   complaint_forward[] @relation(name: "forward_from_user")
-    forward_receive_by_user   complaint_forward[] @relation(name: "forward_receive_by_user")
+    forward_from_user       complaint_forward[] @relation(name: "forward_from_user")
+    forward_receive_by_user complaint_forward[] @relation(name: "forward_receive_by_user")
 
-    follow_from_user   complaint_follow[] @relation(name: "follow_from_user")
-    follow_receive_by_user   complaint_follow[] @relation(name: "follow_receive_by_user")
+    follow_from_user       complaint_follow[] @relation(name: "follow_from_user")
+    follow_receive_by_user complaint_follow[] @relation(name: "follow_receive_by_user")
 
     extend_user          complaint_extend[] @relation(name: "ExtendUser")
     approved_extend_user complaint_extend[] @relation(name: "ApprovedUser")
 
-    prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
-    position            position?        @relation(fields: [position_id], references: [id])
-    section             section?         @relation(fields: [section_id], references: [id])
-    role                role?            @relation(fields: [role_id], references: [id])
-    inspector           inspector?       @relation(fields: [inspector_id], references: [id])
-    bureau              bureau?          @relation(fields: [bureau_id], references: [id])
-    division            division?        @relation(fields: [division_id], references: [id])
-    agency              agency?          @relation(fields: [agency_id], references: [id])
-
+    prefix_name prefix_name? @relation(fields: [prefix_name_id], references: [id])
+    position    position?    @relation(fields: [position_id], references: [id])
+    section     section?     @relation(fields: [section_id], references: [id])
+    role        role?        @relation(fields: [role_id], references: [id])
+    inspector   inspector?   @relation(fields: [inspector_id], references: [id])
+    bureau      bureau?      @relation(fields: [bureau_id], references: [id])
+    division    division?    @relation(fields: [division_id], references: [id])
+    agency      agency?      @relation(fields: [agency_id], references: [id])
 }
 
 model complaint_type {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    due_date            Int
-    extend_time         Int
-    extend_date         Int
+    name_th     String? @db.VarChar(100)
+    name_en     String? @db.VarChar(100)
+    due_date    Int
+    extend_time Int
+    extend_date Int
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    topic_category      topic_category[]
-    complaint           complaint[]
-    proceed_status      proceed_status[]
+    topic_category topic_category[]
+    complaint      complaint[]
+    proceed_status proceed_status[]
 }
 
 model occupation {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
+    name_th String? @db.VarChar(100)
+    name_en String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complainant         complainant[]
+    complainant complainant[]
 }
 
 //รอดำเนินการ
 model complainant {
-    id                  Int         @id @default(autoincrement())
-    case_id             String?     @db.VarChar(100) @unique
-    uuid                String?     @db.VarChar(45) @unique
-    phone_number        String     @db.VarChar(100) @unique
-    card_type           Int?        @db.TinyInt
-    id_card             String?     @db.VarChar(100)
-    card_photo          String?     @db.VarChar(200)
-    prefix_name_id      Int?
-    firstname           String?     @db.VarChar(100)
-    lastname            String?     @db.VarChar(100)
-    birthday            DateTime?   @db.Date
-    occupation_id       Int?
-    occupation_text     String?     @db.VarChar(100)
+    id              Int       @id @default(autoincrement())
+    case_id         String?   @unique @db.VarChar(100)
+    uuid            String?   @unique @db.VarChar(45)
+    phone_number    String    @unique @db.VarChar(100)
+    card_type       Int?      @db.TinyInt
+    id_card         String?   @db.VarChar(100)
+    card_photo      String?   @db.VarChar(200)
+    prefix_name_id  Int?
+    firstname       String?   @db.VarChar(100)
+    lastname        String?   @db.VarChar(100)
+    birthday        DateTime? @db.Date
+    occupation_id   Int?
+    occupation_text String?   @db.VarChar(100)
 
-    email               String?     @db.VarChar(100)
-    line_id             String?     @db.VarChar(45)
+    email   String? @db.VarChar(100)
+    line_id String? @db.VarChar(45)
 
-    house_number        String?     @db.VarChar(100)
-    building            String?     @db.VarChar(100)
-    moo                 String?     @db.VarChar(100)
-    soi                 String?     @db.VarChar(100)
-    road                String?     @db.VarChar(100)
-    postal_code         String?     @db.VarChar(10)
+    house_number String? @db.VarChar(100)
+    building     String? @db.VarChar(100)
+    moo          String? @db.VarChar(100)
+    soi          String? @db.VarChar(100)
+    road         String? @db.VarChar(100)
+    postal_code  String? @db.VarChar(10)
 
-    sub_district_id     Int?
-    district_id         Int?
-    province_id         Int?
+    sub_district_id Int?
+    district_id     Int?
+    province_id     Int?
 
-    position_id         Int?
-    section_id          Int?
-    inspector_id        Int?
-    bureau_id           Int?
-    division_id         Int?
-    agency_id           Int?
-    complainant_type    Int?        @db.TinyInt
+    position_id      Int?
+    section_id       Int?
+    inspector_id     Int?
+    bureau_id        Int?
+    division_id      Int?
+    agency_id        Int?
+    complainant_type Int? @db.TinyInt
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint[]
+    complaint complaint[]
 
-    prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
-    occupation          occupation?      @relation(fields: [occupation_id], references: [id])
-    position            position?        @relation(fields: [position_id], references: [id])
-    section             section?         @relation(fields: [section_id], references: [id])
-    inspector           inspector?       @relation(fields: [inspector_id], references: [id])
-    bureau              bureau?          @relation(fields: [bureau_id], references: [id])
-    division            division?        @relation(fields: [division_id], references: [id])
-    agency              agency?          @relation(fields: [agency_id], references: [id])
+    prefix_name prefix_name? @relation(fields: [prefix_name_id], references: [id])
+    occupation  occupation?  @relation(fields: [occupation_id], references: [id])
+    position    position?    @relation(fields: [position_id], references: [id])
+    section     section?     @relation(fields: [section_id], references: [id])
+    inspector   inspector?   @relation(fields: [inspector_id], references: [id])
+    bureau      bureau?      @relation(fields: [bureau_id], references: [id])
+    division    division?    @relation(fields: [division_id], references: [id])
+    agency      agency?      @relation(fields: [agency_id], references: [id])
 
-    sub_district        sub_district?       @relation(fields: [sub_district_id], references: [id])
-    district            district?           @relation(fields: [district_id], references: [id])
-    province            province?           @relation(fields: [province_id], references: [id])
+    sub_district sub_district? @relation(fields: [sub_district_id], references: [id])
+    district     district?     @relation(fields: [district_id], references: [id])
+    province     province?     @relation(fields: [province_id], references: [id])
 }
 
 model province {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
+    name_th String? @db.VarChar(100)
+    name_en String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    district            district[]
-    sub_district        sub_district[]
-    complaint           complaint[]
-    complainant         complainant[]
+    district     district[]
+    sub_district sub_district[]
+    complaint    complaint[]
+    complainant  complainant[]
 }
 
 model district {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    province_id         Int?
+    name_th     String? @db.VarChar(100)
+    name_en     String? @db.VarChar(100)
+    province_id Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    province            province?     @relation(fields: [province_id], references: [id])
+    province province? @relation(fields: [province_id], references: [id])
 
-    sub_district        sub_district[]
-    complaint           complaint[]
-    complainant         complainant[]
+    sub_district sub_district[]
+    complaint    complaint[]
+    complainant  complainant[]
 }
 
 model sub_district {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    post_code           String?     @db.VarChar(10)
-    district_id         Int?
-    province_id         Int?
+    name_th     String? @db.VarChar(100)
+    name_en     String? @db.VarChar(100)
+    post_code   String? @db.VarChar(10)
+    district_id Int?
+    province_id Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    district            district?     @relation(fields: [district_id], references: [id])
-    province            province?     @relation(fields: [province_id], references: [id])
-    complaint           complaint[]
-    complainant         complainant[]
+    district    district?     @relation(fields: [district_id], references: [id])
+    province    province?     @relation(fields: [province_id], references: [id])
+    complaint   complaint[]
+    complainant complainant[]
 }
 
 model complaint_channel_history {
-    id                  Int         @id @default(autoincrement())
-    complaint_id        Int
+    id                   Int       @id @default(autoincrement())
+    complaint_id         Int
     complaint_channel_id Int
-    description         String?     @db.VarChar(100)
-    can_input           Int?        @db.TinyInt
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    description          String?   @db.VarChar(100)
+    can_input            Int?      @db.TinyInt
+    created_at           DateTime? @default(now()) @db.DateTime(0)
+    created_by           String?   @db.VarChar(32)
+    updated_at           DateTime? @default(now()) @db.DateTime(0)
+    updated_by           String?   @db.VarChar(32)
+    deleted_at           DateTime?
+    deleted_by           String?   @db.VarChar(32)
+    is_active            Int?      @default(1)
 
-    complaint           complaint?  @relation(fields: [complaint_id], references: [id])
-    channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])
+    complaint complaint?         @relation(fields: [complaint_id], references: [id])
+    channel   complaint_channel? @relation(fields: [complaint_channel_id], references: [id])
 }
 
 model complaint_channel {
-    id                  Int         @id @default(autoincrement())
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    can_input           Int?        @db.TinyInt
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    id         Int       @id @default(autoincrement())
+    name_th    String?   @db.VarChar(100)
+    name_en    String?   @db.VarChar(100)
+    can_input  Int?      @db.TinyInt
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint[]
-    complaint_channel_history   complaint_channel_history[]
+    complaint                 complaint[]
+    complaint_channel_history complaint_channel_history[]
 }
 
 model topic_category {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    complaint_type_id   Int
+    name_th           String? @db.VarChar(100)
+    name_en           String? @db.VarChar(100)
+    complaint_type_id Int
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint_type      complaint_type     @relation(fields: [complaint_type_id], references: [id])
-    topic_type          topic_type[]
+    complaint_type complaint_type @relation(fields: [complaint_type_id], references: [id])
+    topic_type     topic_type[]
 }
 
 model topic_type {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    topic_category_id   Int
+    name_th           String? @db.VarChar(100)
+    name_en           String? @db.VarChar(100)
+    topic_category_id Int
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    topic_category      topic_category     @relation(fields: [topic_category_id], references: [id])
-    complaint           complaint[]
+    topic_category topic_category @relation(fields: [topic_category_id], references: [id])
+    complaint      complaint[]
 }
-
 
 model complaint_extend {
-    id                  Int         @id @default(autoincrement())
+    id                  Int       @id @default(autoincrement())
     complaint_id        Int
-    extend_comment      String?     @db.Text
+    extend_comment      String?   @db.Text
     extend_user_id      Int?
     bureau_id           Int?
-    extend_doc_no       String?     @db.VarChar(100)
-    extend_doc_date     DateTime?   @db.Date
-    extend_doc_filename String?     @db.VarChar(200)
+    extend_doc_no       String?   @db.VarChar(100)
+    extend_doc_date     DateTime? @db.Date
+    extend_doc_filename String?   @db.VarChar(200)
 
-    approved_at         DateTime?
-    approved_user_id    Int?
-    approved_comment    String?     @db.Text
-    inspector_id        Int?
-    approved_doc_no     String?     @db.VarChar(100)
-    approved_doc_date   DateTime?   @db.Date
-    approved_doc_filename String?    @db.VarChar(200)
-    status              Int?        @db.TinyInt
-    time_no             Int?
-    extend_day          Int?
-    due_date            DateTime?   @db.Date
+    approved_at           DateTime?
+    approved_user_id      Int?
+    approved_comment      String?   @db.Text
+    inspector_id          Int?
+    approved_doc_no       String?   @db.VarChar(100)
+    approved_doc_date     DateTime? @db.Date
+    approved_doc_filename String?   @db.VarChar(200)
+    status                Int?      @db.TinyInt
+    time_no               Int?
+    extend_day            Int?
+    due_date              DateTime? @db.Date
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint?  @relation(fields: [complaint_id], references: [id])
-    extend_user         user?       @relation(name: "ExtendUser", fields: [extend_user_id], references: [id])
-    approved_user user?      @relation(name: "ApprovedUser", fields: [approved_user_id], references: [id])
-    approved_inspector   inspector?  @relation(fields: [inspector_id], references: [id])
-    extend_bureau        bureau?     @relation(fields: [bureau_id], references: [id])
-
+    complaint          complaint? @relation(fields: [complaint_id], references: [id])
+    extend_user        user?      @relation(name: "ExtendUser", fields: [extend_user_id], references: [id])
+    approved_user      user?      @relation(name: "ApprovedUser", fields: [approved_user_id], references: [id])
+    approved_inspector inspector? @relation(fields: [inspector_id], references: [id])
+    extend_bureau      bureau?    @relation(fields: [bureau_id], references: [id])
 }
+
 model state {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    parent_state        Int?
+    name_th      String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    parent_state Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint[]
-    proceed_status      proceed_status[]
-    complaint_report complaint_report[]
-    complaint_forward   complaint_forward[]
+    complaint         complaint[]
+    proceed_status    proceed_status[]
+    complaint_report  complaint_report[]
+    complaint_forward complaint_forward[]
 }
 
 model inspector_state {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    parent_state        Int?
+    name_th      String? @db.VarChar(100)
+    name_en      String? @db.VarChar(100)
+    parent_state Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint[]
-    complaint_forward   complaint_forward[]
+    complaint         complaint[]
+    complaint_forward complaint_forward[]
 }
 
 model complaint {
-    id                  Int         @id @default(autoincrement())
-    case_id             String?     @db.VarChar(100) @unique
-    uuid                String?     @db.VarChar(100)
-    jcoms_no            String?     @db.VarChar(100) @unique
-    tracking_satisfaction Int?      @db.TinyInt
-    tracking_satisfaction_at DateTime?
-    complaint_satisfaction Int?     @db.TinyInt
+    id                        Int       @id @default(autoincrement())
+    case_id                   String?   @unique @db.VarChar(100)
+    uuid                      String?   @db.VarChar(100)
+    jcoms_no                  String?   @unique @db.VarChar(100)
+    tracking_satisfaction     Int?      @db.TinyInt
+    tracking_satisfaction_at  DateTime?
+    complaint_satisfaction    Int?      @db.TinyInt
     complaint_satisfaction_at DateTime?
 
-    receive_at          DateTime?
-    receive_user_id     Int?
-    pol_no              String?     @db.VarChar(100)
-    receive_doc_no      String?     @db.VarChar(100)
-    receive_doc_date    DateTime?   @db.Date
-    receive_comment     String?     @db.VarChar(200)
-    receive_doc_filename String?     @db.VarChar(200)
-    receive_status      Int?        @db.TinyInt
+    receive_at           DateTime?
+    receive_user_id      Int?
+    pol_no               String?   @db.VarChar(100)
+    receive_doc_no       String?   @db.VarChar(100)
+    receive_doc_date     DateTime? @db.Date
+    receive_comment      String?   @db.VarChar(200)
+    receive_doc_filename String?   @db.VarChar(200)
+    receive_status       Int?      @db.TinyInt
 
-    complaint_type_id   Int?
-    complainant_id      Int?
-    is_anonymous        Int?        @db.TinyInt
-    complaint_title     String?     @db.Text
-    complaint_detail    String?     @db.Text
-    incident_datetime   DateTime?
-    location_coordinates  String?   @db.VarChar(100)
-    incident_location   String?     @db.Text
-    evidence_url        String?     @db.Text
+    complaint_type_id    Int?
+    complainant_id       Int?
+    is_anonymous         Int?      @db.TinyInt
+    complaint_title      String?   @db.Text
+    complaint_detail     String?   @db.Text
+    incident_datetime    DateTime?
+    location_coordinates String?   @db.VarChar(100)
+    incident_location    String?   @db.Text
+    evidence_url         String?   @db.Text
 
-    day_time            Int?        @db.TinyInt
+    day_time             Int?    @db.TinyInt
     complaint_channel_id Int?
-    channel_history_text String?    @db.VarChar(200)
-    inspector_id        Int?
-    bureau_id           Int?
-    division_id         Int?
-    agency_id           Int?
-    topic_type_id       Int?
-    house_number        String?     @db.VarChar(100)
-    building            String?     @db.VarChar(100)
-    moo                 String?     @db.VarChar(100)
-    soi                 String?     @db.VarChar(100)
-    road                String?     @db.VarChar(100)
-    postal_code         String?     @db.VarChar(10)
-    sub_district_id     Int?
-    district_id         Int?
-    province_id         Int?
-    state_id            Int?
-    notice_type         Int?        @db.TinyInt
-    inspector_state_id  Int?
+    channel_history_text String? @db.VarChar(200)
+    inspector_id         Int?
+    bureau_id            Int?
+    division_id          Int?
+    agency_id            Int?
+    topic_type_id        Int?
+    house_number         String? @db.VarChar(100)
+    building             String? @db.VarChar(100)
+    moo                  String? @db.VarChar(100)
+    soi                  String? @db.VarChar(100)
+    road                 String? @db.VarChar(100)
+    postal_code          String? @db.VarChar(10)
+    sub_district_id      Int?
+    district_id          Int?
+    province_id          Int?
+    state_id             Int?
+    notice_type          Int?    @db.TinyInt
+    inspector_state_id   Int?
 
-    forward_doc_no      String?     @db.VarChar(100)
-    forward_doc_date    DateTime?   @db.Date
+    forward_doc_no   String?   @db.VarChar(100)
+    forward_doc_date DateTime? @db.Date
 
     jcoms_month_running Int?
     jcoms_year_running  Int?
 
-    closed_at           DateTime?
-    closed_user_id      Int?
-    closed_comment      String?     @db.Text
+    closed_at      DateTime?
+    closed_user_id Int?
+    closed_comment String?   @db.Text
 
-    due_day             Int?
-    due_date            DateTime?   @db.Date
+    due_day  Int?
+    due_date DateTime? @db.Date
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    closed_user         user?               @relation(name: "ClosedUser", fields: [closed_user_id], references: [id])
-    receive_user        user?               @relation(name: "ReceiveUser", fields: [receive_user_id], references: [id])
-    complaint_type      complaint_type?     @relation(fields: [complaint_type_id], references: [id])
-    complainant         complainant?        @relation(fields: [complainant_id], references: [id])
-    complaint_channel   complaint_channel?  @relation(fields: [complaint_channel_id], references: [id])
-    inspector           inspector?          @relation(fields: [inspector_id], references: [id])
-    bureau              bureau?             @relation(fields: [bureau_id], references: [id])
-    division            division?           @relation(fields: [division_id], references: [id])
-    agency              agency?             @relation(fields: [agency_id], references: [id])
-    topic_type          topic_type?         @relation(fields: [topic_type_id], references: [id])
-    sub_district        sub_district?       @relation(fields: [sub_district_id], references: [id])
-    district            district?           @relation(fields: [district_id], references: [id])
-    province            province?           @relation(fields: [province_id], references: [id])
-    state               state?              @relation(fields: [state_id], references: [id])
-    inspector_state      inspector_state?     @relation(fields: [inspector_state_id], references: [id])
+    closed_user       user?              @relation(name: "ClosedUser", fields: [closed_user_id], references: [id])
+    receive_user      user?              @relation(name: "ReceiveUser", fields: [receive_user_id], references: [id])
+    complaint_type    complaint_type?    @relation(fields: [complaint_type_id], references: [id])
+    complainant       complainant?       @relation(fields: [complainant_id], references: [id])
+    complaint_channel complaint_channel? @relation(fields: [complaint_channel_id], references: [id])
+    inspector         inspector?         @relation(fields: [inspector_id], references: [id])
+    bureau            bureau?            @relation(fields: [bureau_id], references: [id])
+    division          division?          @relation(fields: [division_id], references: [id])
+    agency            agency?            @relation(fields: [agency_id], references: [id])
+    topic_type        topic_type?        @relation(fields: [topic_type_id], references: [id])
+    sub_district      sub_district?      @relation(fields: [sub_district_id], references: [id])
+    district          district?          @relation(fields: [district_id], references: [id])
+    province          province?          @relation(fields: [province_id], references: [id])
+    state             state?             @relation(fields: [state_id], references: [id])
+    inspector_state   inspector_state?   @relation(fields: [inspector_state_id], references: [id])
 
-    accused             accused[]
-    complaint_forward   complaint_forward[]
-    complaint_report complaint_report[]
-    complaint_follow    complaint_follow[]
+    accused           accused[]
+    complaint_forward complaint_forward[]
+    complaint_report  complaint_report[]
+    complaint_follow  complaint_follow[]
     channel_history   complaint_channel_history[]
     complaint_extend  complaint_extend[]
-
 }
 
 model accused {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    prefix_name_id      Int?
-    firstname           String?     @db.VarChar(100)
-    lastname            String?     @db.VarChar(100)
-    position_id         Int?
-    section_id          Int?
-    agency_id           Int?
-    inspector_id        Int?
-    bureau_id           Int?
-    division_id         Int?
-    complaint_id        Int
-    type                Int?        @db.TinyInt
-    detail              String?     @db.VarChar(200)
+    prefix_name_id Int?
+    firstname      String? @db.VarChar(100)
+    lastname       String? @db.VarChar(100)
+    position_id    Int?
+    section_id     Int?
+    agency_id      Int?
+    inspector_id   Int?
+    bureau_id      Int?
+    division_id    Int?
+    complaint_id   Int
+    type           Int?    @db.TinyInt
+    detail         String? @db.VarChar(200)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    prefix_name         prefix_name?     @relation(fields: [prefix_name_id], references: [id])
-    position            position?        @relation(fields: [position_id], references: [id])
-    section             section?         @relation(fields: [section_id], references: [id])
-    inspector           inspector?       @relation(fields: [inspector_id], references: [id])
-    bureau              bureau?          @relation(fields: [bureau_id], references: [id])
-    division            division?        @relation(fields: [division_id], references: [id])
-    agency              agency?          @relation(fields: [agency_id], references: [id])
-    complaint           complaint?       @relation(fields: [complaint_id], references: [id])
+    prefix_name prefix_name? @relation(fields: [prefix_name_id], references: [id])
+    position    position?    @relation(fields: [position_id], references: [id])
+    section     section?     @relation(fields: [section_id], references: [id])
+    inspector   inspector?   @relation(fields: [inspector_id], references: [id])
+    bureau      bureau?      @relation(fields: [bureau_id], references: [id])
+    division    division?    @relation(fields: [division_id], references: [id])
+    agency      agency?      @relation(fields: [agency_id], references: [id])
+    complaint   complaint?   @relation(fields: [complaint_id], references: [id])
 }
 
 model order {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
+    name_th String? @db.VarChar(100)
+    name_en String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint_forward   complaint_forward[]
+    complaint_forward complaint_forward[]
 }
-
 
 //รอดำเนินการ
 model complaint_forward {
-    id                  Int         @id @default(autoincrement())
-    complaint_id        Int
-    forward_doc_no      String?     @db.VarChar(100)
-    forward_doc_date    DateTime?   @db.Date
-    forward_doc_filename String?    @db.VarChar(200)
-    forward_user_id     Int?
-    forward_at          DateTime?
-    from_inspector_id   Int?
-    from_bureau_id      Int?
-    from_agency_id      Int?
-    from_division_id    Int?
-    to_inspector_id     Int?
-    to_bureau_id        Int?
-    to_division_id      Int?
-    to_agency_id        Int?
-    receive_doc_no      String?     @db.VarChar(100)
-    receive_doc_date    DateTime?
-    receive_doc_filename String?    @db.VarChar(200)
-    receive_user_id     Int?
-    receive_at          DateTime?
-    order_id            Int?
-    order_detail        String?     @db.VarChar(100)
-    receive_status      Int?        @db.TinyInt
-    receive_comment     String?     @db.VarChar(200)
-    state_id            Int?
-    inspector_state_id  Int?
+    id                   Int       @id @default(autoincrement())
+    complaint_id         Int
+    forward_doc_no       String?   @db.VarChar(100)
+    forward_doc_date     DateTime? @db.Date
+    forward_doc_filename String?   @db.VarChar(200)
+    forward_user_id      Int?
+    forward_at           DateTime?
+    from_inspector_id    Int?
+    from_bureau_id       Int?
+    from_agency_id       Int?
+    from_division_id     Int?
+    to_inspector_id      Int?
+    to_bureau_id         Int?
+    to_division_id       Int?
+    to_agency_id         Int?
+    receive_doc_no       String?   @db.VarChar(100)
+    receive_doc_date     DateTime?
+    receive_doc_filename String?   @db.VarChar(200)
+    receive_user_id      Int?
+    receive_at           DateTime?
+    order_id             Int?
+    order_detail         String?   @db.VarChar(100)
+    receive_status       Int?      @db.TinyInt
+    receive_comment      String?   @db.VarChar(200)
+    state_id             Int?
+    inspector_state_id   Int?
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint?      @relation(fields: [complaint_id], references: [id])
-    order               order?          @relation(fields: [order_id], references: [id])
-    state               state?          @relation(fields: [state_id], references: [id])
-    inspector_state     inspector_state? @relation(fields: [inspector_state_id], references: [id])
+    complaint       complaint?       @relation(fields: [complaint_id], references: [id])
+    order           order?           @relation(fields: [order_id], references: [id])
+    state           state?           @relation(fields: [state_id], references: [id])
+    inspector_state inspector_state? @relation(fields: [inspector_state_id], references: [id])
 
-    forward_user        user?           @relation(name: "forward_from_user", fields: [forward_user_id], references: [id])
-    receive_user        user?           @relation(name: "forward_receive_by_user", fields: [receive_user_id], references: [id])
+    forward_user user? @relation(name: "forward_from_user", fields: [forward_user_id], references: [id])
+    receive_user user? @relation(name: "forward_receive_by_user", fields: [receive_user_id], references: [id])
 
-    from_inspector      inspector?      @relation(name: "forward_from_inspector", fields: [from_inspector_id], references: [id])
-    from_bureau         bureau?         @relation(name: "forward_from_bureau", fields: [from_bureau_id], references: [id])
-    from_agency         agency?         @relation(name: "forward_from_agency", fields: [from_agency_id], references: [id])
-    from_division       division?       @relation(name: "forward_from_division", fields: [from_division_id], references: [id])
+    from_inspector inspector? @relation(name: "forward_from_inspector", fields: [from_inspector_id], references: [id])
+    from_bureau    bureau?    @relation(name: "forward_from_bureau", fields: [from_bureau_id], references: [id])
+    from_agency    agency?    @relation(name: "forward_from_agency", fields: [from_agency_id], references: [id])
+    from_division  division?  @relation(name: "forward_from_division", fields: [from_division_id], references: [id])
 
-    to_inspector        inspector?      @relation(name: "forward_to_inspector", fields: [to_inspector_id], references: [id])
-    to_bureau           bureau?         @relation(name: "forward_to_bureau", fields: [to_bureau_id], references: [id])
-    to_agency           agency?         @relation(name: "forward_to_agency", fields: [to_agency_id], references: [id])
-    to_division         division?       @relation(name: "forward_to_division", fields: [to_division_id], references: [id])
+    to_inspector inspector? @relation(name: "forward_to_inspector", fields: [to_inspector_id], references: [id])
+    to_bureau    bureau?    @relation(name: "forward_to_bureau", fields: [to_bureau_id], references: [id])
+    to_agency    agency?    @relation(name: "forward_to_agency", fields: [to_agency_id], references: [id])
+    to_division  division?  @relation(name: "forward_to_division", fields: [to_division_id], references: [id])
 }
 
 model proceed_status {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    name_th             String?     @db.VarChar(100)
-    name_en             String?     @db.VarChar(100)
-    state_id            Int?
-    complaint_type_id   Int?
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    name_th           String?   @db.VarChar(100)
+    name_en           String?   @db.VarChar(100)
+    state_id          Int?
+    complaint_type_id Int?
+    created_at        DateTime? @default(now()) @db.DateTime(0)
+    created_by        String?   @db.VarChar(32)
+    updated_at        DateTime? @default(now()) @db.DateTime(0)
+    updated_by        String?   @db.VarChar(32)
+    deleted_at        DateTime?
+    deleted_by        String?   @db.VarChar(32)
+    is_active         Int?      @default(1)
 
     complaint_report complaint_report[]
 
-    state               state?          @relation(fields: [state_id], references: [id])
-    complaint_type      complaint_type?          @relation(fields: [complaint_type_id], references: [id])
+    state          state?          @relation(fields: [state_id], references: [id])
+    complaint_type complaint_type? @relation(fields: [complaint_type_id], references: [id])
 }
 
 //รอดำเนินการ
 model complaint_report {
-    id                  Int         @id @default(autoincrement())
-    complaint_id        Int
-    proceed_status_id   Int?
-    report_doc_no       String?     @db.VarChar(100)
-    report_doc_date     DateTime?   @db.Date
-    report_doc_filename String?     @db.VarChar(200)
-    report_user_id      Int?
-    report_at           DateTime?
-    report_detail       String?     @db.Text
-    from_inspector_id   Int?
-    from_bureau_id      Int?
-    from_division_id    Int?
-    from_agency_id      Int?
-    to_inspector_id     Int?
-    to_bureau_id        Int?
-    to_division_id      Int?
-    to_agency_id        Int?
-    receive_doc_no      String?     @db.VarChar(100)
-    receive_doc_date    DateTime?   @db.Date
-    receive_doc_filename String?    @db.VarChar(200)
-    receive_user_id     Int?
-    receive_at          DateTime?
-    receive_comment     String?     @db.VarChar(200)
-    state_id            Int?
-    status              Int?        @db.TinyInt
-    return_detail       String?     @db.Text
-    return_at           DateTime?
-    return_user_id      Int?
-    return_doc_no       String?     @db.VarChar(100)
-    return_doc_date     DateTime?   @db.Date
-    return_doc_filename String?     @db.VarChar(200)
+    id                   Int       @id @default(autoincrement())
+    complaint_id         Int
+    proceed_status_id    Int?
+    report_doc_no        String?   @db.VarChar(100)
+    report_doc_date      DateTime? @db.Date
+    report_doc_filename  String?   @db.VarChar(200)
+    report_user_id       Int?
+    report_at            DateTime?
+    report_detail        String?   @db.Text
+    from_inspector_id    Int?
+    from_bureau_id       Int?
+    from_division_id     Int?
+    from_agency_id       Int?
+    to_inspector_id      Int?
+    to_bureau_id         Int?
+    to_division_id       Int?
+    to_agency_id         Int?
+    receive_doc_no       String?   @db.VarChar(100)
+    receive_doc_date     DateTime? @db.Date
+    receive_doc_filename String?   @db.VarChar(200)
+    receive_user_id      Int?
+    receive_at           DateTime?
+    receive_comment      String?   @db.VarChar(200)
+    state_id             Int?
+    status               Int?      @db.TinyInt
+    return_detail        String?   @db.Text
+    return_at            DateTime?
+    return_user_id       Int?
+    return_doc_no        String?   @db.VarChar(100)
+    return_doc_date      DateTime? @db.Date
+    return_doc_filename  String?   @db.VarChar(200)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    complaint           complaint?      @relation(fields: [complaint_id], references: [id])
-    proceed_status      proceed_status? @relation(fields: [proceed_status_id], references: [id])
-    report_user         user?           @relation(name: "report_from_user", fields: [report_user_id], references: [id])
-    receive_user        user?           @relation(name: "report_receive_by_user", fields: [receive_user_id], references: [id])
-    report_return_user  user?           @relation(name: "report_return_user",  fields: [return_user_id], references: [id])
+    complaint          complaint?      @relation(fields: [complaint_id], references: [id])
+    proceed_status     proceed_status? @relation(fields: [proceed_status_id], references: [id])
+    report_user        user?           @relation(name: "report_from_user", fields: [report_user_id], references: [id])
+    receive_user       user?           @relation(name: "report_receive_by_user", fields: [receive_user_id], references: [id])
+    report_return_user user?           @relation(name: "report_return_user", fields: [return_user_id], references: [id])
 
-    from_inspector      inspector?      @relation(name: "report_from_inspector", fields: [from_inspector_id], references: [id])
-    from_bureau         bureau?         @relation(name: "report_from_bureau", fields: [from_bureau_id], references: [id])
-    from_agency         agency?         @relation(name: "report_from_agency", fields: [from_agency_id], references: [id])
-    from_division       division?       @relation(name: "report_from_division", fields: [from_division_id], references: [id])
+    from_inspector inspector? @relation(name: "report_from_inspector", fields: [from_inspector_id], references: [id])
+    from_bureau    bureau?    @relation(name: "report_from_bureau", fields: [from_bureau_id], references: [id])
+    from_agency    agency?    @relation(name: "report_from_agency", fields: [from_agency_id], references: [id])
+    from_division  division?  @relation(name: "report_from_division", fields: [from_division_id], references: [id])
 
-    to_inspector        inspector?      @relation(name: "report_to_inspector", fields: [to_inspector_id], references: [id])
-    to_bureau           bureau?         @relation(name: "report_to_bureau", fields: [to_bureau_id], references: [id])
-    to_agency           agency?         @relation(name: "report_to_agency", fields: [to_agency_id], references: [id])
-    to_division         division?       @relation(name: "report_to_division", fields: [to_division_id], references: [id])
+    to_inspector inspector? @relation(name: "report_to_inspector", fields: [to_inspector_id], references: [id])
+    to_bureau    bureau?    @relation(name: "report_to_bureau", fields: [to_bureau_id], references: [id])
+    to_agency    agency?    @relation(name: "report_to_agency", fields: [to_agency_id], references: [id])
+    to_division  division?  @relation(name: "report_to_division", fields: [to_division_id], references: [id])
 
-    state               state?          @relation(fields: [state_id], references: [id])
-
+    state state? @relation(fields: [state_id], references: [id])
 }
+
 //รอดำเนินการ
 model complaint_follow {
-    id                  Int         @id @default(autoincrement())
-    complaint_id        Int
-    inspector_id        Int?
+    id              Int  @id @default(autoincrement())
+    complaint_id    Int
+    inspector_id    Int?
+    is_commissioner Int?
 
-    follow_detail       String?     @db.Text
+    follow_detail String? @db.Text
 
-    follow_doc_no       String?     @db.VarChar(100)
-    follow_doc_date     DateTime?   @db.Date
-    follow_doc_filename String?     @db.VarChar(200)
+    follow_doc_no       String?   @db.VarChar(100)
+    follow_doc_date     DateTime? @db.Date
+    follow_doc_filename String?   @db.VarChar(200)
     follow_user_id      Int?
     follow_at           DateTime?
 
-    receive_doc_no      String?     @db.VarChar(100)
-    receive_doc_date    DateTime?   @db.Date
-    receive_doc_filename String?    @db.VarChar(200)
-    receive_user_id     Int?
-    receive_at          DateTime?
-    receive_status      Int?        @db.TinyInt
-    receive_comment     String?     @db.VarChar(200)
+    receive_doc_no       String?   @db.VarChar(100)
+    receive_doc_date     DateTime? @db.Date
+    receive_doc_filename String?   @db.VarChar(200)
+    receive_user_id      Int?
+    receive_at           DateTime?
+    receive_status       Int?      @db.TinyInt
+    receive_comment      String?   @db.VarChar(200)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
-    time_no             Int?        @default(0)
-    bureau_id           Int?
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
+    time_no    Int?      @default(0)
+    bureau_id  Int?
 
-    complaint           complaint?          @relation(fields: [complaint_id], references: [id])
-    inspector           inspector?          @relation(fields: [inspector_id], references: [id])
+    complaint complaint? @relation(fields: [complaint_id], references: [id])
+    inspector inspector? @relation(fields: [inspector_id], references: [id])
 
-    follow_user         user?           @relation(name: "follow_from_user", fields: [follow_user_id], references: [id])
-    receive_user        user?           @relation(name: "follow_receive_by_user", fields: [receive_user_id], references: [id])
+    follow_user  user? @relation(name: "follow_from_user", fields: [follow_user_id], references: [id])
+    receive_user user? @relation(name: "follow_receive_by_user", fields: [receive_user_id], references: [id])
 }
 
 model login_log {
-    id                  Int         @id @default(autoincrement())
-    user_id             Int
-    logined_at          DateTime?   @default(now())     @db.DateTime(0)
-    ip_address          String?     @db.VarChar(100)
-    user_agent          String?      @db.VarChar(200)
-    status              Int?        @db.TinyInt
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    id         Int       @id @default(autoincrement())
+    user_id    Int
+    logined_at DateTime? @default(now()) @db.DateTime(0)
+    ip_address String?   @db.VarChar(100)
+    user_agent String?   @db.VarChar(200)
+    status     Int?      @db.TinyInt
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    user                user?          @relation(fields: [user_id], references: [id])
+    user user? @relation(fields: [user_id], references: [id])
 }
 
 model complaint_file_attach {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    complaint_id        Int?
-    filename            String?     @db.VarChar(200)
-    secret_key          String?     @db.VarChar(100)
+    complaint_id Int?
+    filename     String? @db.VarChar(200)
+    secret_key   String? @db.VarChar(100)
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 }
 
 model otp {
-    id                  Int         @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-    phone_number        String     @db.VarChar(100)
-    otp_secret          String     @db.VarChar(100)
-    otp                 String     @db.VarChar(100)
-    status              Int?       @db.TinyInt
+    phone_number String @db.VarChar(100)
+    otp_secret   String @db.VarChar(100)
+    otp          String @db.VarChar(100)
+    status       Int?   @db.TinyInt
 
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 }
 
 model recovery_password {
-    id                  Int         @id @default(autoincrement())
-    user_id             Int
-    email               String      @db.VarChar(100)
-    ref_code            String      @db.VarChar(100)
-    code                String      @db.VarChar(100)
-    status              Int?        @db.TinyInt
-    expired_at          DateTime?
-    created_at          DateTime?   @default(now())     @db.DateTime(0)
-    created_by          String?     @db.VarChar(32)
-    updated_at          DateTime?   @default(now())     @db.DateTime(0)
-    updated_by          String?     @db.VarChar(32)
-    deleted_at          DateTime?
-    deleted_by          String?     @db.VarChar(32)
-    is_active           Int?        @default(1)
+    id         Int       @id @default(autoincrement())
+    user_id    Int
+    email      String    @db.VarChar(100)
+    ref_code   String    @db.VarChar(100)
+    code       String    @db.VarChar(100)
+    status     Int?      @db.TinyInt
+    expired_at DateTime?
+    created_at DateTime? @default(now()) @db.DateTime(0)
+    created_by String?   @db.VarChar(32)
+    updated_at DateTime? @default(now()) @db.DateTime(0)
+    updated_by String?   @db.VarChar(32)
+    deleted_at DateTime?
+    deleted_by String?   @db.VarChar(32)
+    is_active  Int?      @default(1)
 
-    user                user?          @relation(fields: [user_id], references: [id])
+    user user? @relation(fields: [user_id], references: [id])
 }

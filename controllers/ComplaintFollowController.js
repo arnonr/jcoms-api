@@ -45,6 +45,7 @@ const selectField = {
     follow_doc_filename: true,
     follow_user_id: true,
     follow_at: true,
+    is_commissioner: true,
 
     receive_doc_no: true,
     receive_doc_date: true,
@@ -243,7 +244,7 @@ const methods = {
                     follow_doc_no: req.body.follow_doc_no,
                     follow_doc_date: req.body.follow_doc_date != null ? new Date(req.body.follow_doc_date) : undefined,
                     follow_doc_filename: followDocPathFile,
-
+                    is_commissioner: req.body.is_commissioner,
                     follow_user_id: Number(req.body.follow_user_id),
                     follow_at: req.body.follow_at != null ? new Date(req.body.follow_at) : undefined,
 
@@ -295,6 +296,7 @@ const methods = {
                     follow_user_id: req.body.follow_user_id != null ? Number(req.body.follow_user_id) : undefined,
                     follow_at: req.body.follow_at != null ? new Date(req.body.follow_at) : undefined,
                     follow_detail: req.body.follow_detail != null ? req.body.follow_detail : undefined,
+                    is_commissioner: req.body.is_commissioner  != null  ? req.body.is_commissioner : undefined,
 
                     from_inspector_id: req.body.from_inspector_id != null ? Number(req.body.from_inspector_id) : undefined,
                     from_bureau_id: req.body.from_bureau_id != null ? Number(req.body.from_bureau_id) : undefined,
