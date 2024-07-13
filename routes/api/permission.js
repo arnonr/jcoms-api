@@ -10,6 +10,7 @@ router.post("/", controllers.onCreate);
 
 router.put("/:id", controllers.onUpdate);
 
+router.delete("/with-role-id/:id", controllers.onDeleteWithRoleID);
 router.delete("/:id", controllers.onDelete);
 
 module.exports = router;
