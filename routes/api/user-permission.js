@@ -12,6 +12,9 @@ router.post("/", controllers.onCreate);
 
 router.put("/:id", controllers.onUpdate);
 
+router.delete("/with-user-id/:id", controllers.onDeleteWithUserID);
 router.delete("/:id", controllers.onDelete);
+
+
 
 module.exports = router;

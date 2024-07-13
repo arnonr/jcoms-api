@@ -214,6 +214,22 @@ const methods = {
             res.status(400).json({ msg: error.message });
         }
     },
+
+    async onDeleteWithUserID(req, res) {
+        try { 
+            await prisma[$table].deleteMany({
+                where: {
+                    user_id: Number(req.params.id),
+                },
+            });
+
+            res.status(200).json({
+                msg: "success",
+            });
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
+        }
+    },
 };
 
 module.exports = { ...methods };
