@@ -27,7 +27,8 @@ const selectField = {
     is_active: true,
     prefix_name:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     position:{
