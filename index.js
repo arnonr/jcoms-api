@@ -5,6 +5,7 @@ const routes = require("./routes");
 var path = require("path");
 const bodyParser = require('body-parser');
 const fileUpload = require("express-fileupload");
+const requestIp = require('request-ip');
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,8 @@ const corsOptions = {
   credentials: true,
 };
 
+
+
 app.use(bodyParser.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({ extended: true,limit: '500mb' }));
 app.use(cors(corsOptions));
@@ -22,6 +25,10 @@ app.use(express.json({limit: '500mb'}));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
 app.use(fileUpload());
+
+// Middleware สำหรับดึง IP Address
+app.use(requestIp.mw());
+
 app.use("/static", express.static(__dirname + "/public"));
 
 app.use(routes);

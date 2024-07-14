@@ -38,6 +38,7 @@ const inspectorState = require("./api/inspector-state");
 const permission = require("./api/permission");
 const userPermission = require("./api/user-permission");
 const opm = require("./api/opm");
+const visitWebsiteLog = require("./api/visit-website-log");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -77,7 +78,8 @@ router.use(
   router.use("/inspector-state", inspectorState),
   router.use("/permission", permission),
   router.use("/user-permission", userPermission),
-  router.use("/opm", opm)
+  router.use("/opm", opm),
+  router.use("/visit-website-log", visitWebsiteLog),
 );
 
 module.exports = router;
