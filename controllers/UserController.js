@@ -578,7 +578,7 @@ const methods = {
               ? Number(req.body.division_id)
               : undefined,
           agency_id:
-            req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+            req.body.agency_id != undefined ? Number(req.body.agency_id) : undefined,
 
           phone_number:
             req.body.phone_number != null ? req.body.phone_number : undefined,
