@@ -1,0 +1,9 @@
+{
+    "organization_permission":[
+        {
+            "resp_inspector_id" : [1,2,3],
+            "resp_bureau_id" : [1,2,3],
+            "resp_agency_id" : [1,2,3]
+        }
+    ]
+}

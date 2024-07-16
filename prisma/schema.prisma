@@ -80,6 +80,9 @@ model inspector {
 
     report_from_inspector complaint_report[] @relation(name: "report_from_inspector")
     report_to_inspector   complaint_report[] @relation(name: "report_to_inspector")
+
+    organization_permission_inspector      organization_permission[] @relation(name: "org_permission_inspector")
+    organization_permission_inspector_resp organization_permission[] @relation(name: "org_permission_resp_inspector")
 }
 
 model bureau {
@@ -114,6 +117,8 @@ model bureau {
 
     report_from_bureau complaint_report[] @relation(name: "report_from_bureau")
     report_to_bureau   complaint_report[] @relation(name: "report_to_bureau")
+    organization_permission  organization_permission[] @relation(name: "org_permission_bureau")
+    organization_permission_bureau_resp organization_permission[] @relation(name: "org_permission_resp_bureau")
 }
 
 model division {
@@ -146,6 +151,8 @@ model division {
 
     report_from_division complaint_report[] @relation(name: "report_from_division")
     report_to_division   complaint_report[] @relation(name: "report_to_division")
+    organization_permission_division organization_permission[] @relation(name: "org_permission_division")
+    organization_permission_division_resp organization_permission[] @relation(name: "org_permission_resp_division")
 }
 
 model agency {
@@ -178,6 +185,8 @@ model agency {
 
     report_from_agency complaint_report[] @relation(name: "report_from_agency")
     report_to_agency   complaint_report[] @relation(name: "report_to_agency")
+
+    organization_permission_agency_resp organization_permission[] @relation(name: "org_permission_resp_agency")
 }
 
 model role {
@@ -196,6 +205,7 @@ model role {
 
     user       user[]
     permission permission[]
+    organization_permission organization_permission[] @relation(name: "org_permission_role")
 }
 
 model permission {
@@ -1050,4 +1060,31 @@ model visit_website_log {
     created_at DateTime? @default(now()) @db.DateTime(0)
     created_by String?   @db.VarChar(32)
     is_active  Int?      @default(1)
+}
+
+model organization_permission{
+    id                  Int         @id @default(autoincrement())
+    role_id             Int
+    inspector_id        Int?
+    bureau_id           Int?
+    division_id           Int?
+    resp_inspector_id   Int?
+    resp_bureau_id      Int?
+    resp_division_id    Int?
+    resp_agency_id      Int?
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    is_active           Int?        @default(1)
+
+    role                role?       @relation(name: "org_permission_role", fields: [role_id], references: [id])
+    inspector           inspector?  @relation(name: "org_permission_inspector", fields: [inspector_id], references: [id])
+    bureau              bureau?     @relation(name: "org_permission_bureau", fields: [bureau_id], references: [id])
+    division            division?   @relation(name: "org_permission_division", fields: [division_id], references: [id])
+    resp_inspector      inspector?  @relation(name: "org_permission_resp_inspector", fields: [resp_inspector_id], references: [id])
+    resp_bureau         bureau?     @relation(name: "org_permission_resp_bureau", fields: [resp_bureau_id], references: [id])
+    resp_division       division?   @relation(name: "org_permission_resp_division", fields: [resp_division_id], references: [id])
+    resp_agency         agency?     @relation(name: "org_permission_resp_agency", fields: [resp_agency_id], references: [id])
 }

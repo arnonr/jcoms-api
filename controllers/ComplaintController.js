@@ -1182,8 +1182,7 @@ const methods = {
             req.body.province_id != null
               ? Number(req.body.province_id)
               : undefined,
-          state_id:
-            req.body.state_id != null ? Number(req.body.state_id) : undefined,
+          state_id: req.body.state_id != null ? parseInt(req.body.state_id) : undefined,
           notice_type: parseInt(req.body.notice_type),
           inspector_state_id: req.body.inspector_state_id != null ? Number(req.body.inspector_state_id) : undefined,
 

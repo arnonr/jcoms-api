@@ -6,6 +6,7 @@ const $table = "user";
 const $permission_table = "permission";
 const $recovery_password_table = "recovery_password";
 const $user_permission_table = "user_permission";
+const $organization_permission_table = "organization_permission";
 
 const { v4: uuidv4 } = require("uuid");
 jwt = require("jsonwebtoken");
@@ -121,6 +122,50 @@ async function getCustomAbilities(user_id) {
   })
 
   return abilities
+}
+
+async function getOrganizationPermissions(role_id, inspector_id, bureau_id, division_id) {
+
+  try {
+    // Assuming you have a PrismaClient instance named prisma
+    const dbData = await prisma.organization_permission.findMany({
+      where: {
+        role_id: role_id,
+        OR: [
+          { inspector_id: inspector_id },
+          { bureau_id: bureau_id },
+          { division_id: division_id }
+        ]
+      }
+    });
+
+    const result = {
+      resp_inspector_id: [],
+      resp_bureau_id: [],
+      resp_division_id: [],
+      resp_agency_id: []
+    };
+
+    dbData.forEach(item => {
+      if (item.resp_inspector_id !== null && !result.resp_inspector_id.includes(item.resp_inspector_id)) {
+        result.resp_inspector_id.push(item.resp_inspector_id);
+      }
+      if (item.resp_bureau_id !== null && !result.resp_bureau_id.includes(item.resp_bureau_id)) {
+        result.resp_bureau_id.push(item.resp_bureau_id);
+      }
+      if (item.resp_division_id !== null && !result.resp_division_id.includes(item.resp_division_id)) {
+        result.resp_division_id.push(item.resp_division_id);
+      }
+      if (item.resp_agency_id !== null && !result.resp_agency_id.includes(item.resp_agency_id)) {
+        result.resp_agency_id.push(item.resp_agency_id);
+      }
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Error fetching organization permissions:", error);
+    throw error;
+  }
 }
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
@@ -399,6 +444,10 @@ const methods = {
         item.custom_abilities = {};
         item.custom_abilities = await getCustomAbilities(item.id);
       }
+
+      item.organization_permissions = {};
+      item.organization_permissions = await getOrganizationPermissions(item.role_id, item.inspector_id, item.bureau_id, item.division_id);
+      // console.log(JSON.stringify(result, null, 2));
 
       res.status(200).json({
         data: item,
