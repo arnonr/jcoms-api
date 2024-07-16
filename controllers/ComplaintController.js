@@ -1245,6 +1245,17 @@ const methods = {
             authUsername = decoded.username;
         }
 
+        let complaintPathFile = await uploadController.onUploadFile(
+          req,
+          "/complaint/",
+          "complaint_file"
+        );
+
+        if (complaintPathFile == "error") {
+          return res.status(500).send("error");
+        }
+
+        console.log(req.body);
         // console.log("----------------------")
 
         const inspector = req.body.inspector != null ? req.body.inspector : null;
@@ -1258,16 +1269,18 @@ const methods = {
         const district = req.body.district != null ? req.body.district : null;
         const sub_district = req.body.sub_district != null ? req.body.sub_district : null;
 
-        const complainant_prefix_name = req.body.complainant.prefix_name != null ? req.body.complainant.prefix_name : null;
-        const complainant_province = req.body.complainant.province != null ? req.body.complainant.province : null;
-        const complainant_district = req.body.complainant.district != null ? req.body.complainant.district : null;
-        const complainant_sub_district = req.body.complainant.sub_district != null ? req.body.complainant.sub_district : null;
+        const complainant_prefix_name = req.body.complainant !== undefined && req.body.complainant.prefix_name ? req.body.complainant.prefix_name : null;
+        const complainant_province = req.body.complainant !== undefined && req.body.complainant.province != null ? req.body.complainant.province : null;
+        const complainant_district = req.body.complainant !== undefined && req.body.complainant.district != null ? req.body.complainant.district : null;
+        const complainant_sub_district = req.body.complainant !== undefined && req.body.complainant.sub_district != null ? req.body.complainant.sub_district : null;
 
-        const accused_prefix_name = req.body.accused.prefix_name != null ? req.body.accused.prefix_name : null;
-        const accused_agency = req.body.accused.agency != null ? req.body.accused.agency : null;
-        const accused_inspector = req.body.accused.inspector != null ? req.body.accused.inspector : null;
-        const accused_bureau = req.body.accused.bureau != null ? req.body.accused.bureau : null;
-        const accused_division = req.body.accused.division != null ? req.body.accused.division : null;
+        const accused_prefix_name = req.body.accused !== undefined && req.body.accused.prefix_name != null ? req.body.accused.prefix_name : null;
+        const accused_agency = req.body.accused !== undefined && req.body.accused.agency != null ? req.body.accused.agency : null;
+        const accused_inspector = req.body.accused !== undefined && req.body.accused.inspector != null ? req.body.accused.inspector : null;
+        const accused_bureau = req.body.accused !== undefined && req.body.accused.bureau != null ? req.body.accused.bureau : null;
+        const accused_division = req.body.accused !== undefined && req.body.accused.division != null ? req.body.accused.division : null;
+        const accused_section = req.body.accused !== undefined && req.body.accused.section != null ? req.body.accused.section : null;
+        const accused_position = req.body.accused !== undefined && req.body.accused.position != null ? req.body.accused.position : null;
 
         const inspector_id = await inspectorController.onGetId(inspector);
         // console.log("inspector_id: " + inspector_id);
@@ -1321,66 +1334,63 @@ const methods = {
         // console.log("accused_bureau_id: " + accused_bureau_id);
 
         const accused_division_id = await divisionController.onGetId(accused_division);
-        // console.log("accused_division_id: " + accused_division_id);
+        const accused_section_id = await sectionController.onGetId(accused_section);
+        const accused_position_id = await positionController.onGetId(accused_position);
 
-        // const complaint_type_id = await complaintTypeController.onGetId("ร้องทุกข์ขอความช่วยเหลือ/แจ้งเบาะแส");
-        // console.log("complaint_type_id: " + complaint_type_id);
-
-        // console.log(req.body);
         let complainant_id = null;
+        let item_complaint = null;
+        let item_accused = null;
+        let item_complainant = null;
 
         try {
 
-            if(req.body.complainant.phone_number != null && req.body.complainant.phone_number != "") {
-                let complainantFind = await prisma[$table_complainant].findUnique({
+            if(req.body.complainant != undefined && req.body.complainant.phone_number != null && req.body.complainant.phone_number != "") {
+                item_complainant = await prisma[$table_complainant].findUnique({
                     where: {
                         phone_number: req.body.complainant.phone_number
                     },
-                    select: {
-                        id: true
-                    }
                 });
 
-                if(complainantFind != null) {
-                    complainant_id = complainantFind.id;
+                if(item_complainant != null) {
+                    complainant_id = item_complainant.id;
                 }
             }
 
             if(complainant_id == null) {
-                const complainantCreate = await prisma[$table_complainant].create({
+                item_complainant = await prisma[$table_complainant].create({
                     data: {
                         card_type: 1, /* ประเภทบัตร 1=บัตรประชาชน, 2=หนังสือเดินทาง */
 
                         id_card: req.body.id_card != null ? helperController.base64EncodeWithKey(req.body.id_card) : undefined,
                         prefix_name_id: complainant_prefix_name_id != null ? Number(complainant_prefix_name_id) : undefined,
-                        firstname: req.body.complainant.prefix_name != null ? req.body.complainant.prefix_name : undefined,
-                        lastname: req.body.complainant.lastname != null ? req.body.complainant.lastname : undefined,
-                        birthday: req.body.complainant.birthday != null ? new Date(req.body.complainant.birthday) : undefined,
-                        occupation_text: req.body.complainant.occupation != null ? req.body.complainant.occupation : undefined,
-                        phone_number: req.body.complainant.phone_number != null ? req.body.complainant.phone_number : uuidv4,
-                        email: req.body.complainant.email != null ? req.body.complainant.email : undefined,
-                        house_number: req.body.complainant.house_number != null ? req.body.complainant.house_number : undefined,
-                        building: req.body.complainant.building != null ? req.body.complainant.building : undefined,
-                        moo: req.body.complainant.moo != null ? req.body.complainant.moo : undefined,
-                        soi: req.body.complainant.soi != null ? req.body.complainant.soi : undefined,
-                        road: req.body.complainant.road != null ? req.body.complainant.road : undefined,
-                        postal_code: req.body.complainant.postal_code != null ? req.body.complainant.postal_code : undefined,
+                        firstname: req.body.complainant != undefined && req.body.complainant.firstname != null ? req.body.complainant.firstname : undefined,
+                        lastname: req.body.complainant != undefined && req.body.complainant.lastname != null ? req.body.complainant.lastname : undefined,
+                        birthday: req.body.complainant != undefined && req.body.complainant.birthday != null ? new Date(req.body.complainant.birthday) : undefined,
+                        occupation_text: req.body.complainant != undefined && req.body.complainant.occupation != null ? req.body.complainant.occupation : undefined,
+                        phone_number: req.body.complainant != undefined && req.body.complainant.phone_number != null ? req.body.complainant.phone_number : uuidv4,
+                        email: req.body.complainant != undefined && req.body.complainant.email != null ? req.body.complainant.email : undefined,
+                        house_number: req.body.complainant != undefined && req.body.complainant.house_number != null ? req.body.complainant.house_number : undefined,
+                        building: req.body.complainant != undefined && req.body.complainant.building != null ? req.body.complainant.building : undefined,
+                        moo: req.body.complainant != undefined && req.body.complainant.moo != null ? req.body.complainant.moo : undefined,
+                        soi: req.body.complainant != undefined && req.body.complainant.soi != null ? req.body.complainant.soi : undefined,
+                        road: req.body.complainant != undefined && req.body.complainant.road != null ? req.body.complainant.road : undefined,
+                        postal_code: req.body.complainant != undefined && req.body.complainant.postal_code != null ? req.body.complainant.postal_code : undefined,
                         sub_district_id: complainant_sub_district_id != null ? Number(complainant_sub_district_id) : undefined,
                         district_id: complainant_district_id != null ? Number(complainant_district_id) : undefined,
                         province_id: complainant_province_id != null ? Number(complainant_province_id) : undefined,
                     }
                 });
 
-                complainant_id = complainantCreate.id;
+                complainant_id = item_complainant.id;
             }
 
             if(complainant_id != null){
 
-                const item = await prisma[$table].create({
+                item_complaint = await prisma[$table].create({
                     data: {
                         is_active: 1,
                         uuid: uuidv4(),
-
+                        receive_doc_filename: complaintPathFile,
                         complaint_type_id: complaint_type_id != null ? Number(complaint_type_id) : undefined,
                         complainant_id: complainant_id,
                         is_anonymous: 0,
@@ -1416,8 +1426,9 @@ const methods = {
                         updated_at: new Date(),
                     },
                 });
-                const complaint_id = item.id;
-                const item_accused = await prisma[$table_accused].create({
+                const complaint_id = item_complaint.id;
+
+                item_accused = await prisma[$table_accused].create({
                     data: {
                         prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
                         firstname: req.body.accused.prefix_name != null ? req.body.accused.prefix_name : undefined,
@@ -1426,6 +1437,8 @@ const methods = {
                         inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
                         bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
                         division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
+                        position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                        section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
                         complaint_id: complaint_id,
                         // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
                         detail: req.body.accused.detail != null ? req.body.accused.detail : undefined,
@@ -1434,11 +1447,12 @@ const methods = {
                     },
                 });
 
-                const JcomsCode = await generateJcomsYearCode(item.id);
+                const JcomsCode = await generateJcomsYearCode(complaint_id);
                 req.body.jcoms_no = JcomsCode.jcoms_code;
             }
 
-            res.status(201).json({ ...req.body, msg: "success" });
+            const data = {complaint: item_complaint, complainant: item_complainant, accused : item_accused};
+            res.status(201).json({data, msg: "success" });
         } catch (error) {
             res.status(400).json({ msg: error.message });
         }
