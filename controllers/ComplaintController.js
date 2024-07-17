@@ -833,7 +833,7 @@ const methods = {
         }
 
         if (req.body.id_card) {
-          $where["complainant"]["id_card"] = req.body.id_card;
+            $where["complainant"]["id_card"] = helperController.base64EncodeWithKey(req.body.id_card);
         }
 
         try {
