@@ -1628,8 +1628,8 @@ const methods = {
           state_id:
             req.body.state_id != null ? Number(req.body.state_id) : undefined,
           inspector_state_id:
-            req.body.inspector_state_id != null
-              ? Number(req.body.inspector_state_id)
+            req.body.inspector_state_id !== undefined
+              ? req.body.inspector_state_id != null ?  Number(req.body.inspector_state_id) : null
               : undefined,
           notice_type:
             req.body.notice_type != null ? req.body.notice_type : undefined,
