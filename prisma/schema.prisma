@@ -633,6 +633,7 @@ model state {
     proceed_status    proceed_status[]
     complaint_report  complaint_report[]
     complaint_forward complaint_forward[]
+    complaint_closed  complaint[] @relation(name: "ClosedState")
 }
 
 model inspector_state {
@@ -713,6 +714,8 @@ model complaint {
     closed_at      DateTime?
     closed_user_id Int?
     closed_comment String?   @db.Text
+    closed_state_id Int?
+    closed_doc_filename String?   @db.VarChar(200)
 
     due_day  Int?
     due_date DateTime? @db.Date
@@ -740,6 +743,7 @@ model complaint {
     province          province?          @relation(fields: [province_id], references: [id])
     state             state?             @relation(fields: [state_id], references: [id])
     inspector_state   inspector_state?   @relation(fields: [inspector_state_id], references: [id])
+    closed_state      state?             @relation(name: "ClosedState", fields: [closed_state_id], references: [id])
 
     accused           accused[]
     complaint_forward complaint_forward[]

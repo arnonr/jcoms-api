@@ -46,6 +46,18 @@ const prisma = new PrismaClient().$extends({
           return receive_doc_filename;
         },
       },
+      closed_doc_filename: {
+        // the name of the new computed field
+        needs: { closed_doc_filename: true } /* field */,
+        compute(model) {
+          let closed_doc_filename = null; /* field */
+          if (model.closed_doc_filename != null) {  /* field */
+            closed_doc_filename =
+              process.env.PATH_UPLOAD + model.closed_doc_filename;
+          }
+          return closed_doc_filename;
+        },
+      },
     },
   },
 });
@@ -105,6 +117,8 @@ const selectField = {
   closed_at: true,
   closed_user_id: true,
   closed_comment: true,
+  closed_state_id: true,
+  closed_doc_filename: true,
   due_day: true,
   due_date: true,
 
@@ -1077,6 +1091,12 @@ const methods = {
       authUsername = decoded.username;
     }
 
+    let closedDocPathFile = await uploadController.onUploadFile(
+      req,
+      "/complaint/",
+      "closed_doc_filename"
+    );
+
     let receiveDocPathFile = await uploadController.onUploadFile(
       req,
       "/complaint/",
@@ -1084,7 +1104,11 @@ const methods = {
     );
 
     if (receiveDocPathFile == "error") {
-      return res.status(500).send("error");
+      return res.status(500).send("receive_doc_filename error");
+    }
+
+    if (closedDocPathFile == "error") {
+      return res.status(500).send("closed_doc_filename error");
     }
 
     try {
@@ -1198,6 +1222,8 @@ const methods = {
               ? Number(req.body.closed_user_id)
               : undefined,
           closed_comment: req.body.closed_comment,
+          closed_state_id: req.body.closed_state_id != null ? Number(req.body.closed_state_id) : undefined,
+          closed_doc_filename: closedDocPathFile != null ? closedDocPathFile : undefined,
           due_day: req.body.due_day != null ? parseInt(req.body.due_day) : undefined,
           due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
 
@@ -1472,8 +1498,18 @@ const methods = {
       "receive_doc_filename"
     );
 
+    let closedDocPathFile = await uploadController.onUploadFile(
+      req,
+      "/complaint/",
+      "closed_doc_filename"
+    );
+
     if (receiveDocPathFile == "error") {
-      return res.status(500).send("error");
+      return res.status(500).send("receive_doc_filename error");
+    }
+
+    if (closedDocPathFile == "error") {
+      return res.status(500).send("closed_doc_filename error");
     }
 
     try {
@@ -1645,6 +1681,14 @@ const methods = {
             req.body.closed_comment != null
               ? req.body.closed_comment
               : undefined,
+
+          closed_state_id:
+            req.body.closed_state_id != null
+            ? Number(req.body.closed_state_id)
+            : undefined,
+
+          closed_doc_filename:
+            closedDocPathFile != null ? closedDocPathFile : undefined,
 
           due_day: req.body.due_day != null ? parseInt(req.body.due_day) : undefined,
           due_date: req.body.due_date != null ? new Date(req.body.due_date) : undefined,
