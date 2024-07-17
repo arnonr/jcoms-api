@@ -40,6 +40,7 @@ const userPermission = require("./api/user-permission");
 const opm = require("./api/opm");
 const visitWebsiteLog = require("./api/visit-website-log");
 const OrganizationPermission = require("./api/organization-permission");
+const thaid = require("./api/thaid");
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
@@ -81,7 +82,8 @@ router.use(
   router.use("/user-permission", userPermission),
   router.use("/opm", opm),
   router.use("/visit-website-log", visitWebsiteLog),
-  router.use("/organization-permission", OrganizationPermission)
+  router.use("/organization-permission", OrganizationPermission),
+  router.use("/thaid", thaid)
 );
 
 module.exports = router;
