@@ -13,7 +13,46 @@ const selectField = {
     resp_bureau_id: true,
     resp_division_id: true,
     resp_agency_id: true,
-
+    role: {
+        select: {
+            name_th: true
+        }
+    },
+    inspector: {
+        select: {
+            name_th: true
+        }
+    },
+    bureau: {
+        select:{
+            name_th: true
+        }
+    },
+    division :{
+        select:{
+            name_th: true
+        }
+    },
+    resp_inspector: {
+        select: {
+            name_th: true
+        }
+    },
+    resp_bureau: {
+        select:{
+            name_th: true
+        }
+    },
+    resp_division :{
+        select:{
+            name_th: true
+        }
+    },
+    resp_agency :{
+        select:{
+            name_th: true
+        }
+    },
     created_at: true,
     created_by: true,
     updated_at: true,
