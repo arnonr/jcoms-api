@@ -607,6 +607,72 @@ const filterData = (req) => {
     }
   }
 
+  if(req.query.resp_bureau_id){
+    let bureauCondition = null
+    if (req.query.inspector_id) {
+        $where['inspector_id'] = undefined;
+        bureauCondition  = {
+            OR: [
+                { inspector_id: parseInt(req.query.inspector_id) },
+                { bureau_id: { in: req.query.resp_bureau_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        bureauCondition  = $where['bureau_id'] = { in: req.query.resp_bureau_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      bureauCondition 
+    ]
+  };
+  }
+
+  if(req.query.resp_division_id){
+    let  divisionCondition = null
+    if (req.query.bureau_id) {
+        $where['bureau_id'] = undefined;
+        divisionCondition = {
+            OR: [
+                { bureau_id: parseInt(req.query.bureau_id) },
+                { division_id: { in: req.query.resp_division_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        divisionCondition = $where['division_id'] = { in: req.query.resp_division_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      divisionCondition
+    ]
+  };
+  }
+
+  if(req.query.resp_agency_id){
+    let  agencyCondition = null
+    if (req.query.division_id) {
+        $where['division_id'] = undefined;
+        agencyCondition = {
+            OR: [
+                { division_id: parseInt(req.query.division_id) },
+                { agency_id: { in: req.query.resp_agency_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        agencyCondition = $where['agency_id'] = { in: req.query.resp_agency_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      agencyCondition
+    ]
+  };
+  }
+
   return $where;
 };
 

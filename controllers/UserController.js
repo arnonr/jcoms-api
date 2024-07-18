@@ -700,6 +700,9 @@ const methods = {
       item.abilities = {};
       item.abilities = await getAbilities(item.id, item.role_id);
 
+      item.organization_permissions = {};
+      item.organization_permissions = await getOrganizationPermissions(item.role_id, item.inspector_id, item.bureau_id, item.division_id);
+
       await LoginLogController.onSaveLog(item.id, item.email, 1, req.clientInfo.ip, req.clientInfo.userAgent);
       // console.log(req.clientInfo);
 
