@@ -700,6 +700,11 @@ const methods = {
       item.abilities = {};
       item.abilities = await getAbilities(item.id, item.role_id);
 
+      if(item.is_custom_role == 1){
+        // item.custom_abilities = {};
+        item.abilities = await getCustomAbilities(item.id);
+      }
+
       item.organization_permissions = {};
       item.organization_permissions = await getOrganizationPermissions(item.role_id, item.inspector_id, item.bureau_id, item.division_id);
 
