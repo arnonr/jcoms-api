@@ -29,7 +29,7 @@ const getToken = async () => {
         let params = {
             'user': user,
             'password': password,
-            'authen_from': 'S',
+            'authen_from': 'I',
             'ip_address': ':::1'
         };
 
