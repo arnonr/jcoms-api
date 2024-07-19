@@ -539,13 +539,13 @@ const filterData = (req) => {
     };
   }
 
-  if (req.query.state_id) {
-    $where["state_id"] = parseInt(req.query.state_id);
-  }
 
-  if(req.query.inspector_state_id){
-    $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
-  }
+//   if(req.query.inspector_state_id){
+//     $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
+//   }
+
+
+
 
   if (req.query.notice_type) {
     $where["notice_type"] = parseInt(req.query.notice_type);
@@ -605,6 +605,11 @@ const filterData = (req) => {
     } else {
       $where['state_id'] = { in: states };
     }
+  }
+
+
+  if (req.query.state_id) {
+    $where["state_id"] = parseInt(req.query.state_id);
   }
 
   if(req.query.resp_bureau_id){
