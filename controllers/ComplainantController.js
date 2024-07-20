@@ -165,9 +165,9 @@ const filterData = (req) => {
         $where["occupation_text"] =  {contains: req.query.occupation_text};
     }
 
-    if (req.query.phone_number) {
-        $where["phone_number"] =  {contains: req.query.phone_number};
-    }
+    // if (req.query.phone_number) {
+    //     $where["phone_number"] =  {contains: req.query.phone_number};
+    // }
 
     if (req.query.email) {
         $where["email"] =  {contains: req.query.email};
