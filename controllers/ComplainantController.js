@@ -78,51 +78,51 @@ const selectField = {
     deleted_at: true,
     deleted_by: true,
     is_active: true,
-    prefix_name:{
-        select:{
-            name_th: true
-        }
-    },
-    province: {
-        select: {
-            name_th: true,
-        }
-    },
-    district: {
-        select: {
-            name_th: true,
-        }
-    },
-    sub_district: {
-        select: {
-            name_th: true,
-        }
-    },
-    inspector: {
-        select: {
-            name_th: true,
-        }
-    },
-    bureau: {
-        select: {
-            name_th: true,
-        }
-    },
-    division: {
-        select: {
-            name_th: true,
-        }
-    },
-    agency: {
-        select: {
-            name_th: true,
-        }
-    },
-    section:{
-        select:{
-            name_th: true
-        }
-    },
+    // prefix_name:{
+    //     select:{
+    //         name_th: true
+    //     }
+    // },
+    // province: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // district: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // sub_district: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // inspector: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // bureau: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // division: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // agency: {
+    //     select: {
+    //         name_th: true,
+    //     }
+    // },
+    // section:{
+    //     select:{
+    //         name_th: true
+    //     }
+    // },
 };
 const filterData = (req) => {
     let $where = {
@@ -296,8 +296,7 @@ const methods = {
         
           
             const item = await prisma[$table].findMany({
-                select: {id: true},
-                // selectField,
+                selectField,
                 where: $where,
                 orderBy: other.$orderBy,
                 skip: other.$offset,
