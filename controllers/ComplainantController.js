@@ -296,7 +296,8 @@ const methods = {
         
           
             const item = await prisma[$table].findMany({
-                // select: selectField,
+                select: {id: true},
+                // selectField,
                 where: $where,
                 orderBy: other.$orderBy,
                 skip: other.$offset,
@@ -306,7 +307,7 @@ const methods = {
 
 
             res.status(200).json({
-                // data: item,
+                data: item,
                 totalData: other.$count,
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
