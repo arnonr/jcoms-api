@@ -64,65 +64,65 @@ const selectField = {
     district_id: true,
     province_id: true,
 
-    // position_id: true,
-    // section_id: true,
-    // inspector_id: true,
-    // bureau_id: true,
-    // division_id: true,
-    // agency_id: true,
+    position_id: true,
+    section_id: true,
+    inspector_id: true,
+    bureau_id: true,
+    division_id: true,
+    agency_id: true,
 
-    // created_at: true,
-    // created_by: true,
-    // updated_at: true,
-    // updated_by: true,
-    // deleted_at: true,
-    // deleted_by: true,
-    // is_active: true,
-    // prefix_name:{
-    //     select:{
-    //         name_th: true
-    //     }
-    // },
-    // province: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // district: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // sub_district: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // inspector: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // bureau: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // division: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // agency: {
-    //     select: {
-    //         name_th: true,
-    //     }
-    // },
-    // section:{
-    //     select:{
-    //         name_th: true
-    //     }
-    // },
+    created_at: true,
+    created_by: true,
+    updated_at: true,
+    updated_by: true,
+    deleted_at: true,
+    deleted_by: true,
+    is_active: true,
+    prefix_name:{
+        select:{
+            name_th: true
+        }
+    },
+    province: {
+        select: {
+            name_th: true,
+        }
+    },
+    district: {
+        select: {
+            name_th: true,
+        }
+    },
+    sub_district: {
+        select: {
+            name_th: true,
+        }
+    },
+    inspector: {
+        select: {
+            name_th: true,
+        }
+    },
+    bureau: {
+        select: {
+            name_th: true,
+        }
+    },
+    division: {
+        select: {
+            name_th: true,
+        }
+    },
+    agency: {
+        select: {
+            name_th: true,
+        }
+    },
+    section:{
+        select:{
+            name_th: true
+        }
+    },
 };
 const filterData = (req) => {
     let $where = {
