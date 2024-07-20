@@ -296,21 +296,21 @@ const methods = {
         
           
             const item = await prisma[$table].findMany({
-                // select: selectField,
-                // where: $where,
-                // orderBy: other.$orderBy,
-                // skip: other.$offset,
-                // take: other.$perPage,
+                select: selectField,
+                where: $where,
+                orderBy: other.$orderBy,
+                skip: other.$offset,
+                take: other.$perPage,
             });
 
 
             res.status(200).json({
-                data: item,
-                totalData: other.$count,
-                totalPage: other.$totalPage,
-                currentPage: other.$currentPage,
-                lang: req.query.lang ? req.query.lang : "",
-                msg: "success",
+                // data: item,
+                // totalData: other.$count,
+                // totalPage: other.$totalPage,
+                // currentPage: other.$currentPage,
+                // lang: req.query.lang ? req.query.lang : "",
+                // msg: "success",
             });
         } catch (error) {
             res.status(500).json({ msg: error.message });
