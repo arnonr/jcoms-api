@@ -42,9 +42,9 @@ const prisma = new PrismaClient().$extends({
 const selectField = {
     id: true,
     uuid: true,
-    // card_type: true,
-    // id_card: true,
-    // card_photo: true,
+    card_type: true,
+    id_card: true,
+    card_photo: true,
     // prefix_name_id: true,
     // firstname: true,
     // lastname: true,
