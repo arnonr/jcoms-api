@@ -955,6 +955,7 @@ const methods = {
       },
 
   async onGetOTPTracking(req, res) {
+    
     if (!req.body.otp_secret) {
       return res.status(400).json({ msg: "otp_secret is required" });
     }
@@ -980,9 +981,9 @@ const methods = {
     }
 
     if (req.body.id_card) {
-      $where["complainant"]["id_card"] = req.body.id_card;
+      $where["complainant"]["id_card"] = helperController.base64EncodeWithKey(req.body.id_card);
     }
-
+    console.log("FREEDOM1")
     try {
       const item = await prisma[$table].findFirstOrThrow({
         select: {
@@ -1008,6 +1009,7 @@ const methods = {
         msg: "success",
       });
     } catch (error) {
+        console.log(error)
       if (error.code == "P2025") {
         return res.status(404).json({ msg: "data not found" });
       }
