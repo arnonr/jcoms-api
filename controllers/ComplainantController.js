@@ -293,7 +293,7 @@ const methods = {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
       
-            res.status(200).json({})
+        
           
             const item = await prisma[$table].findMany({
                 select: selectField,
@@ -302,6 +302,8 @@ const methods = {
                 skip: other.$offset,
                 take: other.$perPage,
             });
+
+
             res.status(200).json({
                 data: item,
                 totalData: other.$count,
