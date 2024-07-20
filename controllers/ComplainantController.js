@@ -306,7 +306,7 @@ const methods = {
 
 
             res.status(200).json({
-                data: item,
+                // data: item,
                 totalData: other.$count,
                 totalPage: other.$totalPage,
                 currentPage: other.$currentPage,
