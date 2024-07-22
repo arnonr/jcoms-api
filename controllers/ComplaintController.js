@@ -1511,14 +1511,29 @@ const methods = {
                             accused_prefix_name_id = Number(accused_prefix_name_id)
                         }
 
+                        let accused_agency_id = null
+                        if(req.body.accused[i].agency != null){
+                            accused_agency_id = await agencyController.onGetId(req.body.accused[i].agency);
+                            accused_agency_id = Number(accused_agency_id)
+                        }
+
+                        let accused_section_id = null
+                        if(req.body.accused[i].section != null){
+                            accused_section_id = await sectionController.onGetId(req.body.accused[i].section);
+                            accused_section_id = Number(accused_section_id)
+                        }
+
+                        let accused_position_id = null
+                        if(req.body.accused[i].position != null){
+                            accused_position_id = await positionController.onGetId(req.body.accused[i].position);
+                            accused_position_id = Number(accused_position_id)
+                        }
+
                         // const accused_agency_id = await agencyController.onGetId(accused_agency);
                         // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
                         // const accused_bureau_id = await bureauController.onGetId(accused_bureau);
                         // const accused_division_id = await divisionController.onGetId(accused_division);
-                        // const accused_section_id = await sectionController.onGetId(accused_section);
-                        // const accused_position_id = await positionController.onGetId(accused_position);
-
-                    // const accused_prefix_name = req.body.accused !== undefined && req.body.accused[i].prefix_name != null ? req.body.accused[i].prefix_name : null;
+                        // const accused_prefix_name = req.body.accused !== undefined && req.body.accused[i].prefix_name != null ? req.body.accused[i].prefix_name : null;
 
                         await prisma[$table_accused].create({
                             data: {
@@ -1526,12 +1541,12 @@ const methods = {
                                 firstname: req.body.accused[i] != undefined && req.body.accused[i].firstname != null ? req.body.accused[i].firstname : undefined,
                                 lastname: req.body.accused[i] != undefined && req.body.accused[i].lastname != null ? req.body.accused[i].lastname : undefined,
                                 complaint_id: complaint_id,
-                                // agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
+                                agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
                                 // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
                                 // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
                                 // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
-                                // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
-                                // section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
+                                position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                                section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
                               
                                 // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
                                 // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
