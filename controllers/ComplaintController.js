@@ -1428,6 +1428,9 @@ const methods = {
                 }
             }
 
+
+            console.log(helperController.base64EncodeWithKey(req.body.complainant.id_card))
+
             if(complainant_id == null) {
                 item_complainant = await prisma[$table_complainant].create({
                     data: {
