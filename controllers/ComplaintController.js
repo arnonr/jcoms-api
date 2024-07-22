@@ -1428,9 +1428,6 @@ const methods = {
                 }
             }
 
-
-            console.log(helperController.base64EncodeWithKey(req.body.complainant.id_card))
-
             if(complainant_id == null) {
                 item_complainant = await prisma[$table_complainant].create({
                     data: {
@@ -1469,6 +1466,8 @@ const methods = {
                         complaint_type_id: complaint_type_id != null ? Number(complaint_type_id) : undefined,
                         complainant_id: complainant_id,
                         is_anonymous: 0,
+
+                        id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
 
                         complaint_title: req.body.complaint_title != null ? req.body.complaint_title : undefined,
                         complaint_detail: req.body.complaint_detail != null ? req.body.complaint_detail : undefined,
