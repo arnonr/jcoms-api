@@ -1546,7 +1546,7 @@ const methods = {
                                 // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
                                 // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
                                 position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
-                                section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
+                                // section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
                               
                                 // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
                                 // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
