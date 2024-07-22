@@ -1414,6 +1414,7 @@ const methods = {
         let item_accused = null;
         let item_complainant = null;
 
+
         try {
 
             if(req.body.complainant != undefined && req.body.complainant.phone_number != null && req.body.complainant.phone_number != "") {
@@ -1457,33 +1458,38 @@ const methods = {
             }
 
             if(complainant_id != null){
-                let res_topic_type_id = 13
-                if(Number(complaint_type_id_) == 1){
-                     res_topic_type_id  = 43
+
+                let res_topic_type_id = 43;
+
+                if(complaint_type_id == 1){
+                    res_topic_type_id = 43;
                 }
 
-                if(Number(complaint_type_id_) == 2){
-                    res_topic_type_id  = 44
-               }
 
-               if(Number(complaint_type_id_) == 3){
-                res_topic_type_id  = 45
-           }
+                if(complaint_type_id == 2){
+                    res_topic_type_id = 44;
+                }
 
-           if(Number(complaint_type_id_) == 4){
-            res_topic_type_id  = 46
-       }
+
+                if(complaint_type_id == 3){
+                    res_topic_type_id = 45;
+                }
+
+
+                if(complaint_type_id == 4){
+                    res_topic_type_id = 46;
+                }
 
                 item_complaint = await prisma[$table].create({
                     data: {
                         is_active: 1,
                         uuid: uuidv4(),
                         receive_doc_filename: complaintPathFile,
-                        complaint_type_id: complaint_type_id_ != null ? Number(complaint_type_id_) : undefined,
+                        complaint_type_id: complaint_type_id != null ? complaint_type_id : undefined,
                         complainant_id: complainant_id,
                         is_anonymous: 0,
 
-                        id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
+                        // id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
 
                         complaint_title: req.body.complaint_title != null ? req.body.complaint_title : undefined,
                         complaint_detail: req.body.complaint_detail != null ? req.body.complaint_detail : undefined,
@@ -1607,6 +1613,9 @@ const methods = {
 
                  
                 }
+
+
+                console.log(complaint_type_id)
 
                 const JcomsCode = await generateJcomsYearCode(complaint_id);
                 req.body.jcoms_no = JcomsCode.jcoms_code;
