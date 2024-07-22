@@ -1432,8 +1432,8 @@ const methods = {
                 item_complainant = await prisma[$table_complainant].create({
                     data: {
                         card_type: 1, /* ประเภทบัตร 1=บัตรประชาชน, 2=หนังสือเดินทาง */
-                        // id_card: req.body.id_card != null ? helperController.base64EncodeWithKey(req.body.id_card) : undefined,
-                        id_card: req.body.id_card != null ? req.body.id_card : undefined,
+                        id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
+                        // id_card: req.body.id_card != null ? req.body.id_card : undefined,
                         prefix_name_id: complainant_prefix_name_id != null ? Number(complainant_prefix_name_id) : undefined,
                         firstname: req.body.complainant != undefined && req.body.complainant.firstname != null ? req.body.complainant.firstname : undefined,
                         lastname: req.body.complainant != undefined && req.body.complainant.lastname != null ? req.body.complainant.lastname : undefined,
