@@ -1458,19 +1458,19 @@ const methods = {
 
             if(complainant_id != null){
                 let res_topic_type_id = 13
-                if(Number(complaint_type_id) == 1){
+                if(Number(complaint_type_id_) == 1){
                      res_topic_type_id  = 43
                 }
 
-                if(Number(complaint_type_id) == 2){
+                if(Number(complaint_type_id_) == 2){
                     res_topic_type_id  = 44
                }
 
-               if(Number(complaint_type_id) == 3){
+               if(Number(complaint_type_id_) == 3){
                 res_topic_type_id  = 45
            }
 
-           if(Number(complaint_type_id) == 4){
+           if(Number(complaint_type_id_) == 4){
             res_topic_type_id  = 46
        }
 
@@ -1479,7 +1479,7 @@ const methods = {
                         is_active: 1,
                         uuid: uuidv4(),
                         receive_doc_filename: complaintPathFile,
-                        complaint_type_id: complaint_type_id != null ? Number(complaint_type_id) : undefined,
+                        complaint_type_id: complaint_type_id_ != null ? Number(complaint_type_id_) : undefined,
                         complainant_id: complainant_id,
                         is_anonymous: 0,
 
