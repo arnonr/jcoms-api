@@ -1502,7 +1502,7 @@ const methods = {
 
                 if(req.body.accused != undefined){
 
-                    for (let index = 0; index < req.body.accused.length; index++) {
+                    for (let i = 0; i < req.body.accused.length; i++) {
                         await prisma[$table_accused].create({
                             data: {
                                 // prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
