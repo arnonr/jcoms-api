@@ -1503,9 +1503,26 @@ const methods = {
                 if(req.body.accused != undefined){
 
                     for (let i = 0; i < req.body.accused.length; i++) {
+
+
+                        let accused_prefix_name_id = null
+                        if(req.body.accused[i].prefix_name != null){
+                            accused_prefix_name_id = await prefixNameController.onGetId(req.body.accused[i].prefix_name);
+                            accused_prefix_name_id = Number(accused_prefix_name_id)
+                        }
+
+                        // const accused_agency_id = await agencyController.onGetId(accused_agency);
+                        // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
+                        // const accused_bureau_id = await bureauController.onGetId(accused_bureau);
+                        // const accused_division_id = await divisionController.onGetId(accused_division);
+                        // const accused_section_id = await sectionController.onGetId(accused_section);
+                        // const accused_position_id = await positionController.onGetId(accused_position);
+
+                    // const accused_prefix_name = req.body.accused !== undefined && req.body.accused[i].prefix_name != null ? req.body.accused[i].prefix_name : null;
+
                         await prisma[$table_accused].create({
                             data: {
-                                // prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
+                                prefix_name_id: accused_prefix_name_id,
                                 firstname: req.body.accused[i] != undefined && req.body.accused[i].firstname != null ? req.body.accused[i].firstname : undefined,
                                 lastname: req.body.accused[i] != undefined && req.body.accused[i].lastname != null ? req.body.accused[i].lastname : undefined,
                                 complaint_id: complaint_id,
