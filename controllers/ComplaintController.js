@@ -1502,24 +1502,29 @@ const methods = {
 
                 if(req.body.accused != undefined){
 
-                  item_accused = await prisma[$table_accused].create({
-                      data: {
-                          prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
-                          firstname: req.body.accused != undefined && req.body.accused.firstname != null ? req.body.accused.firstname : undefined,
-                          lastname: req.body.accused != undefined && req.body.accused.lastname != null ? req.body.accused.lastname : undefined,
-                          agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
-                          inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
-                          bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
-                          division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
-                          position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
-                          section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
-                          complaint_id: complaint_id,
-                          // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
-                          detail: req.body.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
-                          // created_by: null,
-                          // updated_by: null,
-                      },
-                  });
+                    req.body.accused.forEach(async (x) => {
+                        await prisma[$table_accused].create({
+                            data: {
+                                // prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
+                                firstname: x.accused != undefined && x.firstname != null ? x.firstname : undefined,
+                                lastname: x.accused != undefined && x.astname != null ? x.lastname : undefined,
+                                complaint_id: complaint_id,
+                                // agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
+                                // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
+                                // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
+                                // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
+                                // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                                // section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
+                              
+                                // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
+                                // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
+                                // created_by: null,
+                                // updated_by: null,
+                            },
+                        });
+                    })
+
+                 
                 }
 
                 const JcomsCode = await generateJcomsYearCode(complaint_id);
