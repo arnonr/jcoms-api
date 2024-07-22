@@ -1368,6 +1368,7 @@ const methods = {
         const topic_type = req.body.topic_type != null ? req.body.topic_type : null;
         const topic_category = req.body.topic_category != null ? req.body.topic_category : null;
         const complaint_type = req.body.complaint_type != null ? req.body.complaint_type : null;
+        const complaint_type_id_ = req.body.complaint_type_id != null ? req.body.complaint_type_id : null;
         const province = req.body.province != null ? req.body.province : null;
         const district = req.body.district != null ? req.body.district : null;
         const sub_district = req.body.sub_district != null ? req.body.sub_district : null;
@@ -1389,7 +1390,8 @@ const methods = {
         const bureau_id = await bureauController.onGetId(bureau);
         const division_id = await divisionController.onGetId(division);
         const agency_id = await agencyController.onGetId(agency);
-        const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
+        const complaint_type_id = Number(complaint_type_id_);
+        // await complaintTypeController.onGetId(complaint_type);
         const topic_category_id = await topicCategoryController.onGetId(topic_category);
         const topic_type_id = await topicTypeController.onGetId(topic_type);
         const province_id = await provinceController.onGetId(province);
