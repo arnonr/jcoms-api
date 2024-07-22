@@ -1483,6 +1483,7 @@ const methods = {
                 item_complaint = await prisma[$table].create({
                     data: {
                         is_active: 1,
+                        is_anonymous: 1,
                         uuid: uuidv4(),
                         receive_doc_filename: complaintPathFile,
                         complaint_type_id: complaint_type_id != null ? complaint_type_id : undefined,
