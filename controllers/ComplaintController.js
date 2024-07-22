@@ -1457,6 +1457,22 @@ const methods = {
             }
 
             if(complainant_id != null){
+                let res_topic_type_id = 13
+                if(Number(complaint_type_id) == 1){
+                     res_topic_type_id  = 43
+                }
+
+                if(Number(complaint_type_id) == 2){
+                    res_topic_type_id  = 44
+               }
+
+               if(Number(complaint_type_id) == 3){
+                res_topic_type_id  = 45
+           }
+
+           if(Number(complaint_type_id) == 4){
+            res_topic_type_id  = 46
+       }
 
                 item_complaint = await prisma[$table].create({
                     data: {
@@ -1483,8 +1499,9 @@ const methods = {
                         bureau_id: bureau_id != null ? Number(bureau_id) : undefined,
                         division_id: division_id != null ? Number(division_id) : undefined,
                         agency_id: agency_id != null ? Number(agency_id) : undefined,
-                        topic_category_id: topic_category_id != null ? Number(topic_category_id) : undefined,
-                        topic_type_id: topic_type_id != null ? Number(topic_type_id) : undefined,
+                        // topic_category_id: topic_category_id != null ? Number(topic_category_id) : undefined,
+                        topic_type_id: res_topic_type_id,
+                    
                         house_number: req.body.house_number != null ? req.body.house_number : undefined,
                         building: req.body.building != null ? req.body.building : undefined,
                         moo: req.body.moo != null ? req.body.moo : undefined,
