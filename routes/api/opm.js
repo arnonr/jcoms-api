@@ -15,4 +15,5 @@ router.get('/get-attachment/:id', controllers.onGetAttachment);
 router.get('/list-attachments/:id', controllers.onListAttachments);
 router.post('/add-operating/:id', controllers.onAddOperating);
 router.post('/set-org-summary-result/:id', controllers.onSetOrgSummaryResult);
+router.post('/operating-attachment/:id', controllers.onOperatingAttachment);
 module.exports = router;
