@@ -80,7 +80,8 @@ const selectField = {
     is_active: true,
     prefix_name:{
         select:{
-            name_th: true
+            name_th: true,
+            name_th_abbr: true
         }
     },
     province: {
@@ -292,8 +293,9 @@ const methods = {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
-
-
+      
+        
+          
             const item = await prisma[$table].findMany({
                 select: selectField,
                 where: $where,
@@ -301,6 +303,8 @@ const methods = {
                 skip: other.$offset,
                 take: other.$perPage,
             });
+            
+
 
             res.status(200).json({
                 data: item,

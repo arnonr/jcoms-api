@@ -147,12 +147,13 @@ const methods = {
         }
     },
 
-    async onGetId(name){
+    async onGetId(name,province_id = null){
         try {
             const item = await prisma[$table].findFirstOrThrow({
                 select: selectField,
                 where: {
                     name_th: {contains: name},
+                    province_id : province_id != null ? Number(province_id) : undefined
                 },
             });
             return item.id

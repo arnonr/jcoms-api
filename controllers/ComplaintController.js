@@ -539,13 +539,13 @@ const filterData = (req) => {
     };
   }
 
-  if (req.query.state_id) {
-    $where["state_id"] = parseInt(req.query.state_id);
-  }
 
-  if(req.query.inspector_state_id){
-    $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
-  }
+//   if(req.query.inspector_state_id){
+//     $where["inspector_state_id"] = parseInt(req.query.inspector_state_id);
+//   }
+
+
+
 
   if (req.query.notice_type) {
     $where["notice_type"] = parseInt(req.query.notice_type);
@@ -605,6 +605,77 @@ const filterData = (req) => {
     } else {
       $where['state_id'] = { in: states };
     }
+  }
+
+
+  if (req.query.state_id) {
+    $where["state_id"] = parseInt(req.query.state_id);
+  }
+
+  if(req.query.resp_bureau_id){
+    let bureauCondition = null
+    if (req.query.inspector_id) {
+        $where['inspector_id'] = undefined;
+        bureauCondition  = {
+            OR: [
+                { inspector_id: parseInt(req.query.inspector_id) },
+                { bureau_id: { in: req.query.resp_bureau_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        bureauCondition  = $where['bureau_id'] = { in: req.query.resp_bureau_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      bureauCondition 
+    ]
+  };
+  }
+
+  if(req.query.resp_division_id){
+    let  divisionCondition = null
+    if (req.query.bureau_id) {
+        $where['bureau_id'] = undefined;
+        divisionCondition = {
+            OR: [
+                { bureau_id: parseInt(req.query.bureau_id) },
+                { division_id: { in: req.query.resp_division_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        divisionCondition = $where['division_id'] = { in: req.query.resp_division_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      divisionCondition
+    ]
+  };
+  }
+
+  if(req.query.resp_agency_id){
+    let  agencyCondition = null
+    if (req.query.division_id) {
+        $where['division_id'] = undefined;
+        agencyCondition = {
+            OR: [
+                { division_id: parseInt(req.query.division_id) },
+                { agency_id: { in: req.query.resp_agency_id.split(',').map(Number) } }
+            ]
+          };
+    }else{
+        agencyCondition = $where['agency_id'] = { in: req.query.resp_agency_id };
+    }
+
+  $where = {
+    AND: [
+      $where,
+      agencyCondition
+    ]
+  };
   }
 
   return $where;
@@ -884,6 +955,7 @@ const methods = {
       },
 
   async onGetOTPTracking(req, res) {
+    
     if (!req.body.otp_secret) {
       return res.status(400).json({ msg: "otp_secret is required" });
     }
@@ -909,9 +981,9 @@ const methods = {
     }
 
     if (req.body.id_card) {
-      $where["complainant"]["id_card"] = req.body.id_card;
+      $where["complainant"]["id_card"] = helperController.base64EncodeWithKey(req.body.id_card);
     }
-
+    console.log("FREEDOM1")
     try {
       const item = await prisma[$table].findFirstOrThrow({
         select: {
@@ -937,6 +1009,7 @@ const methods = {
         msg: "success",
       });
     } catch (error) {
+        console.log(error)
       if (error.code == "P2025") {
         return res.status(404).json({ msg: "data not found" });
       }
@@ -1295,6 +1368,7 @@ const methods = {
         const topic_type = req.body.topic_type != null ? req.body.topic_type : null;
         const topic_category = req.body.topic_category != null ? req.body.topic_category : null;
         const complaint_type = req.body.complaint_type != null ? req.body.complaint_type : null;
+        const complaint_type_id_ = req.body.complaint_type_id != null ? req.body.complaint_type_id : null;
         const province = req.body.province != null ? req.body.province : null;
         const district = req.body.district != null ? req.body.district : null;
         const sub_district = req.body.sub_district != null ? req.body.sub_district : null;
@@ -1316,14 +1390,15 @@ const methods = {
         const bureau_id = await bureauController.onGetId(bureau);
         const division_id = await divisionController.onGetId(division);
         const agency_id = await agencyController.onGetId(agency);
-        const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
+        const complaint_type_id = Number(complaint_type_id_);
+        // await complaintTypeController.onGetId(complaint_type);
         const topic_category_id = await topicCategoryController.onGetId(topic_category);
         const topic_type_id = await topicTypeController.onGetId(topic_type);
         const province_id = await provinceController.onGetId(province);
         const sub_district_id = await subDistrictController.onGetId(sub_district);
-        const district_id = await districtController.onGetId(district);
+        const district_id = await districtController.onGetId(district,province_id);
         const complainant_province_id = await provinceController.onGetId(complainant_province);
-        const complainant_district_id = await districtController.onGetId(complainant_district);
+        const complainant_district_id = await districtController.onGetId(complainant_district,complainant_province_id);
         const complainant_sub_district_id = await subDistrictController.onGetId(complainant_sub_district);
         const complainant_prefix_name_id = await prefixNameController.onGetId(complainant_prefix_name);
         const accused_prefix_name_id = await prefixNameController.onGetId(accused_prefix_name);
@@ -1338,6 +1413,7 @@ const methods = {
         let item_complaint = null;
         let item_accused = null;
         let item_complainant = null;
+
 
         try {
 
@@ -1357,7 +1433,8 @@ const methods = {
                 item_complainant = await prisma[$table_complainant].create({
                     data: {
                         card_type: 1, /* ประเภทบัตร 1=บัตรประชาชน, 2=หนังสือเดินทาง */
-                        id_card: req.body.id_card != null ? helperController.base64EncodeWithKey(req.body.id_card) : undefined,
+                        id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
+                        // id_card: req.body.id_card != null ? req.body.id_card : undefined,
                         prefix_name_id: complainant_prefix_name_id != null ? Number(complainant_prefix_name_id) : undefined,
                         firstname: req.body.complainant != undefined && req.body.complainant.firstname != null ? req.body.complainant.firstname : undefined,
                         lastname: req.body.complainant != undefined && req.body.complainant.lastname != null ? req.body.complainant.lastname : undefined,
@@ -1382,14 +1459,38 @@ const methods = {
 
             if(complainant_id != null){
 
+                let res_topic_type_id = 43;
+
+                if(complaint_type_id == 1){
+                    res_topic_type_id = 43;
+                }
+
+
+                if(complaint_type_id == 2){
+                    res_topic_type_id = 44;
+                }
+
+
+                if(complaint_type_id == 3){
+                    res_topic_type_id = 45;
+                }
+
+
+                if(complaint_type_id == 4){
+                    res_topic_type_id = 46;
+                }
+
                 item_complaint = await prisma[$table].create({
                     data: {
                         is_active: 1,
+                        is_anonymous: 1,
                         uuid: uuidv4(),
                         receive_doc_filename: complaintPathFile,
-                        complaint_type_id: complaint_type_id != null ? Number(complaint_type_id) : undefined,
+                        complaint_type_id: complaint_type_id != null ? complaint_type_id : undefined,
                         complainant_id: complainant_id,
                         is_anonymous: 0,
+
+                        // id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
 
                         complaint_title: req.body.complaint_title != null ? req.body.complaint_title : undefined,
                         complaint_detail: req.body.complaint_detail != null ? req.body.complaint_detail : undefined,
@@ -1405,8 +1506,9 @@ const methods = {
                         bureau_id: bureau_id != null ? Number(bureau_id) : undefined,
                         division_id: division_id != null ? Number(division_id) : undefined,
                         agency_id: agency_id != null ? Number(agency_id) : undefined,
-                        topic_category_id: topic_category_id != null ? Number(topic_category_id) : undefined,
-                        topic_type_id: topic_type_id != null ? Number(topic_type_id) : undefined,
+                        // topic_category_id: topic_category_id != null ? Number(topic_category_id) : undefined,
+                        topic_type_id: res_topic_type_id,
+                    
                         house_number: req.body.house_number != null ? req.body.house_number : undefined,
                         building: req.body.building != null ? req.body.building : undefined,
                         moo: req.body.moo != null ? req.body.moo : undefined,
@@ -1427,25 +1529,94 @@ const methods = {
 
                 if(req.body.accused != undefined){
 
-                  item_accused = await prisma[$table_accused].create({
-                      data: {
-                          prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
-                          firstname: req.body.accused != undefined && req.body.accused.firstname != null ? req.body.accused.firstname : undefined,
-                          lastname: req.body.accused != undefined && req.body.accused.lastname != null ? req.body.accused.lastname : undefined,
-                          agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
-                          inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
-                          bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
-                          division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
-                          position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
-                          section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
-                          complaint_id: complaint_id,
-                          // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
-                          detail: req.body.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
-                          // created_by: null,
-                          // updated_by: null,
-                      },
-                  });
+                    for (let i = 0; i < req.body.accused.length; i++) {
+
+
+                        let accused_prefix_name_id = null
+                        if(req.body.accused[i].prefix_name != null){
+                            accused_prefix_name_id = await prefixNameController.onGetId(req.body.accused[i].prefix_name);
+                            accused_prefix_name_id = Number(accused_prefix_name_id)
+                        }
+
+                        let accused_agency_id = null
+                        if(req.body.accused[i].agency != null){
+                            accused_agency_id = await agencyController.onGetId(req.body.accused[i].agency);
+                            accused_agency_id = Number(accused_agency_id)
+                        }
+
+                        let accused_section_id = null
+                        if(req.body.accused[i].section != null){
+                            accused_section_id = await sectionController.onGetId(req.body.accused[i].section);
+                            if(accused_section_id) {
+                                accused_section_id = Number(accused_section_id)
+                            }else{
+                                accused_section_id  = null
+                            }
+                        }
+
+                        let accused_position_id = null
+                        if(req.body.accused[i].position != null){
+                            accused_position_id = await positionController.onGetId(req.body.accused[i].position);
+                            accused_position_id = Number(accused_position_id)
+                        }
+
+                        // const accused_agency_id = await agencyController.onGetId(accused_agency);
+                        // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
+                        // const accused_bureau_id = await bureauController.onGetId(accused_bureau);
+                        // const accused_division_id = await divisionController.onGetId(accused_division);
+                        // const accused_prefix_name = req.body.accused !== undefined && req.body.accused[i].prefix_name != null ? req.body.accused[i].prefix_name : null;
+
+                        await prisma[$table_accused].create({
+                            data: {
+                                prefix_name_id: accused_prefix_name_id,
+                                firstname: req.body.accused[i] != undefined && req.body.accused[i].firstname != null ? req.body.accused[i].firstname : undefined,
+                                lastname: req.body.accused[i] != undefined && req.body.accused[i].lastname != null ? req.body.accused[i].lastname : undefined,
+                                complaint_id: complaint_id,
+                                agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
+                                // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
+                                // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
+                                // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
+                                position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                                section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
+                              
+                                // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
+                                // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
+                                // created_by: null,
+                                // updated_by: null,
+                            },
+                        });
+                        
+                    }
+
+                   
+
+                    // req.body.accused.forEach(async (x) => {
+                    //     await prisma[$table_accused].create({
+                    //         data: {
+                    //             // prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
+                    //             firstname: x.accused != undefined && x.firstname != null ? x.firstname : undefined,
+                    //             lastname: x.accused != undefined && x.astname != null ? x.lastname : undefined,
+                    //             complaint_id: complaint_id,
+                    //             // agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
+                    //             // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
+                    //             // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
+                    //             // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
+                    //             // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                    //             // section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
+                              
+                    //             // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
+                    //             // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
+                    //             // created_by: null,
+                    //             // updated_by: null,
+                    //         },
+                    //     });
+                    // })
+
+                 
                 }
+
+
+                console.log(complaint_type_id)
 
                 const JcomsCode = await generateJcomsYearCode(complaint_id);
                 req.body.jcoms_no = JcomsCode.jcoms_code;
@@ -1628,8 +1799,8 @@ const methods = {
           state_id:
             req.body.state_id != null ? Number(req.body.state_id) : undefined,
           inspector_state_id:
-            req.body.inspector_state_id != null
-              ? Number(req.body.inspector_state_id)
+            req.body.inspector_state_id !== undefined
+              ? req.body.inspector_state_id != null ?  Number(req.body.inspector_state_id) : null
               : undefined,
           notice_type:
             req.body.notice_type != null ? req.body.notice_type : undefined,
