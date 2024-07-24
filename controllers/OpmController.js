@@ -15,7 +15,7 @@ const districtController = require("./DistrictController");
 const subDistrictController = require("./SubDistrictController");
 const prefixNameController = require("./PrefixNameController");
 const helperController = require("./HelperController");
-const opmUrl = "http://203.113.25.98/CoreService/";
+const opmUrl = "http://203.113.25.98/CoreService";
 // const $authen_from = "S";
 
     // This function handles getting the token
@@ -73,7 +73,26 @@ const getTimelineHeader = async (req) => {
     }
 };
 
+const getFirstOperating = async (complaint_id) => {
 
+    try {
+        const operatings = await getOperatings(complaint_id);
+        console.log(operatings.length);
+        if (operatings?.length > 0) {
+            const firstOperating = operatings[0];
+            // console.log("First operating item:", firstOperating);
+            return firstOperating;
+        } else {
+            console.log("No operating items found.");
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error('Error getting first operating:', error);
+        throw error;
+    }
+}
 const addOperating = async (complaint_id, req) => {
     try {
 
@@ -85,7 +104,6 @@ const addOperating = async (complaint_id, req) => {
         }
 
         const item = await prisma[$table_complaint].findUnique({
-            // select: select,
             where: {
                 id: Number(complaint_id),
             },
@@ -102,8 +120,12 @@ const addOperating = async (complaint_id, req) => {
         const case_id = item.case_id;
         const type_id = req.body.type_id;
         const detail = req.body.detail;
+        const contact_detail = req.body.contact_detail;
         const date_opened = req.body.date_opened;
         const date_closed = req.body.date_closed;
+
+        const now = new Date();
+        const formattedDate = now.toISOString().slice(0, 19).replace('T', ' ');
 
         if(type_id == null) {
             throw new Error('type_id required');
@@ -113,31 +135,30 @@ const addOperating = async (complaint_id, req) => {
             throw new Error('Detail required');
         }
 
-        if(date_opened == null) {
-            throw new Error('Date opened required');
+        const operatings = await getFirstOperating(complaint_id);
+        if(operatings == null) {
+            throw new Error('First operating not found');
         }
-
-        if(date_closed == null) {
-            throw new Error('Date closed required');
-        }
+        const terminal_org_id = operatings.org_id;
+        const terminal_owner_id = operatings.created_by;
 
         let params = {
             'token_id': tokenId,
             'case_id': case_id,
-            'type_id': type_id, /* ประเภทการปฎิบัติงาน: 14=รายงานผลการปฎิบัติงาน, 15=รายงานผลการพิจารณาเรื่อง , 14=รับ, 15=ไม่รับ */
+            'type_id': type_id, /* ประเภทการปฎิบัติงาน: 14=รายงานผลการปฎิบัติงาน(รับ), 15=รายงานผลการพิจารณาเรื่อง(ไม่รับ) */
             'objective_id': '16', /* กำหนดไว้เป็น 6 */
-            'terminal_org_id': '2608', /* created_by_org “110” */
-            'terminal_owner_id': 'DF28B6CA3C694C959521B3F7180CB236',
-            'channel_id': '5899EE5D72CF3652A4AAE69E429D9DED',
-            'contact_detail': '',
-            'date_opened': date_opened, // '2015-12-31 15:32:12'
-            'date_closed': date_closed, // '2015-12-31 15:32:12'
+            'terminal_org_id': terminal_org_id, /* created_by_org “110” */
+            'terminal_owner_id': terminal_owner_id,
+            'channel_id': '5899EE5D72CF3652A4AAE69E429D9DED', /* คู่มือ: ช่องทางระบบ */
+            'contact_detail': contact_detail || '',
+            'date_opened': formattedDate, // '2015-12-31 15:32:12'
+            'date_closed': formattedDate, // '2015-12-31 15:32:12'
             'detail': detail,
             'severity_id': '1',
             'secret_id': '1',
         };
 
-        const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/AddOperating";
+        const url = opmUrl + "/SOAP/Officer.asmx/AddOperating";
         const response = await axios.get(url, { params });
         return await parseXmlResponse(response.data);
     } catch (error) {
@@ -218,6 +239,76 @@ const getCase = async (case_id) => {
         throw error;
     }
 };
+
+const getAttachment = async (attachment_id) => {
+    try {
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        let params = {
+            'token_id': tokenId,
+            'attachment_id ': attachment_id,
+            'is_preview': 'true'
+        };
+
+        const url = opmUrl + "/SOAP/Officer.asmx/GetAttachment";
+        const response = await axios.get(url, { params });
+
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error getting attachment:', error);
+        throw error;
+    }
+};
+
+const  operatingAttachment = async (complaint_id, req) => {
+
+    try {
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        const item = await prisma[$table_complaint].findUnique({
+            where: {
+                id: Number(complaint_id),
+            },
+        });
+
+        if (!item) {
+            throw new Error('Complaint not found');
+        }
+
+        if(item.case_id == null) {
+            throw new Error('Case not found');
+        }
+
+        const case_id = item.case_id;
+        const operating_id = req.body.operating_id;
+
+        let params = {
+            'token_id': tokenId,
+            'case_id': case_id, /* string รหัสเรื่องที่ใช้ในการอ้างอิงภายในระบบ */
+            'operating_id': operating_id,
+            'doc_type_id': 8, /* เอกสารประกอบ */
+            'doc_type': 'X'
+
+        };
+
+        const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/SetOrgSummaryResult";
+        const response = await axios.get(url, { params });
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error setting org summary result:', error);
+        throw error;
+    }
+}
+
+
 
 const parseXmlResponse = async (xmlData) => {
     return new Promise((resolve, reject) => {
@@ -392,7 +483,7 @@ const saveComplaint = async (caseItem) => {
     }
 };
 
-const getOperatings = async (complaint_id, req) => {
+const getOperatings = async (complaint_id) => {
     try {
         const item = await prisma[$table_complaint].findUnique({
             where: {
@@ -557,7 +648,7 @@ const methods = {
             throw new Error('complaint id required');
         }
 
-        console.log(req.params.id);
+        // console.log(req.params.id);
 
         try {
 
@@ -587,9 +678,77 @@ const methods = {
 
     async onGetOperatings(req, res) {
         try {
-            const jsonData = await getOperatings(req.params.id, req);
+            const jsonData = await getOperatings(req.params.id);
             const operatings = jsonData;
             res.status(200).json({ "operatings": operatings, msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onGetAttachment(req, res) {
+        try {
+            const jsonData = await getAttachment(req.params.id);
+            const attachment = jsonData;
+            res.status(200).json({ "attachment": attachment, msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onListAttachments(req, res) {
+
+        if(req.params.id == null) {
+            throw new Error('complaint id required');
+        }
+        try {
+
+            const item = await prisma[$table_complaint].findUnique({
+                where: {
+                    id: Number(req.params.id),
+                },
+            });
+
+            if (!item) {
+                throw new Error('Complaint not found');
+            }
+
+            if(item.case_id == null) {
+                throw new Error('Case not found');
+            }
+
+            const case_id = item.case_id;
+
+            const jsonData = await getCase(case_id);
+            const caseDetail = jsonData;
+
+            let attachments = [];
+            if (caseDetail.list_case_attachment?.length > 0) {
+                for (let i = 0; i < caseDetail.list_case_attachment.length; i++) {
+                    const attachment = caseDetail.list_case_attachment[i];
+                    console.log(`Attachment ${i + 1}:`, attachment);
+
+                    try {
+                        const attachmentData = await getAttachment(attachment.attachment_id);
+
+                        // Combine the original attachment info with the fetched data
+                        const processedAttachment = {
+                            // ...attachment,
+                            ...attachmentData
+                        };
+
+                        attachments.push(processedAttachment);
+                    } catch (error) {
+                        console.error(`Error processing attachment ${i + 1}:`, error);
+                        // You might want to add the original attachment with an error flag
+                        attachments.push({ ...attachment, error: true, errorMessage: error.message });
+                    }
+                }
+            }
+
+            // console.log('All processed attachments:', attachments);
+
+            res.status(200).json({ "attachments": attachments, msg: "success" });
         } catch (error) {
             res.status(500).json({ msg: error.message });
         }
