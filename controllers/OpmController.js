@@ -15,6 +15,7 @@ const districtController = require("./DistrictController");
 const subDistrictController = require("./SubDistrictController");
 const prefixNameController = require("./PrefixNameController");
 const helperController = require("./HelperController");
+const opmUrl = "http://203.113.25.98/CoreService/";
 // const $authen_from = "S";
 
     // This function handles getting the token
@@ -43,15 +44,21 @@ const getToken = async () => {
     }
 };
 
-const getTimelineHeader = async () => {
+const getTimelineHeader = async (req) => {
 
     try {
         const jsonData = await getToken();
         const tokenId = jsonData.token_id;
+        const timeline_type = req.query.timeline_type;
 
+        if(!timeline_type) {
+            throw new Error('Timeline type required');
+        }
+
+        let type = timeline_type == "A" ? "A" : "I";
         let params = {
             'last_get_date_time': "",
-            'timeline_type': "A", //A=ทั้งหมด, I=รายการรับ, P=กำลังดำเนินการ, N=รายการแจ้งเตือน
+            'timeline_type': type, //A=ทั้งหมด, I=รายการรับ, P=กำลังดำเนินการ, N=รายการแจ้งเตือน
             'skip': 0,
             'take': 10,
             'token_id': tokenId
@@ -66,22 +73,6 @@ const getTimelineHeader = async () => {
     }
 };
 
-const getCase = async (case_id) => {
-    try {
-        const jsonData = await getToken();
-        const tokenId = jsonData.token_id;
-        let params = {
-            'token_id': tokenId,
-            'case_id': case_id
-        };
-        const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/GetCase";
-        const response = await axios.get(url, { params });
-        return await parseXmlResponse(response.data);
-    } catch (error) {
-        console.error('Error getting case:', error);
-        throw error;
-    }
-};
 
 const addOperating = async (complaint_id, req) => {
     try {
@@ -109,9 +100,14 @@ const addOperating = async (complaint_id, req) => {
         }
 
         const case_id = item.case_id;
+        const type_id = req.body.type_id;
         const detail = req.body.detail;
         const date_opened = req.body.date_opened;
         const date_closed = req.body.date_closed;
+
+        if(type_id == null) {
+            throw new Error('type_id required');
+        }
 
         if(detail == null) {
             throw new Error('Detail required');
@@ -128,9 +124,9 @@ const addOperating = async (complaint_id, req) => {
         let params = {
             'token_id': tokenId,
             'case_id': case_id,
-            'type_id': '14',
-            'objective_id': '1',
-            'terminal_org_id': '2608',
+            'type_id': type_id, /* ประเภทการปฎิบัติงาน: 14=รายงานผลการปฎิบัติงาน, 15=รายงานผลการพิจารณาเรื่อง , 14=รับ, 15=ไม่รับ */
+            'objective_id': '16', /* กำหนดไว้เป็น 6 */
+            'terminal_org_id': '2608', /* created_by_org “110” */
             'terminal_owner_id': 'DF28B6CA3C694C959521B3F7180CB236',
             'channel_id': '5899EE5D72CF3652A4AAE69E429D9DED',
             'contact_detail': '',
@@ -146,6 +142,79 @@ const addOperating = async (complaint_id, req) => {
         return await parseXmlResponse(response.data);
     } catch (error) {
         console.error('Error adding operating:', error);
+        throw error;
+    }
+};
+
+const setOrgSummaryResult = async (complaint_id, req) => {
+    try {
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        const item = await prisma[$table_complaint].findUnique({
+            // select: select,
+            where: {
+                id: Number(complaint_id),
+            },
+        });
+
+        if (!item) {
+            throw new Error('Complaint not found');
+        }
+
+        if(item.case_id == null) {
+            throw new Error('Case not found');
+        }
+
+        const case_id = item.case_id;
+        const status_id = req.body.status_id;
+        const result = req.body.result;
+
+        if(status_id == null) {
+            throw new Error('Status id required');
+        }
+
+        if(result == null) {
+            throw new Error('Result required');
+        }
+
+        let params = {
+            'token_id': tokenId,
+            'case_id': case_id, /* string รหัสเรื่องที่ใช้ในการอ้างอิงภายในระบบ */
+            'status_id': status_id, /* string 0=อยู่ระหว่างดําเนินการ, 1=ยุติเรื่อง, 2=รับทราบไว้ขั้นต้น ,3=ไม่อยู่ในอำนาจหน้าที่ */
+            'result': result, /* string ผลการปฏิบัติงานแจ้งผู้ร้องเรียน */
+        };
+
+        const url = "http://203.113.25.98/CoreService/SOAP/Officer.asmx/SetOrgSummaryResult";
+        const response = await axios.get(url, { params });
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error setting org summary result:', error);
+        throw error;
+    }
+};
+
+const getCase = async (case_id) => {
+    try {
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        let params = {
+            'token_id': tokenId,
+            'case_id': case_id
+        };
+
+        const url = opmUrl + "/SOAP/Officer.asmx/GetCase";
+        const response = await axios.get(url, { params });
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error getting case:', error);
         throw error;
     }
 };
@@ -315,29 +384,51 @@ const saveComplaint = async (caseItem) => {
             }
         });
 
-        console.log(upsertedCase);
-        // const item = await prisma[$table_complaint].findFirst({
-        //     select: {
-        //         id: true,
-        //         case_id: true,
-        //     },
-        //     where: {
-        //         case_id: data.case_id,
-        //     },
-        // });
+        // console.log(upsertedCase);
 
-        // if(item) {
-        //     console.log(`Case ${data.case_id} already exists in database.`);
-        // }else{
-        //     console.log(`Case ${data.case_id} not found in database. Saving...`);
-        // }
-
-        // const result = await prisma.complaint.create({
-        //     data: data
-        // });
-        // return result;
     } catch (error) {
         console.error('Error saving complaint:', error);
+        throw error;
+    }
+};
+
+const getOperatings = async (complaint_id, req) => {
+    try {
+        const item = await prisma[$table_complaint].findUnique({
+            where: {
+                id: Number(complaint_id),
+            },
+        });
+
+        if (!item) {
+            throw new Error('Complaint not found');
+        }
+
+        if(item.case_id == null) {
+            throw new Error('Case not found');
+        }
+
+        const case_id = item.case_id;
+
+        const jsonData = await getToken();
+        const tokenId = jsonData.token_id;
+        if(tokenId == null) {
+            throw new Error('Token not found');
+        }
+
+        let params = {
+            'token_id': tokenId,
+            'case_id': case_id,
+            'select_org_id': "",
+            'skip': 0,
+            'take': 10,
+        };
+
+        const url = opmUrl + "/SOAP/Officer.asmx/GetOperatings";
+        const response = await axios.get(url, { params });
+        return await parseXmlResponse(response.data);
+    } catch (error) {
+        console.error('Error getting operatings:', error);
         throw error;
     }
 };
@@ -354,7 +445,8 @@ const methods = {
                 res.status(500).json({ msg: "Token not found" });
             }
 
-            res.status(200).json({ token_id: tokenId, msg: "success" });
+            // res.status(200).json({ token_id: tokenId, msg: "success" });
+            res.status(200).json({ token: jsonData, msg: "success" });
         } catch (error) {
             res.status(500).json({ msg: error.message });
         }
@@ -410,6 +502,35 @@ const methods = {
         }
     },
 
+    async onGetAllCase(req, res) {
+        try {
+            const jsonData = await getTimelineHeader(req);
+            const cases = jsonData;
+            // console.log(cases);
+            const results = await Promise.all(cases.map(async (caseItem, index) => {
+
+                console.log(`Processing Case ${index + 1}:`);
+                try{
+                    const caseDetail = await getCase(caseItem.case_id);
+                    // console.log(caseDetail);
+                    await saveComplaint(caseDetail);
+
+                    return { case_id: caseItem.case_id, case_detail: caseDetail };
+                } catch (error) {
+                    console.error(`Error processing case ${caseItem.case_id}:`, error);
+                    return { caseId: caseItem.case_id, error: error.message };
+                }
+
+            }));
+
+            // console.log('All cases processed:', results);
+            res.status(200).json({ "results": results, msg: "success" });
+            // res.status(200).json({ msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
     async onAddOperating(req, res) {
         try {
             const jsonData = await addOperating(req.params.id, req);
@@ -418,7 +539,61 @@ const methods = {
         } catch (error) {
             res.status(500).json({ msg: error.message });
         }
-    }
+    },
+
+    async onSetOrgSummaryResult(req, res) {
+        try {
+            const jsonData = await setOrgSummaryResult(req.params.id, req);
+            const OrgSummaryResult = jsonData;
+            res.status(200).json({ "OrgSummaryResult": OrgSummaryResult, msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onGetCase(req, res) {
+
+        if(req.params.id == null) {
+            throw new Error('complaint id required');
+        }
+
+        console.log(req.params.id);
+
+        try {
+
+            const item = await prisma[$table_complaint].findUnique({
+                where: {
+                    id: Number(req.params.id),
+                },
+            });
+
+            if (!item) {
+                throw new Error('Complaint not found');
+            }
+
+            if(item.case_id == null) {
+                throw new Error('Case not found');
+            }
+
+            const case_id = item.case_id;
+
+            const jsonData = await getCase(case_id);
+            const caseDetail = jsonData;
+            res.status(200).json({ "caseDetail": caseDetail, msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
+
+    async onGetOperatings(req, res) {
+        try {
+            const jsonData = await getOperatings(req.params.id, req);
+            const operatings = jsonData;
+            res.status(200).json({ "operatings": operatings, msg: "success" });
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+    },
 
 };
 
