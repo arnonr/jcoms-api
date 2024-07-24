@@ -353,6 +353,14 @@ const filterData = (req) => {
     };
   }
 
+  if (req.query.card_type) {
+    $where["complainant"]['card_type'] = Number(req.query.card_type)
+  }
+
+  if (req.query.id_card) {
+    $where["complainant"]["id_card"] = helperController.base64EncodeWithKey(req.query.id_card);
+  }
+
   if (req.query.id) {
     $where["id"] = parseInt(req.query.id);
   }
