@@ -1093,3 +1093,24 @@ model organization_permission{
     resp_division       division?   @relation(name: "org_permission_resp_division", fields: [resp_division_id], references: [id])
     resp_agency         agency?     @relation(name: "org_permission_resp_agency", fields: [resp_agency_id], references: [id])
 }
+
+model api_user {
+    id                  Int         @id @default(autoincrement())
+    username            String?     @db.VarChar(100) @unique
+    uuid                String      @unique @db.VarChar(100)
+    name                String?     @db.VarChar(100)
+    email               String?     @db.VarChar(100)
+    tel                 String?     @db.VarChar(100)
+    agency              String?     @db.VarChar(200)
+    password_hash       String?     @db.VarChar(255)
+    api_key             String?     @db.VarChar(255) @unique
+    last_login_at       DateTime?   @db.DateTime(0)
+    rate_limit          Int?        @db.Int
+    created_at          DateTime?   @default(now())     @db.DateTime(0)
+    created_by          String?     @db.VarChar(32)
+    updated_at          DateTime?   @default(now())     @db.DateTime(0)
+    updated_by          String?     @db.VarChar(32)
+    deleted_by          String?     @db.VarChar(32)
+    deleted_at          DateTime?
+    is_active           Int?        @default(1)
+}
