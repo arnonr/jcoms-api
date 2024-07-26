@@ -1167,10 +1167,10 @@ const methods = {
   // สร้าง
   async onCreate(req, res) {
     let authUsername = null;
-    if (req.headers.authorization !== undefined) {
-      const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-      authUsername = decoded.username;
-    }
+    // if (req.headers.authorization !== undefined) {
+    //   const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+    //   authUsername = decoded.username;
+    // }
 
     let closedDocPathFile = await uploadController.onUploadFile(
       req,
@@ -1347,10 +1347,10 @@ const methods = {
     async onRpaImport(req, res) {
 
         let authUsername = null;
-        if (req.headers.authorization !== undefined) {
-            const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-            authUsername = decoded.username;
-        }
+        // if (req.headers.authorization !== undefined) {
+        //     const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        //     authUsername = decoded.username;
+        // }
 
         if(req.body.complainant === undefined){
             return res.status(400).send("complainant is required");
@@ -1640,10 +1640,10 @@ const methods = {
   // แก้ไข
   async onUpdate(req, res) {
     let authUsername = null;
-    if (req.headers.authorization !== undefined) {
-      const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-      authUsername = decoded.username;
-    }
+    // if (req.headers.authorization !== undefined) {
+    //   const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+    //   authUsername = decoded.username;
+    // }
 
     let receiveDocPathFile = await uploadController.onUploadFile(
       req,
