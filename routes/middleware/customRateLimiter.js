@@ -60,8 +60,8 @@ const customRateLimiter = async (req, res, next) => {
     return prisma[$table].update({
         where: { id: userId },
         data: {
-        rate_limit_allowance: newAllowance,
-        last_request_time: now
+            rate_limit_allowance: newAllowance,
+            last_request_time: now
         }
     });
     }
