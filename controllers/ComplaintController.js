@@ -1562,11 +1562,11 @@ const methods = {
                             }
                         }
 
-                        let accused_position_id = null
-                        if(req.body.accused[i].position != null){
-                            accused_position_id = await positionController.onGetId(req.body.accused[i].position);
-                            accused_position_id = Number(accused_position_id)
-                        }
+                        // let accused_position_id = null
+                        // if(req.body.accused[i].position != null){
+                        //     accused_position_id = await positionController.onGetId(req.body.accused[i].position);
+                        //     accused_position_id = Number(accused_position_id)
+                        // }
 
                         // const accused_agency_id = await agencyController.onGetId(accused_agency);
                         // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
@@ -1584,7 +1584,7 @@ const methods = {
                                 // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
                                 // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
                                 // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
-                                position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                                // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
                                 section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
                               
                                 // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
