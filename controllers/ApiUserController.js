@@ -22,8 +22,9 @@ const selectField = {
     agency: true,
     password_hash: true,
     api_key: true,
-    last_login_at: true,
-    rate_limit: true,
+    last_request_time: true,
+    rate_limit_per_hour: true,
+    rate_limit_allowance: true,
     created_at: true,
     created_by: true,
     updated_at: true,
@@ -217,6 +218,8 @@ const methods = {
                     agency: req.body.agency != null ? req.body.agency : undefined,
                     password_hash: req.body.password_hash != null ? req.body.password_hash : undefined,
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
+                    rate_limit_per_hour: req.body.rate_limit_per_hour != null ? Number(req.body.rate_limit_per_hour) : undefined,
+                    rate_limit_allowance: req.body.rate_limit_allowance != null ? Number(req.body.rate_limit_allowance) : undefined,
                 },
             });
 
