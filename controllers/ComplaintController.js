@@ -637,7 +637,7 @@ const filterData = (req) => {
   $where = {
     AND: [
       $where,
-      bureauCondition 
+      bureauCondition
     ]
   };
   }
@@ -963,7 +963,7 @@ const methods = {
       },
 
   async onGetOTPTracking(req, res) {
-    
+
     if (!req.body.otp_secret) {
       return res.status(400).json({ msg: "otp_secret is required" });
     }
@@ -1376,7 +1376,6 @@ const methods = {
         const topic_type = req.body.topic_type != null ? req.body.topic_type : null;
         const topic_category = req.body.topic_category != null ? req.body.topic_category : null;
         const complaint_type = req.body.complaint_type != null ? req.body.complaint_type : null;
-        const complaint_type_id_ = req.body.complaint_type_id != null ? req.body.complaint_type_id : null;
         const province = req.body.province != null ? req.body.province : null;
         const district = req.body.district != null ? req.body.district : null;
         const sub_district = req.body.sub_district != null ? req.body.sub_district : null;
@@ -1398,7 +1397,7 @@ const methods = {
         const bureau_id = await bureauController.onGetId(bureau);
         const division_id = await divisionController.onGetId(division);
         const agency_id = await agencyController.onGetId(agency);
-        const complaint_type_id = Number(complaint_type_id_);
+        const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
         // await complaintTypeController.onGetId(complaint_type);
         const topic_category_id = await topicCategoryController.onGetId(topic_category);
         const topic_type_id = await topicTypeController.onGetId(topic_type);
@@ -1409,19 +1408,19 @@ const methods = {
         const complainant_district_id = await districtController.onGetId(complainant_district,complainant_province_id);
         const complainant_sub_district_id = await subDistrictController.onGetId(complainant_sub_district);
         const complainant_prefix_name_id = await prefixNameController.onGetId(complainant_prefix_name);
-        const accused_prefix_name_id = await prefixNameController.onGetId(accused_prefix_name);
-        const accused_agency_id = await agencyController.onGetId(accused_agency);
-        const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
-        const accused_bureau_id = await bureauController.onGetId(accused_bureau);
-        const accused_division_id = await divisionController.onGetId(accused_division);
-        const accused_section_id = await sectionController.onGetId(accused_section);
-        const accused_position_id = await positionController.onGetId(accused_position);
+        // const accused_prefix_name_id = await prefixNameController.onGetId(accused_prefix_name);
+        // const accused_agency_id = await agencyController.onGetId(accused_agency);
+        // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
+        // const accused_bureau_id = await bureauController.onGetId(accused_bureau);
+        // const accused_division_id = await divisionController.onGetId(accused_division);
+        // const accused_section_id = await sectionController.onGetId(accused_section);
+        // const accused_position_id = await positionController.onGetId(accused_position);
 
+        let complaint_id = null;
         let complainant_id = null;
         let item_complaint = null;
-        let item_accused = null;
+        let item_accused_arr = [];
         let item_complainant = null;
-
 
         try {
 
@@ -1473,16 +1472,13 @@ const methods = {
                     res_topic_type_id = 43;
                 }
 
-
                 if(complaint_type_id == 2){
                     res_topic_type_id = 44;
                 }
 
-
                 if(complaint_type_id == 3){
                     res_topic_type_id = 45;
                 }
-
 
                 if(complaint_type_id == 4){
                     res_topic_type_id = 46;
@@ -1516,7 +1512,7 @@ const methods = {
                         agency_id: agency_id != null ? Number(agency_id) : undefined,
                         // topic_category_id: topic_category_id != null ? Number(topic_category_id) : undefined,
                         topic_type_id: res_topic_type_id,
-                    
+
                         house_number: req.body.house_number != null ? req.body.house_number : undefined,
                         building: req.body.building != null ? req.body.building : undefined,
                         moo: req.body.moo != null ? req.body.moo : undefined,
@@ -1533,12 +1529,12 @@ const methods = {
                         updated_at: new Date(),
                     },
                 });
-                const complaint_id = item_complaint.id;
+
+                complaint_id = item_complaint.id;
 
                 if(req.body.accused != undefined){
 
                     for (let i = 0; i < req.body.accused.length; i++) {
-
 
                         let accused_prefix_name_id = null
                         if(req.body.accused[i].prefix_name != null){
@@ -1568,69 +1564,41 @@ const methods = {
                             accused_position_id = Number(accused_position_id)
                         }
 
-                        // const accused_agency_id = await agencyController.onGetId(accused_agency);
-                        // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
-                        // const accused_bureau_id = await bureauController.onGetId(accused_bureau);
-                        // const accused_division_id = await divisionController.onGetId(accused_division);
-                        // const accused_prefix_name = req.body.accused !== undefined && req.body.accused[i].prefix_name != null ? req.body.accused[i].prefix_name : null;
-
-                        await prisma[$table_accused].create({
+                        const item_accused = await prisma[$table_accused].create({
                             data: {
                                 prefix_name_id: accused_prefix_name_id,
                                 firstname: req.body.accused[i] != undefined && req.body.accused[i].firstname != null ? req.body.accused[i].firstname : undefined,
                                 lastname: req.body.accused[i] != undefined && req.body.accused[i].lastname != null ? req.body.accused[i].lastname : undefined,
                                 complaint_id: complaint_id,
                                 agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
-                                // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
-                                // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
-                                // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
                                 position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
                                 section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
-                              
-                                // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
-                                // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
-                                // created_by: null,
-                                // updated_by: null,
+                                detail: req.body.accused[i] != undefined && req.body.accused[i].detail != null ? req.body.accused[i].detail : undefined,
                             },
                         });
-                        
+
+                        if(item_accused) {
+                          item_accused_arr.push(item_accused);
+                        }
+
+                        // console.log(item_accused);
+
                     }
-
-                   
-
-                    // req.body.accused.forEach(async (x) => {
-                    //     await prisma[$table_accused].create({
-                    //         data: {
-                    //             // prefix_name_id: accused_prefix_name_id != null ? Number(accused_prefix_name_id) : undefined,
-                    //             firstname: x.accused != undefined && x.firstname != null ? x.firstname : undefined,
-                    //             lastname: x.accused != undefined && x.astname != null ? x.lastname : undefined,
-                    //             complaint_id: complaint_id,
-                    //             // agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
-                    //             // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
-                    //             // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
-                    //             // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
-                    //             // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
-                    //             // section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
-                              
-                    //             // type: Number(req.body.type), /* ประเภทผู้ถูกกล่าวหา 1=ประชาชน,2=ตำรวจ */
-                    //             // detail: x.accused != undefined && req.body.accused.detail != null ? req.body.accused.detail : undefined,
-                    //             // created_by: null,
-                    //             // updated_by: null,
-                    //         },
-                    //     });
-                    // })
-
-                 
                 }
 
-
-                console.log(complaint_type_id)
-
                 const JcomsCode = await generateJcomsYearCode(complaint_id);
-                req.body.jcoms_no = JcomsCode.jcoms_code;
+                item_complaint.jcoms_no = JcomsCode.jcoms_code;
             }
 
-            const data = {complaint: item_complaint, complainant: item_complainant, accused : item_accused};
+            let select = excludeSpecificField(req, selectField);
+            const complaint = await prisma[$table].findUnique({
+                select: select,
+                where: {
+                    id: Number(complaint_id),
+                },
+            });
+
+            const data = {complaint: complaint};
             res.status(201).json({data, msg: "success" });
         } catch (error) {
             res.status(400).json({ msg: error.message });
