@@ -1558,11 +1558,11 @@ const methods = {
                             }
                         }
 
-                        let accused_position_id = null
-                        if(req.body.accused[i].position != null){
-                            accused_position_id = await positionController.onGetId(req.body.accused[i].position);
-                            accused_position_id = Number(accused_position_id)
-                        }
+                        // let accused_position_id = null
+                        // if(req.body.accused[i].position != null){
+                        //     accused_position_id = await positionController.onGetId(req.body.accused[i].position);
+                        //     accused_position_id = Number(accused_position_id)
+                        // }
 
                         const item_accused = await prisma[$table_accused].create({
                             data: {
@@ -1571,7 +1571,10 @@ const methods = {
                                 lastname: req.body.accused[i] != undefined && req.body.accused[i].lastname != null ? req.body.accused[i].lastname : undefined,
                                 complaint_id: complaint_id,
                                 agency_id: accused_agency_id != null ? Number(accused_agency_id) : undefined,
-                                position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
+                                // inspector_id: accused_inspector_id != null ? Number(accused_inspector_id) : undefined,
+                                // bureau_id: accused_bureau_id != null ? Number(accused_bureau_id) : undefined,
+                                // division_id: accused_division_id != null ? Number(accused_division_id) : undefined,
+                                // position_id: accused_position_id != null ? Number(accused_position_id) : undefined,
                                 section_id: accused_section_id != null ? Number(accused_section_id) : undefined,
                                 detail: req.body.accused[i] != undefined && req.body.accused[i].detail != null ? req.body.accused[i].detail : undefined,
                             },
