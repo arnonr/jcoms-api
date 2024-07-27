@@ -1539,13 +1539,22 @@ const methods = {
                         let accused_prefix_name_id = null
                         if(req.body.accused[i].prefix_name != null){
                             accused_prefix_name_id = await prefixNameController.onGetId(req.body.accused[i].prefix_name);
-                            accused_prefix_name_id = Number(accused_prefix_name_id)
+                            if(accused_prefix_name_id){
+                                accused_prefix_name_id = Number(accused_prefix_name_id)
+
+                            }else{
+                                accused_prefix_name_id = null
+                            }
                         }
 
                         let accused_agency_id = null
                         if(req.body.accused[i].agency != null){
                             accused_agency_id = await agencyController.onGetId(req.body.accused[i].agency);
-                            accused_agency_id = Number(accused_agency_id)
+                            if(accused_agency_id){
+                                accused_agency_id = Number(accused_agency_id)
+                            }else{
+                                accused_agency_id = null
+                            }
                         }
 
                         let accused_section_id = null
@@ -1558,11 +1567,15 @@ const methods = {
                             }
                         }
 
-                        // let accused_position_id = null
-                        // if(req.body.accused[i].position != null){
-                        //     accused_position_id = await positionController.onGetId(req.body.accused[i].position);
-                        //     accused_position_id = Number(accused_position_id)
-                        // }
+                        let accused_position_id = null
+                        if(req.body.accused[i].position != null){
+                            accused_position_id = await positionController.onGetId(req.body.accused[i].position);
+                            if(accused_position_id){
+                                accused_position_id = Number(accused_position_id)
+                            }else{
+                                accused_position_id  = null
+                            }
+                        }
 
                         const item_accused = await prisma[$table_accused].create({
                             data: {
