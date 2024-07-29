@@ -1397,7 +1397,7 @@ const methods = {
         const bureau_id = await bureauController.onGetId(bureau);
         const division_id = await divisionController.onGetId(division);
         const agency_id = await agencyController.onGetId(agency);
-        const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
+        // const complaint_type_id = await complaintTypeController.onGetId(complaint_type);
         // await complaintTypeController.onGetId(complaint_type);
         const topic_category_id = await topicCategoryController.onGetId(topic_category);
         const topic_type_id = await topicTypeController.onGetId(topic_type);
@@ -1408,6 +1408,7 @@ const methods = {
         const complainant_district_id = await districtController.onGetId(complainant_district,complainant_province_id);
         const complainant_sub_district_id = await subDistrictController.onGetId(complainant_sub_district);
         const complainant_prefix_name_id = await prefixNameController.onGetId(complainant_prefix_name);
+        const complaint_type_id = Number(req.body.complaint_type_id);
         // const accused_prefix_name_id = await prefixNameController.onGetId(accused_prefix_name);
         // const accused_agency_id = await agencyController.onGetId(accused_agency);
         // const accused_inspector_id = await inspectorController.onGetId(accused_inspector);
