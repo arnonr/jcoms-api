@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const mime = require('mime-types');

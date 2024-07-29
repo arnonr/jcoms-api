@@ -1,11 +1,11 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
 const uploadController = require("./UploadsController");
 const helperController = require("./HelperController");
 const $table = "complainant";
 const { v4: uuidv4 } = require('uuid');
 
 // const prisma = new PrismaClient();
-const prisma = new PrismaClient().$extends({
+const prisma = prisma_config.$extends({
     result: {
         complainant: { //extend Model name
             card_photo: { // the name of the new computed field

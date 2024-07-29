@@ -1,7 +1,7 @@
 const uploadController = require("./UploadsController");
-const { PrismaClient } = require("@prisma/client");
 const jwt = require("jsonwebtoken");
-const prisma = new PrismaClient();
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 
 const methods = {
   // สร้าง

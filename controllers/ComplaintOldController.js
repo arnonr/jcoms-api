@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
 const SmsController = require("./SmsController");
 const uploadController = require("./UploadsController");
 const helperController = require("./HelperController");
@@ -28,7 +28,7 @@ const $table_accused = "accused";
 
 // const prisma = new PrismaClient();
 
-const prisma = new PrismaClient().$extends({
+const prisma = prisma_config.$extends({
   result: {
     complaint: {
       //extend Model name

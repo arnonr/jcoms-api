@@ -1,9 +1,9 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
 const uploadController = require("./UploadsController");
 const $table = "complaint_extend";
 
 // const prisma = new PrismaClient();
-const prisma = new PrismaClient().$extends({
+const prisma = prisma_config.$extends({
     result: {
         complaint_extend: { //extend Model name
             extend_doc_filename: { // the name of the new computed field

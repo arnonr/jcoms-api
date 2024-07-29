@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
 const uploadController = require("./UploadsController");
 const loginLogController = require("./LoginLogController");
 
@@ -32,7 +32,7 @@ const randomNumber = async () => {
 };
 
 // const prisma = new PrismaClient();
-const prisma = new PrismaClient().$extends({
+const prisma = prisma_config.$extends({
     result: {
         user: {
         //extend Model name

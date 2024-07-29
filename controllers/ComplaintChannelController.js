@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 const $table = "complaint_channel";
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join

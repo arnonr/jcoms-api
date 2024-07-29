@@ -1,4 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 const uploadController = require("./UploadsController");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -11,7 +12,6 @@ const saltRounds = 10;
 // const { expressjwt: jwt1 } = require("express-jwt");
 const $table = "user";
 
-const prisma = new PrismaClient();
 
 // ค้นหา
 const filterData = (req) => {

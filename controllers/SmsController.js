@@ -1,8 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 
 const axios = require("axios");
 const $table = "otp";
-const prisma = new PrismaClient();
 
 const randomOTP = async () => {
   const min = 100000; // Minimum 6-digit number

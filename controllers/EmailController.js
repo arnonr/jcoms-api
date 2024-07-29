@@ -1,7 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
-
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 const nodemailer = require("nodemailer");
-const prisma = new PrismaClient();
 
 const sendEmail = async (mailto, subject, body) => {
 

@@ -1,4 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma_config = require('../config/prismaClient');
+const prisma = prisma_config;
 
 const axios = require("axios");
 
