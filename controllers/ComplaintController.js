@@ -1627,7 +1627,7 @@ const methods = {
 
         let  complainantSubDistrictResult  = null
         if(complainantDistrictResult){
-          complainantSubDistrictResult =  await prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: complainantDistrictResult.id }, select: { id: true } });
+          complainantSubDistrictResult =  await prisma2.sub_district.findFirst({ where: { name_th: complainant_sub_district,district_id: complainantDistrictResult.id }, select: { id: true } });
         }
 
         return {
