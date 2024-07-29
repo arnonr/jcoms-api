@@ -1467,6 +1467,22 @@ const methods = {
 
             // ทำต่อจาดด้านบน
             if(complainant_id != null){
+
+   
+                // const isDay = (time: any) => {
+                //     return time.hours >= 6 && time.hours < 18;
+                //   };
+
+                // let day = isDay(value);
+                // if (day) {
+                // complaint_item.value.day_time = {
+                //     name: "กลางวัน",
+                //     value: 1,
+                // };
+                // } else {
+                // complaint_item.value.day_time = { name: "กลางคืน", value: 2 };
+                // }
+
                 item_complaint = await prisma[$table].create({
                     data: {
                         is_active: 1,
@@ -1499,7 +1515,7 @@ const methods = {
                         sub_district_id: ids.sub_district_id != null ? ids.sub_district_id : undefined,
                         district_id: ids.district_id != null ? ids.district_id : undefined,
                         province_id: ids.province_id != null ? ids.province_id : undefined,
-                        postal_code: req.body.postal_code != null ? req.body.postal_code : undefined,
+                        postal_code: ids.postal_code != null ? ids.postal_code : undefined,
                         state_id: 1, /* เรื่องร้องเรียนใหม่ (ยังไม่รับเรื่อง) */
                         created_by: authUsername,
                         updated_by: authUsername,
@@ -1614,9 +1630,13 @@ const methods = {
             districtResult =  await prisma2.district.findFirst({ where: { name_th: district, province_id :  provinceResult.id}, select: { id: true } });
         }
 
+        let postal_code = null;
         let subDistrictResult = null
         if( districtResult){
-            subDistrictResult =  await  prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: districtResult.id }, select: { id: true } });
+            subDistrictResult =  await  prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: districtResult.id }, select: { id: true ,post_code: true} });
+            if(subDistrictResult){
+                postal_code = subDistrictResult.post_code
+            }
         }
        
       
@@ -1638,6 +1658,7 @@ const methods = {
           province_id:  provinceResult ? provinceResult?.id: null,
           sub_district_id: subDistrictResult ? subDistrictResult?.id: null,
           district_id: districtResult ? districtResult?.id: null,
+          postal_code: postal_code,
           complainant_province_id: complainantProvinceResult ? complainantProvinceResult?.id: null,
           complainant_district_id: complainantDistrictResult ? complainantDistrictResult?.id: null,
           complainant_sub_district_id: complainantSubDistrictResult ? complainantSubDistrictResult?.id : null,
