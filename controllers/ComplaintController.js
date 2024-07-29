@@ -1519,7 +1519,6 @@ const methods = {
                             accused_prefix_name_id = await  prisma2.prefix_name.findFirst({ where: {name_th: req.body.accused[i].prefix_name }, select: { id: true } });
                         }
 
-                        console.log(accused_prefix_name_id)
 
                         let accused_agency_id = null
                         if(req.body.accused[i].agency != null){
@@ -1556,7 +1555,6 @@ const methods = {
                           item_accused_arr.push(item_accused);
                         }
 
-                        // console.log(item_accused);
 
                     }
                 }
@@ -1589,8 +1587,6 @@ const methods = {
           complainant_prefix_name, 
         } = data
 
-
-        console.log(data)
       
         const [
           inspectorResult,
@@ -1615,41 +1611,37 @@ const methods = {
 
         let districtResult = null
         if(provinceResult){
-            districtResult =  prisma2.district.findFirst({ where: { name_th: district,province_id :  provinceResult}, select: { id: true } });
+            districtResult =  await prisma2.district.findFirst({ where: { name_th: district, province_id :  provinceResult.id}, select: { id: true } });
         }
-     
 
         let subDistrictResult = null
         if( districtResult){
-            subDistrictResult =  prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: districtResult }, select: { id: true } });
+            subDistrictResult =  await  prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: districtResult.id }, select: { id: true } });
         }
        
       
         let complainantDistrictResult = null 
         if(complainantProvinceResult){
-            prisma2.district.findFirst({ where: { name_th: complainant_district,province_id :  complainantProvinceResult}, select: { id: true } });
+            complainantDistrictResult = await  prisma2.district.findFirst({ where: { name_th: complainant_district,province_id :  complainantProvinceResult.id}, select: { id: true } });
         }
 
-       let  complainantSubDistrictResult  = null
+        let  complainantSubDistrictResult  = null
         if(complainantDistrictResult){
-            complainantSubDistrictResult =  prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: complainantDistrictResult }, select: { id: true } });
-         }
+          complainantSubDistrictResult =  await prisma2.sub_district.findFirst({ where: { name_th: sub_district,district_id: complainantDistrictResult.id }, select: { id: true } });
+        }
 
-
-      
         return {
-          inspector_id: inspectorResult?.id,
-          bureau_id: bureauResult?.id,
-          division_id: divisionResult?.id,
-          agency_id: agencyResult?.id,
-          complaint_type_id: Number(complaint_type_id_),
-          province_id: provinceResult?.id,
-          sub_district_id: subDistrictResult?.id,
-          district_id: districtResult?.id,
-          complainant_province_id: complainantProvinceResult?.id,
-          complainant_district_id: complainantDistrictResult?.id,
-          complainant_sub_district_id: complainantSubDistrictResult?.id,
-          complainant_prefix_name_id: complainantPrefixNameResult?.id,
+          inspector_id:  inspectorResult ? inspectorResult?.id : null,
+          bureau_id: bureauResult? bureauResult?.id : null,
+          division_id: divisionResult ? divisionResult?.id : null,
+          agency_id: agencyResult? agencyResult?.id : null,
+          province_id:  provinceResult ? provinceResult?.id: null,
+          sub_district_id: subDistrictResult ? subDistrictResult?.id: null,
+          district_id: districtResult ? districtResult?.id: null,
+          complainant_province_id: complainantProvinceResult ? complainantProvinceResult?.id: null,
+          complainant_district_id: complainantDistrictResult ? complainantDistrictResult?.id: null,
+          complainant_sub_district_id: complainantSubDistrictResult ? complainantSubDistrictResult?.id : null,
+          complainant_prefix_name_id: complainantPrefixNameResult ? complainantPrefixNameResult?.id : null,
         }
       },
   // แก้ไข
