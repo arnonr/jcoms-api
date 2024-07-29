@@ -1493,7 +1493,6 @@ const methods = {
                         receive_doc_filename: complaintPathFile,
                         complaint_type_id: complaint_type_id != null ? complaint_type_id : undefined,
                         complainant_id: complainant_id,
-                        is_anonymous: 0,
 
                         // id_card: req.body.complainant.id_card != null ? helperController.base64EncodeWithKey(req.body.complainant.id_card) : undefined,
 
