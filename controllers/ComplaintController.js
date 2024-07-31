@@ -1589,8 +1589,15 @@ const methods = {
             });
 
             const data = {complaint: complaint};
+
+
+            await prisma.$disconnect();
+            await prisma2.$disconnect();
+            
             res.status(201).json({data, msg: "success" });
         } catch (error) {
+            await prisma.$disconnect();
+            await prisma2.$disconnect();
             res.status(400).json({ msg: error.message });
         }
     },
