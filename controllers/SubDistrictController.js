@@ -2,6 +2,7 @@ const prisma_config = require('../config/prismaClient');
 const prisma = prisma_config;
 const $table = "sub_district";
 
+
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
     id: true,

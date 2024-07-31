@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 3600 }); // cache 1 ชั่วโมง
+const cache = new NodeCache({ stdTTL: 86400 }); // cache
 
 
 function cacheMiddleware(req, res, next) {
