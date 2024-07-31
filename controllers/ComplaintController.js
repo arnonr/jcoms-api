@@ -1593,7 +1593,7 @@ const methods = {
 
             await prisma.$disconnect();
             await prisma2.$disconnect();
-            
+
             res.status(201).json({data, msg: "success" });
         } catch (error) {
             await prisma.$disconnect();
@@ -1605,7 +1605,7 @@ const methods = {
 
     async getMultipleIds(data) {
         const {
-          inspector, bureau, division, agency, complaint_type_id_,
+          inspector, bureau, division, agency,
          province, sub_district, district,
           complainant_province, complainant_district, complainant_sub_district,
           complainant_prefix_name, 
@@ -1708,7 +1708,8 @@ const methods = {
         },
         data: {
           is_active:
-            req.body.is_active != null ? Number(req.body.is_active) : undefined,
+          req.body.is_active !== undefined ? (req.body.is_active === null ? null : Number(req.body.is_active)) : undefined,
+
           complaint_code:
             req.body.complaint_code != null
               ? req.body.complaint_code
@@ -1805,17 +1806,17 @@ const methods = {
             req.body.evidence_url != null ? req.body.evidence_url : undefined,
 
           inspector_id:
-            req.body.inspector_id != null
-              ? Number(req.body.inspector_id)
+            req.body.inspector_id !== undefined
+              ? (req.body.inspector_id === null ? null : Number(req.body.inspector_id)) 
               : undefined,
           bureau_id:
-            req.body.bureau_id != null ? Number(req.body.bureau_id) : undefined,
+            req.body.bureau_id !== undefined ?  (req.body.division_id === null ? null : Number(req.body.bureau_id)) : undefined,
           division_id:
-            req.body.division_id != null
-              ? Number(req.body.division_id)
+            req.body.division_id !== undefined
+              ?  (req.body.division_id === null ? null : Number(req.body.division_id))
               : undefined,
           agency_id:
-            req.body.agency_id != null ? Number(req.body.agency_id) : undefined,
+            req.body.agency_id !==undefined ?  (req.body.agency_id === null ? null : Number(req.body.agency_id)) : undefined,
           topic_type_id:
             req.body.topic_type_id != null
               ? Number(req.body.topic_type_id)
