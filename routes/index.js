@@ -42,6 +42,7 @@ const visitWebsiteLog = require("./api/visit-website-log");
 const OrganizationPermission = require("./api/organization-permission");
 const thaid = require("./api/thaid");
 const apiUser = require("./api/api-user");
+const moi = require("./api/moi");
 const authenticateApiKey = require('./middleware/authenticateApiKey');
 const customRateLimiter = require('./middleware/customRateLimiter');
 
@@ -93,7 +94,8 @@ router.use(
   router.use("/visit-website-log", visitWebsiteLog),
   router.use("/organization-permission", OrganizationPermission),
   router.use("/thaid", thaid),
-  router.use("/api-user", apiUser)
+  router.use("/api-user", apiUser),
+  router.use("/moi", moi)
 );
 
 module.exports = router;

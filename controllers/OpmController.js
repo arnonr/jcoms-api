@@ -13,6 +13,7 @@ const xml2js = require('xml2js');
 const $user = "servicejaray";
 const $password = "53ad4e7726f820b84c1fa474098e4b6b";
 
+const complaintController = require("./ComplaintController");
 const provinceController = require("./ProvinceController");
 const districtController = require("./DistrictController");
 const subDistrictController = require("./SubDistrictController");
@@ -573,10 +574,16 @@ const saveComplaint = async (caseItem) => {
                 district_id: district_id,
                 province_id: province_id,
                 postal_code: postcode,
+                complainant_id: complainant_id,
             }
         });
 
         // console.log(upsertedCase);
+
+        if(upsertedCase.jcoms_no == null) {
+            const JcomsCode = await complaintController.generateJcomsYearCode(complaint_id);
+            upsertedCase.jcoms_no = JcomsCode.jcoms_code;
+        }
 
     } catch (error) {
         console.error('Error saving complaint:', error);
@@ -707,7 +714,7 @@ const methods = {
                     // console.log(caseDetail);
                     await saveComplaint(caseDetail);
 
-                    return { case_id: caseItem.case_id, case_detail: caseDetail };
+                    return { case_id: caseItem.case_id};
                 } catch (error) {
                     console.error(`Error processing case ${caseItem.case_id}:`, error);
                     return { caseId: caseItem.case_id, error: error.message };

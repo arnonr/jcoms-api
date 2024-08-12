@@ -126,6 +126,7 @@ const selectField = {
   due_date: true,
 
   case_id: true,
+  moi_id: true,
 
   created_at: true,
   created_by: true,
@@ -1469,7 +1470,7 @@ const methods = {
             // ทำต่อจาดด้านบน
             if(complainant_id != null){
 
-   
+
                 // const isDay = (time: any) => {
                 //     return time.hours >= 6 && time.hours < 18;
                 //   };
@@ -1608,10 +1609,10 @@ const methods = {
           inspector, bureau, division, agency,
          province, sub_district, district,
           complainant_province, complainant_district, complainant_sub_district,
-          complainant_prefix_name, 
+          complainant_prefix_name,
         } = data
 
-      
+
         const [
           inspectorResult,
           bureauResult,
@@ -1620,7 +1621,7 @@ const methods = {
           provinceResult,
           complainantPrefixNameResult,
           complainantProvinceResult,
-        
+
         ] = await Promise.all([
             prisma2.inspector.findFirst({ where: { name_th: inspector }}),
             prisma2.bureau.findFirst({ where: { name_th: bureau }, select: { id: true } }),
@@ -1630,7 +1631,7 @@ const methods = {
             // complainant
             prisma2.prefix_name.findFirst({ where: {name: complainant_prefix_name }, select: { id: true } }),
             prisma2.province.findFirst({ where: { name_th: complainant_province }, select: { id: true } }),
-  
+
         ])
 
         let districtResult = null
@@ -1646,9 +1647,8 @@ const methods = {
                 postal_code = subDistrictResult.post_code
             }
         }
-       
-      
-        let complainantDistrictResult = null 
+
+        let complainantDistrictResult = null
         if(complainantProvinceResult){
             complainantDistrictResult = await  prisma2.district.findFirst({ where: { name_th: complainant_district,province_id :  complainantProvinceResult.id}, select: { id: true } });
         }
@@ -1807,7 +1807,7 @@ const methods = {
 
           inspector_id:
             req.body.inspector_id !== undefined
-              ? (req.body.inspector_id === null ? null : Number(req.body.inspector_id)) 
+              ? (req.body.inspector_id === null ? null : Number(req.body.inspector_id))
               : undefined,
           bureau_id:
             req.body.bureau_id !== undefined ?  (req.body.division_id === null ? null : Number(req.body.bureau_id)) : undefined,
@@ -1943,4 +1943,4 @@ const methods = {
   },
 };
 
-module.exports = { ...methods };
+module.exports = { ...methods, generateJcomsYearCode };
