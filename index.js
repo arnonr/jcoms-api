@@ -22,9 +22,9 @@ app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://trusted.cdn.com"],
-        styleSrc: ["'self'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        // scriptSrc: ["'self'", "https://trusted.cdn.com"],
+        // styleSrc: ["'self'", "https://fonts.googleapis.com"],
+        // fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
