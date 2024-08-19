@@ -49,9 +49,8 @@ app.use(cors(corsOptions));
 app.use(express.json({limit: '500mb'}));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
-// เพิ่ม Strict-Transport-Security header
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' https://trusted.images.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://trusted.images.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
     next();
 });
 
