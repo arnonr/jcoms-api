@@ -6,7 +6,7 @@ var path = require("path");
 const bodyParser = require('body-parser');
 const fileUpload = require("express-fileupload");
 const requestIp = require('request-ip');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 dotenv.config();
 
@@ -18,28 +18,28 @@ const corsOptions = {
   credentials: true,
 };
 
-app.disable('x-powered-by');
+// app.disable('x-powered-by');
 
-app.use(helmet());
+// app.use(helmet());
 
-app.use((req, res, next) => {
-    res.setHeader('Referrer-Policy', 'no-referrer');
-    next();
-  });
+// app.use((req, res, next) => {
+//     res.setHeader('Referrer-Policy', 'no-referrer');
+//     next();
+//   });
 
-  // เพิ่ม Strict-Transport-Security header
-app.use((req, res, next) => {
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-    next();
-  });
+//   // เพิ่ม Strict-Transport-Security header
+// app.use((req, res, next) => {
+//     res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+//     next();
+//   });
 
-  app.use((req, res, next) => {
-    res.setHeader(
-      "Content-Security-Policy",
-      "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self';"
-    );
-    next();
-  });
+//   app.use((req, res, next) => {
+//     res.setHeader(
+//       "Content-Security-Policy",
+//       "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self';"
+//     );
+//     next();
+//   });
   
 
 app.use(bodyParser.json({limit: '500mb'}));
