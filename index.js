@@ -51,7 +51,7 @@ app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
 // เพิ่ม Strict-Transport-Security header
 app.use((req, res, next) => {
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' https://trusted.images.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
     next();
 });
 
