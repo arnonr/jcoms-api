@@ -14,10 +14,11 @@ const app = express();
 const port = process.env.APP_PORT || 3002;
 
 const corsOptions = {
-  origin: "*",
+  origin: "https://jcoms2.police.go.th",
   credentials: true,
 };
 
+// res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self'; img-src 'self' https://trusted.images.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"); 
 // app.disable('x-powered-by');
 
 // app.use(helmet());
@@ -47,6 +48,14 @@ app.use(bodyParser.urlencoded({ extended: true,limit: '500mb' }));
 app.use(cors(corsOptions));
 app.use(express.json({limit: '500mb'}));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
+
+// เพิ่ม Strict-Transport-Security header
+app.use((req, res, next) => {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    next();
+});
+
+
 
 app.use(fileUpload());
 
