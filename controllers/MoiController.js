@@ -103,9 +103,9 @@ const updateStatus = async (complaint_id, req) => {
 
         const params = {
             "complaintKey": item.moi_id,
-            "code": req.body.code, /* รับเรื่อง */
-            "refId": "100",
-            "refCode": item.jcoms_no, /* เลขที่หนังสือ ฝรท. หรือเลข JComs */
+            "code": Number(req.body.code), /* รับเรื่อง */
+            "refId": item.jcoms_no,
+            "refCode": req.body?.refCode, /* เลขที่หนังสือ ฝรท. หรือเลข JComs */
             "refDescription": req.body.refDescription
         }
 
