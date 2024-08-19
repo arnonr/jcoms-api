@@ -46,11 +46,21 @@ const moi = require("./api/moi");
 const authenticateApiKey = require('./middleware/authenticateApiKey');
 const customRateLimiter = require('./middleware/customRateLimiter');
 
+
+// กำหนด Content-Security-Policy header ให้กับเส้นทางที่อยู่ภายใต้ router นี้
+router.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
+    next();
+  });
+
+  
 // Apply authentication middleware
 router.use(authenticateApiKey);
 
 // Apply custom rate limiting middleware
 router.use(customRateLimiter);
+
+
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
