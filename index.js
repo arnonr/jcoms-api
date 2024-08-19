@@ -18,21 +18,21 @@ const corsOptions = {
   credentials: true,
 };
 app.use(helmet());
-// app.use(
-//     helmet.contentSecurityPolicy({
-//       directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "https://trusted.cdn.com"],
-//         styleSrc: ["'self'", "https://fonts.googleapis.com"],
-//         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-//         imgSrc: ["'self'"],
-//         objectSrc: ["'none'"],
-//         frameAncestors: ["'none'"],
-//         baseUri: ["'self'"],
-//         formAction: ["'self'"],
-//       },
-//     })
-//   );
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://trusted.cdn.com"],
+        styleSrc: ["'self'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+      },
+    })
+  );
 
 // res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self'; img-src 'self' https://trusted.images.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"); 
 // app.disable('x-powered-by');
