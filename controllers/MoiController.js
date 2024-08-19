@@ -75,7 +75,7 @@ const getData = async () => {
     }
 };
 
-const updateStatus = async (complaint_id) => {
+const updateStatus = async (complaint_id, req) => {
     try {
         const item = await prisma[$table_complaint].findUnique({
             where: {
@@ -103,10 +103,10 @@ const updateStatus = async (complaint_id) => {
 
         const params = {
             "complaintKey": item.moi_id,
-            "code": 3, /* รับเรื่อง */
+            "code": req.body.code, /* รับเรื่อง */
             "refId": "100",
             "refCode": item.jcoms_no, /* เลขที่หนังสือ ฝรท. หรือเลข JComs */
-            "refDescription": "รับเรื่องแล้วกำลังดำเนินการ"
+            "refDescription": req.body.refDescription
         }
 
         const url = apiHost + "/agency/v1/case/status";
@@ -383,7 +383,15 @@ const methods = {
                 throw new Error('complaint id required');
             }
 
-            const data = await updateStatus(req.params.id);
+            if(req.body.code === undefined) {
+                throw new Error('code required');
+            }
+
+            if(req.body.refDescription === undefined) {
+                throw new Error('refDescription required');
+            }
+
+            const data = await updateStatus(req.params.id, req);
             res.status(200).json({ data: data, msg: "success" });
         } catch (error) {
             res.status(500).json({ msg: error.message });
