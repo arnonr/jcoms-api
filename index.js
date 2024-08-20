@@ -17,7 +17,7 @@ const corsOptions = {
   origin: "https://jcoms2.police.go.th",
   credentials: true,
 };
-app.use(helmet());
+// app.use(helmet());
 // app.use(
 //     helmet.contentSecurityPolicy({
 //       directives: {
