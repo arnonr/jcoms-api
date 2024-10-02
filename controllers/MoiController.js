@@ -16,8 +16,8 @@ const helperController = require("./HelperController");
 const uploadController = require("./UploadsController");
 const { Console } = require('console');
 
-const apiHost = "http://damrongdham-api-uat.moi.go.th";
-const apiSecretKey = "iSOfG6mYMr";
+const apiHost = "damrongdham-api.moi.go.th";
+const apiSecretKey = "QlpQdZR1tK";
 const agentId = "A01";
 
 const getToken = async () => {

@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.APP_PORT || 3002;
 
 const corsOptions = {
-  origin: "https://jcoms2.police.go.th",
+  origin: "*",
   credentials: true,
 };
 // app.use(helmet());
