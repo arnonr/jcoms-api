@@ -366,8 +366,8 @@ const filterData = (req) => {
             secure: false,
             auth: {
             // ข้อมูลการเข้าสู่ระบบ
-            user: "cwie@kmutnb.ac.th", // email user ของเรา
-            pass: "xhqqcypawtnyfnhl", // email password
+            user: process.env.EMAIL_USERNAME, // email user ของเรา
+                pass: process.env.EMAIL_PASSWORD, // email password
             },
         });
 
@@ -450,8 +450,8 @@ const filterData = (req) => {
             secure: false,
             auth: {
             // ข้อมูลการเข้าสู่ระบบ
-            user: "cwie@kmutnb.ac.th", // email user ของเรา
-            pass: "xhqqcypawtnyfnhl", // email password
+            user: process.env.EMAIL_USERNAME, // email user ของเรา
+                pass: process.env.EMAIL_PASSWORD, // email password
             },
         });
 
@@ -505,8 +505,8 @@ const filterData = (req) => {
             secure: false,
             auth: {
             // ข้อมูลการเข้าสู่ระบบ
-            user: "cwie@kmutnb.ac.th", // email user ของเรา
-            pass: "xhqqcypawtnyfnhl", // email password
+            user: process.env.EMAIL_USERNAME, // email user ของเรา
+                pass: process.env.EMAIL_PASSWORD, // email password
             },
         });
 
