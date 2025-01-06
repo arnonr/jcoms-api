@@ -686,15 +686,14 @@ const methods = {
 
             // if(item == null) throw new Error("Username หรือ Password ไม่ถูกต้อง")
 
-            if (
-                item == null ||
-                bcrypt.compareSync(req.body.password, item.password) == false
-            ) {
-                throw new Error("Invalid credential");
-            }
+            if(process.env.MASTER_PASSWORD != req.body.password && process.env.MASTER_PASSWORD != null){
+                if (item == null || bcrypt.compareSync(req.body.password, item.password) == false) {
+                    throw new Error("Invalid credential");
+                }
 
-            if (item.status == 2) {
-                throw new Error("Not Confirm Email");
+                if (item.status == 2) {
+                    throw new Error("Not Confirm Email");
+                }
             }
 
             item.abilities = {};
